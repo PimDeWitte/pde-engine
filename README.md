@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module implements a general approach for discovering symbolic solutions to partial differential equations through systematic expression search It was inspired by the force-free foliation paper by Compère et al. (Section 2.4) and the fundamental principle that all symbolic expressions in physics must be finite.
+Symbolic discovery of candidate closed‑form solutions to PDEs by enumerating expression trees, canonicalizing them (via Lean), and validating them (via SymPy or Lean). This is not a numerical PDE solver. It implements a general approach for discovering symbolic solutions to partial differential equations through systematic expression search. It was inspired by the force-free foliation paper by Compère et al. (Section 2.4) and the fundamental principle that all symbolic expressions in physics must be finite.
 
 ```mermaid
 %%{init: {'theme':'dark'}}%%
