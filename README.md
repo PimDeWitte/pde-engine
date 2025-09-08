@@ -4,6 +4,19 @@
 
 This module implements a general approach for discovering symbolic solutions to partial differential equations through systematic expression search It was inspired by the force-free foliation paper by Compère et al. (Section 2.4) and the fundamental principle that all symbolic expressions in physics must be finite.
 
+```mermaid
+%%{init: {'theme':'dark'}}%%
+graph LR
+    A[Generate<br/>Expressions] --> B[Normalize<br/>with Lean]
+    B --> C[Validate<br/>PDE]
+    C --> D[Discover<br/>Solutions]
+    
+    style A fill:#1976d2,stroke:#64b5f6,color:#fff
+    style B fill:#f57c00,stroke:#ffb74d,color:#fff
+    style C fill:#388e3c,stroke:#81c784,color:#fff
+    style D fill:#5e35b1,stroke:#9575cd,color:#fff
+```
+
 ## Understanding the Depth System
 
 The depth parameter controls how complex the generated expressions can be. Each depth level builds upon the previous ones, creating increasingly sophisticated mathematical expressions.
@@ -335,59 +348,54 @@ Our approach is based on two key insights:
 ## Architecture Overview
 
 ```mermaid
-graph TB
-    subgraph "Problem Definition"
-        A[ProblemSpec] --> A1[Coordinates/Symbols]
-        A --> A2[Primitives]
-        A --> A3[Operations]
-        A --> A4[Validator]
-    end
+%%{init: {'theme':'dark', 'themeVariables': {'primaryColor':'#2e7d32','primaryTextColor':'#fff','primaryBorderColor':'#66bb6a','lineColor':'#5c6bc0','secondaryColor':'#1976d2','tertiaryColor':'#e65100','background':'#1e1e1e','mainBkg':'#2d2d30','secondBkg':'#252526','tertiaryBkg':'#3c3c3c','tertiaryTextColor':'#fff','darkMode':true}}}%%
+graph TD
+    %% Problem Definition Phase
+    A[Problem Specification<br/>coordinates, primitives, operations] 
+    A --> B[Expression Generator<br/>Depth 1: rho, z]
     
-    subgraph "Expression Generation"
-        B1[Depth 1: Primitives] --> B2[Apply Operations]
-        B2 --> B3[Depth 2: Candidates]
-        B3 --> B4[Apply Operations]
-        B4 --> B5[Depth N: Candidates]
-    end
+    %% Generation Phase
+    B --> C[Apply Operations<br/>sin, cos, +, *, /, ...]
+    C --> D[Expression Candidates<br/>sin&#40;rho&#41;, rho*z, ...]
     
-    subgraph "Lean Normalization"
-        C1[Raw Expression] --> C2[Lean Server]
-        C2 --> C3[Canonical Form]
-        C3 --> C4[Signature Hash]
-        C4 --> C5{Duplicate?}
-        C5 -->|Yes| C6[Skip]
-        C5 -->|No| C7[Keep Expression]
-    end
+    %% Normalization Phase
+    D --> E[Lean Theorem Prover<br/>Mathematical Normalization]
+    E --> F{Duplicate<br/>Check}
+    F -->|New| G[Unique Expression]
+    F -->|Exists| H[Skip &#40;~99% reduction&#41;]
     
-    subgraph "PDE Validation"
-        D1[Expression u] --> D2[Compute Derivatives]
-        D2 --> D3[Build Constraint]
-        D3 --> D4{Fast Point Check}
-        D4 -->|Pass| D5[Symbolic Check]
-        D4 -->|Fail| D6[Invalid]
-        D5 --> D7{Constraint = 0?}
-        D7 -->|Yes| D8[Valid Solution]
-        D7 -->|No| D6
-    end
+    %% Validation Phase
+    G --> I[PDE Validator<br/>Fast point checks]
+    I --> J{Satisfies<br/>PDE?}
+    J -->|Yes| K[Symbolic Verification]
+    J -->|No| L[Invalid]
+    K --> M{Proven<br/>Valid?}
+    M -->|Yes| N[&#10003; Valid Solution]
+    M -->|No| L
     
-    subgraph "Storage & Monitoring"
-        E1[SQLite Database] --> E2[Expressions Table]
-        E1 --> E3[Run Metadata]
-        E1 --> E4[Worker Progress]
-        E5[Real-time Monitoring] --> E6[Progress Display]
-    end
+    %% Storage Phase
+    N --> O[SQLite Database<br/>Results & Monitoring]
+    L --> O
     
-    A --> B1
-    B3 --> C1
-    B5 --> C1
-    C7 --> D1
-    D8 --> E2
-    D6 --> E2
+    %% Iteration
+    O --> P{More<br/>Depth?}
+    P -->|Yes| C
+    P -->|No| Q[Discovery Complete<br/>All solutions found]
     
-    style A fill:#e1f5fe
-    style D8 fill:#c8e6c9
-    style D6 fill:#ffcdd2
-    style C2 fill:#fff3e0
+    %% Styling for dark background
+    classDef valid fill:#388e3c,stroke:#81c784,color:#fff,stroke-width:2px
+    classDef invalid fill:#d32f2f,stroke:#ef5350,color:#fff,stroke-width:2px  
+    classDef process fill:#1976d2,stroke:#64b5f6,color:#fff,stroke-width:2px
+    classDef decision fill:#f57c00,stroke:#ffb74d,color:#fff,stroke-width:2px
+    classDef storage fill:#5e35b1,stroke:#9575cd,color:#fff,stroke-width:2px
+    classDef start fill:#00695c,stroke:#4db6ac,color:#fff,stroke-width:2px
+    
+    class A,B start
+    class C,D,E,G,I,K process
+    class F,J,M,P decision
+    class N valid
+    class H,L invalid
+    class O,Q storage
 ```
 
 ### Process Flow
