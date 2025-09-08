@@ -1,0 +1,65 @@
+# -----------------------------------------------------------
+# Python ignores
+# -----------------------------------------------------------
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environment
+venv/
+env/
+.venv/
+.tox/
+
+# Editors and IDEs
+# VS Code
+.vscode/
+# JetBrains IDEs (e.g., PyCharm)
+.idea/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Misc
+*.log
+*.sqlite3
+.env
+.env.*
+
+# -----------------------------------------------------------
+# Lean ignores
+# -----------------------------------------------------------
+
+# Lake build outputs and dependencies
+build/
+.lake/
+lake-packages/
+
+# Lean compiler intermediate files
+*.olean
+*.trace
+*.ast
+
+# Lean project cache files
+lean-toolchain
+

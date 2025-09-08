@@ -1,0 +1,42 @@
+{
+  "summary": {
+    "method": "General Simplification Approach (LEAN ONLY)",
+    "problem": "Kerr Magnetosphere (linear surrogate)",
+    "timestamp": "20250815_162746",
+    "statistics": {
+      "total_generated": 7,
+      "duplicates_avoided": 0,
+      "expressions_checked": 7,
+      "valid_foliations": 1,
+      "known_solutions_found": 0,
+      "invalid_null_results": 0,
+      "invalid_error_results": 0
+    },
+    "expression_counts_by_depth": {
+      "1": 7
+    },
+    "comparison": {
+      "our_expressions_total": 7,
+      "our_valid_solutions": 1
+    }
+  },
+  "valid_solutions": [
+    {
+      "expression": "1",
+      "name": null,
+      "depth": 1,
+      "is_paper_solution": false
+    }
+  ],
+  "all_expressions": {
+    "1": [
+      "x",
+      "1",
+      "a**2*x**2 + r**2",
+      "-2*M*r/(a**2*x**2 + r**2) + 1",
+      "r",
+      "-2*M*r + a**2 + r**2",
+      "1 - x"
+    ]
+  }
+}

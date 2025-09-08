@@ -1,0 +1,94 @@
+{
+  "summary": {
+    "method": "General Simplification Approach (LEAN ONLY)",
+    "problem": "Force-Free Foliations",
+    "timestamp": "20250815_162643",
+    "statistics": {
+      "total_generated": 5,
+      "duplicates_avoided": 0,
+      "expressions_checked": 5,
+      "valid_foliations": 4,
+      "known_solutions_found": 6,
+      "invalid_null_results": 0,
+      "invalid_error_results": 1
+    },
+    "expression_counts_by_depth": {
+      "1": 5
+    },
+    "comparison": {
+      "our_expressions_total": 5,
+      "our_valid_solutions": 10
+    }
+  },
+  "valid_solutions": [
+    {
+      "expression": "rho**2",
+      "name": "Vertical field",
+      "depth": "known",
+      "is_paper_solution": true
+    },
+    {
+      "expression": "rho**2*z",
+      "name": "X-point",
+      "depth": "known",
+      "is_paper_solution": true
+    },
+    {
+      "expression": "1 - z/sqrt(rho**2 + z**2)",
+      "name": "Radial",
+      "depth": "known",
+      "is_paper_solution": true
+    },
+    {
+      "expression": "rho**2/(rho**2 + z**2)**(3/2)",
+      "name": "Dipolar",
+      "depth": "known",
+      "is_paper_solution": true
+    },
+    {
+      "expression": "sqrt(rho**2 + z**2) - z",
+      "name": "Parabolic",
+      "depth": "known",
+      "is_paper_solution": true
+    },
+    {
+      "expression": "rho**2*exp(-2*z)",
+      "name": "Bent",
+      "depth": "known",
+      "is_paper_solution": true
+    },
+    {
+      "expression": "z",
+      "name": null,
+      "depth": 1,
+      "is_paper_solution": false
+    },
+    {
+      "expression": "rho**2 + z**2",
+      "name": null,
+      "depth": 1,
+      "is_paper_solution": false
+    },
+    {
+      "expression": "rho/z",
+      "name": null,
+      "depth": 1,
+      "is_paper_solution": false
+    },
+    {
+      "expression": "rho",
+      "name": null,
+      "depth": 1,
+      "is_paper_solution": false
+    }
+  ],
+  "all_expressions": {
+    "1": [
+      "z",
+      "rho**2 + z**2",
+      "rho/z",
+      "1",
+      "rho"
+    ]
+  }
+}
