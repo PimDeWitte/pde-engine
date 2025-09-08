@@ -1,8 +1,8 @@
-# PDE Engine
+# PDE Engine - General Method for Discovering Symbolic Solutions to PDEs
 
 ## Overview
 
-This project implements a general method for discovering physics solutions through systematic symbolic expression search. It was inspired by the force-free foliation paper by Compère et al. (Section 2.4) and the fundamental principle that all symbolic expressions in physics must be finite.
+This module implements a general approach for discovering symbolic solutions to partial differential equations through systematic expression search It was inspired by the force-free foliation paper by Compère et al. (Section 2.4) and the fundamental principle that all symbolic expressions in physics must be finite.
 
 ## Understanding the Depth System
 
