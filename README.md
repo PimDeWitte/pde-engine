@@ -1,4 +1,4 @@
-# PDE Engine - General Method for Discovering Symbolic Solutions to PDEs
+# PDE Engine
 
 ## Overview
 
