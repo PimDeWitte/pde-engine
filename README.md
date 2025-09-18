@@ -410,7 +410,7 @@ graph TD
 
 - **Python/SymPy**: Core expression manipulation and symbolic mathematics
 - **Lean 4**: Mathematical theorem prover for canonical normalization
-- **SQLite**: ACID-compliant storage with concurrent access
+- **SQLite**: Storage for all generations
 - **Multiprocessing**: Parallel expression generation and validation
 - **JSON-RPC**: Communication with Lean server
 
@@ -430,11 +430,10 @@ Key features:
 - **Process isolation**: Each validator runs in its own process to prevent crashes from affecting others
 - **Queue-based communication**: Lock-free message passing between processes
 - **Adaptive worker pool**: Can scale validators based on CPU cores
-- **Graceful shutdown**: Proper cleanup of all processes on interruption
 
 ### 2. SQLite Integration
 
-We use SQLite as a robust, ACID-compliant storage layer:
+We use SQLite to store all the generations to make it easy to interface with other tools and keep track of progress
 
 ```sql
 -- Main expression table (per run)
