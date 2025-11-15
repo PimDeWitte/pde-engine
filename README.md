@@ -95,7 +95,7 @@ Depth 4:         +
              rho
 ```
 
-### Growth Rate
+### Lean normalization at generation time is the key to scaling this up
 
 The number of candidate expressions grows exponentially with depth:
 
@@ -116,7 +116,7 @@ Examples of equivalent expressions:
   sin(x)**2 + cos(x)**2  →  1 (trigonometric identity)
 ```
 
-This reduction is crucial - without it, the search space would be intractable even at moderate depths.
+This reduction is crucial - without it, the search space quickly becomes intractable
 
 ## Quick Start
 
@@ -298,19 +298,18 @@ def load_problem(name: str) -> ProblemSpec:
 python general_method_paper_reproduction.py --problem my_problem --max-depth 3
 ```
 
-### Tips for Custom Problems
+### Some tips are you try this on your own problems :)
 
-1. **Choose good primitives**: Include the basic building blocks that solutions might use
-2. **Implement fast validation**: Use numerical checks at test points before expensive symbolic simplification
-3. **Add known solutions**: Helps verify your validator is working correctly
-4. **Start with small depths**: Test with depth 2-3 before running expensive depth 4+ searches
-5. **Use Lean normalizer**: It dramatically reduces redundant expressions
+1. **Implement fast validation**: Use numerical checks at test points before expensive symbolic simplification
+2. **Add known solutions**: Helps verify your validator is working correctly
+3. **Start with small depths**: Test with depth 2-3 before running expensive depth 4+ searches
+4. **Use Lean normalizer**: It dramatically reduces redundant expressions
 
 ## Inspiration & Core Philosophy
 
 Our approach is based on two key insights:
 
-1. **Finite Search Space** The space of formulas that can be expressed with finitely many symbols in a few lines is certainly finite
+1. **Finite Search Space** The space of formulas that can be expressed with finitely many symbols in a few lines is certainly finite, and we should explore it computationally :)
 
 2. **Force-Free Foliations Paper (Section 2.4)**: The paper demonstrates that complex PDEs can be solved by:
    - Starting with simple primitive expressions
