@@ -159,33 +159,6 @@ python general_method_paper_reproduction.py --problem kerr_magnetosphere --max-d
 python general_method_paper_reproduction.py --problem force_free --max-depth 4 --validators 8
 ```
 
-### Expected Runtime & Expression Counts
-
-- **Depth 2**: ~10 seconds
-  - Generates ~128 candidates  
-  - Reduces to ~45-50 unique expressions after Lean normalization
-  - This ~60% reduction demonstrates the power of canonicalization!
-  
-- **Depth 3**: ~30-60 seconds
-  - Generates thousands of candidates
-  - Reduces to ~200-500 unique expressions  
-  - First valid solutions typically found here
-  
-- **Depth 4**: ~2-5 minutes
-  - Generates tens of thousands of candidates
-  - Reduces to ~2000-5000 unique expressions
-  - Finds all 7 paper solutions for force-free problem
-
-### Interpreting Results
-
-The output shows:
-- Total expressions generated
-- Valid solutions found (satisfy the PDE)
-- Known solutions matched (from literature)
-- Expression counts by depth
-- Database location for detailed inspection
-
-
 Example output:
 ```
 PARALLEL DISCOVERY COMPLETE - RUN ID: paper_repro_20250908_043828_792d8a02
