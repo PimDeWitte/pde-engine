@@ -188,11 +188,6 @@ python general_method_paper_reproduction.py --problem force_free --max-depth 4
 # Total expressions generated: ~336
 # Valid foliations found: ~107
 # Known solutions found: 7
-
-# Note: The monitoring may show "generated 0" due to a display bug,
-# but expressions are being generated. Check the database directly:
-# sqlite3 problems/force_free/outputs/parallel_runs_*.db \
-#   "SELECT COUNT(*) FROM expressions_*"
 ```
 
 ### Adding Your Own Problem
