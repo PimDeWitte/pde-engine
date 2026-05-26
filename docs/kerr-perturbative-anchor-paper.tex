@@ -59,9 +59,10 @@ We report a reproducible admission gate for candidate analytic solutions of a
 closed Kerr force-free split-monopole Grad-Shafranov target.  The gate uses a
 bounded pde-engine expression run, strict symbolic prechecks, a direct nonlinear
 residual check, targeted finite-spin correction grammars, and a leading-order
-coefficient solve.  The finite-spin search result is negative: 766 candidate
-inputs were scanned, 456 targeted finite-spin correction candidates passed the
-strict prechecks before the full residual, and zero candidates had exact-zero
+coefficient solve.  The finite-spin search result is negative: 878 candidate
+inputs were scanned, including 456 targeted finite-spin correction candidates
+and 112 Kerr-metric-resummed correction candidates that passed the strict
+prechecks before the full residual, and zero candidates had exact-zero
 nonlinear residual.  A 48-coefficient leading-order ansatz produced 66
 polynomial equations and SymPy returned \code{EmptySet}.  Separately, the same
 gate recognizes the known slow-rotation Blandford-Znajek perturbative
@@ -210,6 +211,24 @@ using a smaller 12-function sub-basis and unordered pairs.  This produced 264
 two-term candidates.  All 456 targeted finite-spin corrections passed the
 strict prechecks before the full residual.  None passed the full residual.
 
+The follow-up search added a Kerr-metric-resummed screen.  It preserves the
+same $a\to0$ split-monopole anchor but permits finite-spin denominators built
+from the metric factors
+\begin{equation}
+  \Sigma = r^2+a^2x^2,\qquad
+  \Delta = r^2-2Mr+a^2,\qquad
+  A = (r^2+a^2)^2-\Delta a^2(1-x^2).
+\end{equation}
+The screen has the form
+\begin{equation}
+  \Psi = 1-x+a^2 c\,m(r,x,a,M),
+  \qquad
+  c\in\left\{-1,-\frac12,\frac12,1\right\},
+\end{equation}
+with four anchor-preserving angular factors and seven metric radial/denominator
+factors.  This generated 112 additional candidates.  All 112 passed the strict
+prechecks before the full residual.  None passed the full residual.
+
 \begin{center}
 \resizebox{\linewidth}{!}{%
 \begin{tikzpicture}[
@@ -222,7 +241,7 @@ strict prechecks before the full residual.  None passed the full residual.
   \node[piece] (anchor) {$1-x$\\small-spin anchor};
   \node[piece, right=of anchor] (corr) {$a^2$ correction\\one-term or two-term basis};
   \node[piece, right=of corr] (gate) {$\Residual[\Psi]$\\closed Kerr residual};
-  \node[piece, right=of gate, draw=red, fill=red!6] (out) {0 / 456\\exact-zero residuals};
+  \node[piece, right=of gate, draw=red, fill=red!6] (out) {0 / 568\\exact-zero residuals};
   \draw[arrow] (anchor) -- (corr);
   \draw[arrow] (corr) -- (gate);
   \draw[arrow] (gate) -- (out);
@@ -309,6 +328,7 @@ engine generation & implemented & 306 generated rows loaded for the strict gate.
 strict prechecks & implemented & candidate variables, finite denominators, finite values, small-spin anchor, and exact-anchor rejection recorded per row. \\
 full nonlinear residual & implemented negative & 0 exact-zero residual rows; admitted count 0. \\
 bounded correction screens & implemented negative & 192 one-term and 264 two-term corrections; 456 passed strict prechecks; 0 passed the full residual. \\
+metric-resummed screen & implemented negative & 112 Kerr-metric-denominator corrections; 112 passed strict prechecks; 0 passed the full residual. \\
 coefficient solve & no leading-order solution & 66 equations, 48 unknowns, matrix shape [66,48], \code{EmptySet}. \\
 literature perturbative anchor & passes leading-order anchor & Tanabe-Nagataki/Pan-Yu \Order{a^2} correction gives exact-zero leading residual. \\
 equivalence filters & partial & exact known anchors rejected; broad gauge/reparameterization equivalence remains future work. \\

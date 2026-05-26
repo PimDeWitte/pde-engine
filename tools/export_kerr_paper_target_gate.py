@@ -90,6 +90,30 @@ PAIR_CORRECTION_RADIAL_FACTORS = [
     "1/(r - 2*M)",
 ]
 
+METRIC_RESUMMED_CORRECTION_COEFFICIENTS = [
+    sp.Integer(-1),
+    sp.Rational(-1, 2),
+    sp.Rational(1, 2),
+    sp.Integer(1),
+]
+
+METRIC_RESUMMED_ANGULAR_FACTORS = [
+    "x*(1-x**2)",
+    "(1-x**2)**2",
+    "x**2*(1-x**2)",
+    "x*(1-x**2)**2",
+]
+
+METRIC_RESUMMED_RADIAL_FACTORS = [
+    "1/r",
+    "1/r**2",
+    "1/(r - 2*M)",
+    "r/(r**2 + a**2*x**2)",
+    "r**2/(r**2 + a**2*x**2)",
+    "(-2*M*r + a**2 + r**2)/r**3",
+    "r**2/((r**2 + a**2)**2 - (-2*M*r + a**2 + r**2)*a**2*(1 - x**2))",
+]
+
 COEFFICIENT_SOLVE_SERIES_ORDER = 4
 LITERATURE_ANCHOR_SERIES_ORDER = 4
 
@@ -205,6 +229,14 @@ def pair_correction_basis() -> list[tuple[str, sp.Basic]]:
     return _cartesian_basis(PAIR_CORRECTION_ANGULAR_FACTORS, PAIR_CORRECTION_RADIAL_FACTORS)
 
 
+def metric_resummed_correction_basis() -> list[tuple[str, sp.Basic]]:
+    """Finite-spin corrections using Kerr metric denominators."""
+    return _cartesian_basis(
+        METRIC_RESUMMED_ANGULAR_FACTORS,
+        METRIC_RESUMMED_RADIAL_FACTORS,
+    )
+
+
 def _cartesian_basis(
     angular_factors: list[str],
     radial_factors: list[str],
@@ -281,6 +313,34 @@ def generate_anchor_pair_correction_rows() -> list[CandidateRow]:
                         f"right_coeff={sp.sstr(right_coeff)}, right_basis={right_name}"
                     ),
                     source="anchor_pair_correction_grammar",
+                )
+            )
+    return rows
+
+
+def generate_metric_resummed_correction_rows() -> list[CandidateRow]:
+    locals_map = sympify_locals()
+    a = locals_map["a"]
+    x = locals_map["x"]
+    rows: list[CandidateRow] = []
+    seen: set[str] = set()
+    for basis_name, basis_expr in metric_resummed_correction_basis():
+        for coeff in METRIC_RESUMMED_CORRECTION_COEFFICIENTS:
+            expr = sp.factor(1 - x + a**2 * coeff * basis_expr)
+            expr_str = sp.sstr(expr)
+            if expr_str in seen:
+                continue
+            seen.add(expr_str)
+            rows.append(
+                CandidateRow(
+                    row_id=None,
+                    expression=expr_str,
+                    depth=None,
+                    validation_reason=(
+                        "metric-resummed finite-spin correction grammar: "
+                        f"coeff={sp.sstr(coeff)}, basis={basis_name}"
+                    ),
+                    source="metric_resummed_anchor_correction_grammar",
                 )
             )
     return rows
@@ -836,6 +896,7 @@ def criteria_status_matrix(
     run_summary: dict[str, Any],
     correction_rows: list[CandidateRow],
     pair_correction_rows: list[CandidateRow],
+    metric_resummed_rows: list[CandidateRow],
     coefficient_solve_metadata: dict[str, Any],
     literature_anchor_metadata: dict[str, Any],
     admitted_count: int,
@@ -846,6 +907,11 @@ def criteria_status_matrix(
     pair_correction_assessments = [
         item for item in assessments if item["source"] == "anchor_pair_correction_grammar"
     ]
+    metric_resummed_assessments = [
+        item
+        for item in assessments
+        if item["source"] == "metric_resummed_anchor_correction_grammar"
+    ]
     correction_prechecks = [
         item
         for item in correction_assessments
@@ -855,6 +921,14 @@ def criteria_status_matrix(
         item
         for item in pair_correction_assessments
         if item["strict_prechecks"]["passed_before_full_target_residual"]
+    ]
+    metric_resummed_prechecks = [
+        item
+        for item in metric_resummed_assessments
+        if item["strict_prechecks"]["passed_before_full_target_residual"]
+    ]
+    metric_resummed_exact = [
+        item for item in metric_resummed_assessments if item["full_target"]["exact_zero"]
     ]
     full_exact_zero = [
         item
@@ -895,6 +969,16 @@ def criteria_status_matrix(
                 f"{len(correction_rows)} one-term and {len(pair_correction_rows)} two-term rows generated; "
                 f"{len(correction_prechecks) + len(pair_correction_prechecks)} pass strict prechecks; "
                 f"{len(full_exact_zero)} exact-zero residual rows."
+            ),
+        },
+        {
+            "id": "metric_resummed_correction_screen",
+            "criterion": "The split-monopole anchor is tested with finite-spin corrections using Kerr metric denominators.",
+            "status": "implemented_negative" if metric_resummed_rows else "not_run",
+            "evidence": (
+                f"{len(metric_resummed_rows)} metric-resummed rows generated; "
+                f"{len(metric_resummed_prechecks)} pass strict prechecks; "
+                f"{len(metric_resummed_exact)} exact-zero residual rows."
             ),
         },
         {
@@ -1028,6 +1112,7 @@ def build_artifact(
     include_probes: bool,
     include_corrections: bool,
     include_pair_corrections: bool,
+    include_metric_resummed_corrections: bool,
     include_coefficient_solve: bool,
     include_literature_anchor: bool,
 ) -> dict[str, Any]:
@@ -1040,6 +1125,10 @@ def build_artifact(
     if include_pair_corrections:
         pair_correction_rows = generate_anchor_pair_correction_rows()
         candidate_rows.extend(pair_correction_rows)
+    metric_resummed_rows: list[CandidateRow] = []
+    if include_metric_resummed_corrections:
+        metric_resummed_rows = generate_metric_resummed_correction_rows()
+        candidate_rows.extend(metric_resummed_rows)
     coefficient_solve_rows: list[CandidateRow] = []
     coefficient_solve_metadata: dict[str, Any] = {
         "enabled": False,
@@ -1068,6 +1157,7 @@ def build_artifact(
         run_summary,
         correction_rows,
         pair_correction_rows,
+        metric_resummed_rows,
         coefficient_solve_metadata,
         literature_anchor_metadata,
         len(admitted),
@@ -1114,6 +1204,19 @@ def build_artifact(
                 "basis_construction": "unordered pairs from the cartesian product basis",
                 "generated_candidates": len(pair_correction_rows),
             },
+            "metric_resummed_search_grammar": {
+                "enabled": include_metric_resummed_corrections,
+                "form": "Psi = 1 - x + a**2 * c * metric_basis(r,x,a,M)",
+                "coefficients": [sp.sstr(item) for item in METRIC_RESUMMED_CORRECTION_COEFFICIENTS],
+                "angular_factors": METRIC_RESUMMED_ANGULAR_FACTORS,
+                "radial_factors": METRIC_RESUMMED_RADIAL_FACTORS,
+                "basis": [name for name, _ in metric_resummed_correction_basis()],
+                "basis_construction": (
+                    "cartesian product of anchor-preserving angular factors "
+                    "and Kerr metric radial/denominator factors"
+                ),
+                "generated_candidates": len(metric_resummed_rows),
+            },
             "coefficient_solve_screen": coefficient_solve_metadata,
             "literature_slow_rotation_anchor_screen": literature_anchor_metadata,
         },
@@ -1152,6 +1255,7 @@ def markdown_from_artifact(artifact: dict[str, Any]) -> str:
 
     grammar = artifact["gate"]["targeted_search_grammar"]
     pair_grammar = artifact["gate"]["two_term_search_grammar"]
+    metric_grammar = artifact["gate"]["metric_resummed_search_grammar"]
     coefficient_solve = artifact["gate"]["coefficient_solve_screen"]
     literature_anchor = artifact["gate"]["literature_slow_rotation_anchor_screen"]
     correction_assessments = [
@@ -1161,6 +1265,11 @@ def markdown_from_artifact(artifact: dict[str, Any]) -> str:
         item
         for item in artifact["assessments"]
         if item["source"] == "anchor_pair_correction_grammar"
+    ]
+    metric_resummed_assessments = [
+        item
+        for item in artifact["assessments"]
+        if item["source"] == "metric_resummed_anchor_correction_grammar"
     ]
     correction_prechecks = [
         item
@@ -1172,16 +1281,27 @@ def markdown_from_artifact(artifact: dict[str, Any]) -> str:
         for item in pair_correction_assessments
         if item["strict_prechecks"]["passed_before_full_target_residual"]
     ]
+    metric_resummed_prechecks = [
+        item
+        for item in metric_resummed_assessments
+        if item["strict_prechecks"]["passed_before_full_target_residual"]
+    ]
     correction_exact = [item for item in correction_assessments if item["full_target"]["exact_zero"]]
     pair_correction_exact = [
         item for item in pair_correction_assessments if item["full_target"]["exact_zero"]
     ]
+    metric_resummed_exact = [
+        item for item in metric_resummed_assessments if item["full_target"]["exact_zero"]
+    ]
     coeffs = ", ".join(grammar["coefficients"])
     pair_coeffs = ", ".join(pair_grammar["coefficients"])
+    metric_coeffs = ", ".join(metric_grammar["coefficients"])
     angular_lines = "\n".join(f"- `{item}`" for item in grammar["angular_factors"])
     radial_lines = "\n".join(f"- `{item}`" for item in grammar["radial_factors"])
     pair_angular_lines = "\n".join(f"- `{item}`" for item in pair_grammar["angular_factors"])
     pair_radial_lines = "\n".join(f"- `{item}`" for item in pair_grammar["radial_factors"])
+    metric_angular_lines = "\n".join(f"- `{item}`" for item in metric_grammar["angular_factors"])
+    metric_radial_lines = "\n".join(f"- `{item}`" for item in metric_grammar["radial_factors"])
     if coefficient_solve.get("enabled"):
         coefficient_section = f"""
 The gate then runs a leading-order coefficient solve over the full one-term
@@ -1261,6 +1381,27 @@ Two-term radial factors:
 This generated `{pair_grammar["generated_candidates"]}` two-term correction
 candidates. In this run, `{len(pair_correction_prechecks)}` passed strict
 prechecks before the full residual, and `{len(pair_correction_exact)}` had
+exact-zero full residual.
+
+The gate then adds a metric-resummed finite-spin correction screen:
+
+```text
+{metric_grammar["form"]}
+c in {{{metric_coeffs}}}
+metric_basis = anchor-preserving angular_factor * Kerr metric denominator factor
+```
+
+Metric-resummed angular factors:
+
+{metric_angular_lines}
+
+Metric-resummed radial/denominator factors:
+
+{metric_radial_lines}
+
+This generated `{metric_grammar["generated_candidates"]}` metric-resummed
+candidates. In this run, `{len(metric_resummed_prechecks)}` passed strict
+prechecks before the full residual, and `{len(metric_resummed_exact)}` had
 exact-zero full residual.
 {coefficient_section}
 {literature_anchor_section}
@@ -1374,6 +1515,11 @@ def parse_args() -> argparse.Namespace:
         help="Do not add the bounded two-term anchor-preserving correction grammar.",
     )
     parser.add_argument(
+        "--no-metric-resummed-corrections",
+        action="store_true",
+        help="Do not add the Kerr metric-resummed finite-spin correction grammar.",
+    )
+    parser.add_argument(
         "--no-coefficient-solve",
         action="store_true",
         help="Do not run the leading-order coefficient solve screen.",
@@ -1435,6 +1581,7 @@ def main() -> int:
         include_probes=args.include_probes,
         include_corrections=not args.no_corrections,
         include_pair_corrections=not args.no_pair_corrections,
+        include_metric_resummed_corrections=not args.no_metric_resummed_corrections,
         include_coefficient_solve=not args.no_coefficient_solve,
         include_literature_anchor=not args.no_literature_anchor,
     )

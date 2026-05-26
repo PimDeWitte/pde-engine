@@ -6,6 +6,9 @@ from tools.export_kerr_paper_target_gate import (
     CORRECTION_COEFFICIENTS,
     CORRECTION_RADIAL_FACTORS,
     FULL_TARGET_REJECTION,
+    METRIC_RESUMMED_ANGULAR_FACTORS,
+    METRIC_RESUMMED_CORRECTION_COEFFICIENTS,
+    METRIC_RESUMMED_RADIAL_FACTORS,
     PAIR_CORRECTION_ANGULAR_FACTORS,
     PAIR_CORRECTION_COEFFICIENTS,
     PAIR_CORRECTION_RADIAL_FACTORS,
@@ -16,7 +19,9 @@ from tools.export_kerr_paper_target_gate import (
     generate_anchor_pair_correction_rows,
     full_kerr_split_monopole_residual,
     generate_anchor_correction_rows,
+    generate_metric_resummed_correction_rows,
     literature_slow_rotation_anchor_metadata,
+    metric_resummed_correction_basis,
     pair_correction_basis,
     solve_leading_order_coefficient_rows,
     sympify_locals,
@@ -117,6 +122,37 @@ class KerrPaperTargetGateTest(unittest.TestCase):
                 {"a", "r", "x"}.issubset({str(symbol) for symbol in expr.free_symbols})
             )
 
+    def test_metric_resummed_correction_grammar_preserves_small_spin_anchor(self):
+        locals_map = sympify_locals()
+        a = locals_map["a"]
+        x = locals_map["x"]
+
+        rows = generate_metric_resummed_correction_rows()
+
+        self.assertEqual(
+            len(rows),
+            len(METRIC_RESUMMED_ANGULAR_FACTORS)
+            * len(METRIC_RESUMMED_RADIAL_FACTORS)
+            * len(METRIC_RESUMMED_CORRECTION_COEFFICIENTS),
+        )
+        self.assertEqual(
+            len(metric_resummed_correction_basis()),
+            len(METRIC_RESUMMED_ANGULAR_FACTORS) * len(METRIC_RESUMMED_RADIAL_FACTORS),
+        )
+        self.assertEqual(len({row.expression for row in rows}), len(rows))
+        for row in rows:
+            expr = sp.sympify(row.expression, locals=locals_map)
+            self.assertEqual(row.source, "metric_resummed_anchor_correction_grammar")
+            self.assertIn(
+                "metric-resummed finite-spin correction grammar:",
+                row.validation_reason or "",
+            )
+            self.assertEqual(sp.simplify(sp.limit(expr, a, 0) - (1 - x)), 0)
+            self.assertNotEqual(sp.simplify(expr - (1 - x)), 0)
+            self.assertTrue(
+                {"a", "r", "x"}.issubset({str(symbol) for symbol in expr.free_symbols})
+            )
+
     def test_leading_order_coefficient_solve_finds_no_one_term_solution(self):
         rows, metadata = solve_leading_order_coefficient_rows()
 
@@ -143,6 +179,7 @@ class KerrPaperTargetGateTest(unittest.TestCase):
             include_probes=True,
             include_corrections=False,
             include_pair_corrections=False,
+            include_metric_resummed_corrections=False,
             include_coefficient_solve=False,
             include_literature_anchor=False,
         )

@@ -98,6 +98,36 @@ candidates. In this run, `264` passed strict
 prechecks before the full residual, and `0` had
 exact-zero full residual.
 
+The gate then adds a metric-resummed finite-spin correction screen:
+
+```text
+Psi = 1 - x + a**2 * c * metric_basis(r,x,a,M)
+c in {-1, -1/2, 1/2, 1}
+metric_basis = anchor-preserving angular_factor * Kerr metric denominator factor
+```
+
+Metric-resummed angular factors:
+
+- `x*(1-x**2)`
+- `(1-x**2)**2`
+- `x**2*(1-x**2)`
+- `x*(1-x**2)**2`
+
+Metric-resummed radial/denominator factors:
+
+- `1/r`
+- `1/r**2`
+- `1/(r - 2*M)`
+- `r/(r**2 + a**2*x**2)`
+- `r**2/(r**2 + a**2*x**2)`
+- `(-2*M*r + a**2 + r**2)/r**3`
+- `r**2/((r**2 + a**2)**2 - (-2*M*r + a**2 + r**2)*a**2*(1 - x**2))`
+
+This generated `112` metric-resummed
+candidates. In this run, `112` passed strict
+prechecks before the full residual, and `0` had
+exact-zero full residual.
+
 The gate then runs a leading-order coefficient solve over the full one-term
 basis instead of only trying fixed scalar coefficients:
 
@@ -143,6 +173,7 @@ future work before a positive solution claim.
 | `strict_prechecks` | Candidate rows must depend on r, x, and a, be finite on rational safe points, meet the small-spin anchor, and not equal the known anchor. | implemented | Every assessment records strict_prechecks before the full nonlinear residual is evaluated. |
 | `full_residual` | Candidate rows must pass the closed split-monopole nonlinear Kerr Grad-Shafranov residual. | implemented_negative | 0 candidates have exact-zero full residual; admitted_count=0. |
 | `bounded_correction_screens` | The split-monopole anchor is tested with bounded one-term and two-term finite-spin correction grammars. | implemented_negative | 192 one-term and 264 two-term rows generated; 456 pass strict prechecks; 0 exact-zero residual rows. |
+| `metric_resummed_correction_screen` | The split-monopole anchor is tested with finite-spin corrections using Kerr metric denominators. | implemented_negative | 112 metric-resummed rows generated; 112 pass strict prechecks; 0 exact-zero residual rows. |
 | `coefficient_solve` | The one-term basis is tested with arbitrary leading-order coefficients, not only sampled constants. | no_leading_order_solution | 66 equations, 48 unknowns, matrix [66, 48], linsolve=EmptySet. |
 | `literature_perturbative_anchor` | The gate is calibrated against the known O(a**2) Blandford-Znajek split-monopole perturbative correction. | passes_leading_order_anchor | leading_residual_exact_zero=True; This is a perturbative O(a**2) literature anchor, not an exact finite-spin Kerr paper candidate. |
 | `equivalence_filters` | Candidate rows must not be equivalent to known solutions under broader gauge, scaling, coordinate, or reparameterization transformations. | partial_not_sufficient_for_positive_claim | The current gate rejects exact known anchors and trivial equivalents only; broader equivalence filters remain future work. |

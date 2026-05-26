@@ -410,10 +410,10 @@ def svg9_kerr_gate() -> str:
         text(330, 230, "axis / horizon regular", 11, INK, "start"),
         rect(552, 150, 176, 100, "#fff0f6", stroke=MAGENTA, rx=5),
         text(572, 174, "measured output", 12, MAGENTA, "start", weight="700"),
-        text(572, 194, "306 rows + 456 corrections", 11, INK, "start"),
+        text(572, 194, "306 rows + 568 corrections", 11, INK, "start"),
         text(572, 210, "48-coeff solve: EmptySet", 11, INK, "start"),
         text(572, 226, "BZ O(a^2) anchor: pass", 11, INK, "start"),
-        text(572, 242, "766 inputs, 0 admitted", 11, INK, "start"),
+        text(572, 242, "878 inputs, 0 admitted", 11, INK, "start"),
         arrow(226, 182, 310, 192),
         arrow(486, 192, 552, 188),
         rect(248, 306, 294, 46, "#fbf9f5", stroke=LINE, rx=5),
@@ -479,7 +479,7 @@ def html() -> str:
             9,
             "Kerr paper-target gate",
             svg9_kerr_gate(),
-            "The next target uses the same measurement discipline in the negative direction. The bounded Kerr run generated 306 rows; the strict gate scans those rows, 456 targeted finite-spin corrections, and four probes against the closed split-monopole nonlinear Kerr Grad-Shafranov residual. It also solves the 48-coefficient leading-order ansatz and gets EmptySet, verifies the known O(a^2) Blandford-Znajek perturbative anchor, then emits no_candidate_yet because no finite-spin exact expression passes the criteria.",
+            "The next target uses the same measurement discipline in the negative direction. The bounded Kerr run generated 306 rows; the strict gate scans those rows, 456 targeted finite-spin corrections, 112 Kerr-metric-resummed corrections, and four probes against the closed split-monopole nonlinear Kerr Grad-Shafranov residual. It also solves the 48-coefficient leading-order ansatz and gets EmptySet, verifies the known O(a^2) Blandford-Znajek perturbative anchor, then emits no_candidate_yet because no finite-spin exact expression passes the criteria.",
         ),
     ]
 
@@ -690,7 +690,10 @@ T = u_z*d_rho - u_rho*d_z</pre>
     coefficients to generate <code>264</code> more candidates.  All
     <code>456</code> finite-spin correction candidates pass the cheap strict
     prechecks before the full residual, and all <code>456</code> fail exact-zero
-    residual.
+    residual.  The follow-up metric-resummed screen adds <code>112</code>
+    Kerr-denominator candidates using <code>Sigma</code>, <code>Delta</code>,
+    and the light-cylinder metric block; all <code>112</code> pass strict
+    prechecks and all <code>112</code> fail exact-zero residual.
   </p>
   <p>
     The stricter screen is not a larger fixed-coefficient search.  It solves the

@@ -140,10 +140,10 @@ python3 tools/export_kerr_paper_target_gate.py \
 The result is `no_candidate_yet`: `306` generated rows, `306` completed
 validations, all `306` generated expressions scanned by the full target gate,
 `192` bounded one-term finite-spin correction candidates, `264` bounded
-two-term correction candidates, four additional probes, a leading-order
-coefficient solve over the full one-term basis, and `0` admitted paper
-candidates across `766` total candidate inputs. The one-term targeted grammar
-is:
+two-term correction candidates, `112` Kerr-metric-resummed finite-spin
+correction candidates, four additional probes, a leading-order coefficient
+solve over the full one-term basis, and `0` admitted paper candidates across
+`878` total candidate inputs. The one-term targeted grammar is:
 
 ```text
 Psi = 1 - x + a**2*c*basis(r,x)
@@ -161,6 +161,9 @@ residual and then fail exact-zero residual. The two-term screen uses
 `Psi = 1 - x + a**2*(c1*basis_i(r,x) + c2*basis_j(r,x))` with
 `c1,c2 in {-1,1}`, a 12-function sub-basis, and produces `264` candidates.
 All `264` pass the strict prechecks before the full residual and then fail
+exact-zero residual. The metric-resummed screen uses Kerr denominator factors
+from `Sigma`, `Delta`, and the light-cylinder metric block; all `112` generated
+rows pass the strict prechecks before the full residual and then fail
 exact-zero residual. The gate also probes `1 - x`, `x`,
 `1/(1 - 1)`, and `1 - x + a**2*r*x`. These are rejected respectively as known
 anchors, undefined expressions, or finite-spin anchor-like expressions whose
@@ -253,18 +256,18 @@ measurement comes out.
 Artifact hashes:
 
 ```text
-d992821aae6d3bd0d56cf565ef972fbf1d2327217d8ad3e149db1bc1024e4fba  docs/lagra-force-free-adapter-paper.html
-9c6587e617de2e5e189d4fc3f174ffa46fa47f26b0a342c274b9276d8c364cb1  docs/lagra-force-free-adapter-paper.pdf
-dee917615ba99060e29970219c4f8726929f3c296ab6d5acde0da819b993c89a  tools/render_lagra_force_free_adapter_paper.py
+91ce21986e55bc05e8c54f3679cd74f2de2118dfad0f2cebdc52fb4fc149f128  docs/lagra-force-free-adapter-paper.html
+e74b8f079a3ee69bb2f44b8a293bb0fdaf31a7d603a464dbca73164fa0720055  docs/lagra-force-free-adapter-paper.pdf
+5ec645933e0e9e349ec7b6c064a2316ddfebd07302be99bf1e00dd8e46529770  tools/render_lagra_force_free_adapter_paper.py
 f67202596b8fe94c85b6ca9ebba02267a7891ef6929add75bf0a0b5f73f67d6c  docs/force-free-novel-discoveries.json
 b6073e74d079d19d7183101f5a21770064e0f3ea450fd257c803afc9e2cd301c  docs/force-free-novel-discoveries.md
 cd5999772df7b0e2a06d10831f9863ddb51ea5ecca5276e314eedc6d76517b41  tools/export_force_free_novel_discoveries.py
 024919b59a15aca96c17da99f1522097633715e072a88f9bd4e494ef463bce0b  docs/discovery-process-and-next-target.md
-3c03c4114ca86268bd213aa71ee0e41be023bdd73201986a5b4bcfb1154679f8  docs/kerr-paper-target-gate.json
-ba389f6999d42c79e6db15956d3a25ab6a5e4dba3324714cbe6a9a2a4134fb3f  docs/kerr-paper-target-gate.md
-49ccd16d62833a935e530a7b3b00c2e663cdb512f69c0686eafae52c655f93b6  docs/kerr-perturbative-anchor-paper.tex
-27697e75c801c5c59474c0a805e54e8f57447db5ff9b2fbedda65556166fcc19  docs/kerr-perturbative-anchor-paper.pdf
-b06927bdb7165c5b076d5440189b3fb8dadfd35b807f5bee0827804b429dd8be  tools/export_kerr_paper_target_gate.py
+d7f6f993d10122e1024debf74b49d42d5bd345036c8b8d259151156824eb918a  docs/kerr-paper-target-gate.json
+d97945daa2c2303f82706a1d8138337cdd8ac074d97d3a5dc71f85580d9df8db  docs/kerr-paper-target-gate.md
+71709d284758e3a2754745bd93226be9c5c9329d7c86e504588a0112c4acaae2  docs/kerr-perturbative-anchor-paper.tex
+4c2c2c4db478306344f56a511121f0b6f8226aa7f6408a6eed9302d6c89262e1  docs/kerr-perturbative-anchor-paper.pdf
+d483c6f2bb79a76db224e9b08b00be3b4be81cabe9ac23bb30632e6cdefaf923  tools/export_kerr_paper_target_gate.py
 ```
 
 ## Reproduction commands
@@ -299,7 +302,7 @@ python3 tools/render_lagra_force_free_adapter_paper.py
 tectonic docs/kerr-perturbative-anchor-paper.tex --outdir docs
 
 pdftotext docs/kerr-perturbative-anchor-paper.pdf - | \
-  rg -n "A Reproducible Kerr|no_candidate_yet|Blandford-Znajek|Tanabe|Pan|Mahlmann|Camilloni|EmptySet|766|456|66|48"
+  rg -n "A Reproducible Kerr|no_candidate_yet|Blandford-Znajek|Tanabe|Pan|Mahlmann|Camilloni|EmptySet|878|568|456|112|66|48"
 ```
 
 From the Lagra checkout that produced the included paper:
