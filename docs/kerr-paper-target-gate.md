@@ -39,34 +39,46 @@ anchor is used only as an `a -> 0` limit, not as a finite-spin solution.
 
 ## Targeted finite-spin correction grammar
 
-The gate also appends a bounded correction grammar around the split-monopole
-anchor:
+The gate also appends an expanded bounded correction grammar around the
+split-monopole anchor:
 
 ```text
 Psi = 1 - x + a**2 * c * basis(r,x)
 c in {-1, -1/2, 1/2, 1}
+basis = angular_factor * radial_factor
 ```
 
-Basis functions:
+Angular factors:
 
-- `x*(1-x**2)/r`
-- `x*(1-x**2)/r**2`
-- `x*(1-x**2)/(r - 2*M)`
-- `(1-x**2)/r`
-- `(1-x**2)/r**2`
-- `x/r`
-- `x/r**2`
+- `1`
+- `x`
+- `x**2`
+- `1-x**2`
+- `x*(1-x**2)`
+- `(1-x**2)**2`
+- `x**2*(1-x**2)`
+- `x*(1-x**2)**2`
 
-This generated `28` correction candidates. In
-this run, `28` passed the strict prechecks before the
-full residual, and `0` had exact-zero full residual.
+Radial factors:
+
+- `1/r`
+- `1/r**2`
+- `1/r**3`
+- `1/(r - 2*M)`
+- `1/(r - 2*M)**2`
+- `1/(r*(r - 2*M))`
+
+This generated `192` correction candidates. In
+this run, `192` passed the strict prechecks before
+the full residual, and `0` had exact-zero full residual.
+The full Cartesian-product basis list is stored in the JSON artifact.
 
 
 ## Source run
 
-- Run id: `paper_repro_20260526_093939_80027ff6`
-- Database: `problems/kerr_magnetosphere/outputs/parallel_runs_paper_repro_20260526_093939_80027ff6.db`
-- Table: `expressions_paper_repro_20260526_093939_80027ff6`
+- Run id: `paper_repro_20260526_094823_46b75700`
+- Database: `problems/kerr_magnetosphere/outputs/parallel_runs_paper_repro_20260526_094823_46b75700.db`
+- Table: `expressions_paper_repro_20260526_094823_46b75700`
 - Command: `python3 general_method_paper_reproduction.py --problem kerr_magnetosphere --max-depth 2 --validators 1`
 - Bounds: `max_depth=2`, `validators=1`, `per_expression_validation_timeout_s=3.0`
 

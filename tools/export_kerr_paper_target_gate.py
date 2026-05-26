@@ -51,6 +51,26 @@ CORRECTION_COEFFICIENTS = [
     sp.Integer(1),
 ]
 
+CORRECTION_ANGULAR_FACTORS = [
+    "1",
+    "x",
+    "x**2",
+    "1-x**2",
+    "x*(1-x**2)",
+    "(1-x**2)**2",
+    "x**2*(1-x**2)",
+    "x*(1-x**2)**2",
+]
+
+CORRECTION_RADIAL_FACTORS = [
+    "1/r",
+    "1/r**2",
+    "1/r**3",
+    "1/(r - 2*M)",
+    "1/(r - 2*M)**2",
+    "1/(r*(r - 2*M))",
+]
+
 LITERATURE_SOURCES = [
     {
         "id": "mahlmann_cerda_duran_aloy_2018_kerr_gse_numerics",
@@ -128,20 +148,20 @@ class CandidateRow:
 
 
 def correction_basis() -> list[tuple[str, sp.Basic]]:
-    """Small bounded finite-spin corrections around the split-monopole anchor."""
+    """Bounded finite-spin corrections around the split-monopole anchor."""
     locals_map = sympify_locals()
-    r = locals_map["r"]
-    x = locals_map["x"]
-    m = locals_map["M"]
-    return [
-        ("x*(1-x**2)/r", x * (1 - x**2) / r),
-        ("x*(1-x**2)/r**2", x * (1 - x**2) / r**2),
-        ("x*(1-x**2)/(r - 2*M)", x * (1 - x**2) / (r - 2 * m)),
-        ("(1-x**2)/r", (1 - x**2) / r),
-        ("(1-x**2)/r**2", (1 - x**2) / r**2),
-        ("x/r", x / r),
-        ("x/r**2", x / r**2),
-    ]
+    basis: list[tuple[str, sp.Basic]] = []
+    for angular_name in CORRECTION_ANGULAR_FACTORS:
+        angular_expr = sp.sympify(angular_name, locals=locals_map)
+        for radial_name in CORRECTION_RADIAL_FACTORS:
+            radial_expr = sp.sympify(radial_name, locals=locals_map)
+            basis.append(
+                (
+                    f"({angular_name})*({radial_name})",
+                    sp.factor(angular_expr * radial_expr),
+                )
+            )
+    return basis
 
 
 def generate_anchor_correction_rows() -> list[CandidateRow]:
@@ -162,7 +182,10 @@ def generate_anchor_correction_rows() -> list[CandidateRow]:
                     row_id=None,
                     expression=expr_str,
                     depth=None,
-                    validation_reason=f"anchor correction grammar: coeff={sp.sstr(coeff)}, basis={basis_name}",
+                    validation_reason=(
+                        f"expanded anchor correction grammar: coeff={sp.sstr(coeff)}, "
+                        f"basis={basis_name}"
+                    ),
                     source="anchor_correction_grammar",
                 )
             )
@@ -696,7 +719,10 @@ def build_artifact(
                 "enabled": include_corrections,
                 "form": "Psi = 1 - x + a**2 * c * basis(r,x)",
                 "coefficients": [sp.sstr(item) for item in CORRECTION_COEFFICIENTS],
+                "angular_factors": CORRECTION_ANGULAR_FACTORS,
+                "radial_factors": CORRECTION_RADIAL_FACTORS,
                 "basis": [name for name, _ in correction_basis()],
+                "basis_construction": "cartesian product of angular_factors and radial_factors",
                 "generated_candidates": len(correction_rows),
             },
         },
@@ -744,24 +770,31 @@ def markdown_from_artifact(artifact: dict[str, Any]) -> str:
     ]
     correction_exact = [item for item in correction_assessments if item["full_target"]["exact_zero"]]
     coeffs = ", ".join(grammar["coefficients"])
-    basis_lines = "\n".join(f"- `{basis}`" for basis in grammar["basis"])
+    angular_lines = "\n".join(f"- `{item}`" for item in grammar["angular_factors"])
+    radial_lines = "\n".join(f"- `{item}`" for item in grammar["radial_factors"])
     grammar_section = f"""## Targeted finite-spin correction grammar
 
-The gate also appends a bounded correction grammar around the split-monopole
-anchor:
+The gate also appends an expanded bounded correction grammar around the
+split-monopole anchor:
 
 ```text
 {grammar["form"]}
 c in {{{coeffs}}}
+basis = angular_factor * radial_factor
 ```
 
-Basis functions:
+Angular factors:
 
-{basis_lines}
+{angular_lines}
+
+Radial factors:
+
+{radial_lines}
 
 This generated `{grammar["generated_candidates"]}` correction candidates. In
-this run, `{len(correction_prechecks)}` passed the strict prechecks before the
-full residual, and `{len(correction_exact)}` had exact-zero full residual.
+this run, `{len(correction_prechecks)}` passed the strict prechecks before
+the full residual, and `{len(correction_exact)}` had exact-zero full residual.
+The full Cartesian-product basis list is stored in the JSON artifact.
 """
 
     rows = []

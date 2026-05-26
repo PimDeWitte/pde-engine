@@ -138,24 +138,22 @@ python3 tools/export_kerr_paper_target_gate.py \
 
 The result is `no_candidate_yet`: `306` generated rows, `306` completed
 validations, all `306` generated expressions scanned by the full target gate,
-`28` bounded finite-spin correction candidates, four additional probes, and
-`0` admitted paper candidates. The targeted grammar is:
+`192` bounded finite-spin correction candidates, four additional probes, and
+`0` admitted paper candidates across `502` total candidate inputs. The targeted
+grammar is:
 
 ```text
 Psi = 1 - x + a**2*c*basis(r,x)
 c in {-1, -1/2, 1/2, 1}
-basis in {
-  x*(1-x**2)/r,
-  x*(1-x**2)/r**2,
-  x*(1-x**2)/(r - 2*M),
-  (1-x**2)/r,
-  (1-x**2)/r**2,
-  x/r,
-  x/r**2
-}
+basis = angular_factor * radial_factor
 ```
 
-All `28` correction candidates pass the strict prechecks before the full
+The angular factors are `1`, `x`, `x**2`, `1-x**2`, `x*(1-x**2)`,
+`(1-x**2)**2`, `x**2*(1-x**2)`, and `x*(1-x**2)**2`. The radial factors are
+`1/r`, `1/r**2`, `1/r**3`, `1/(r - 2*M)`, `1/(r - 2*M)**2`, and
+`1/(r*(r - 2*M))`.
+
+All `192` correction candidates pass the strict prechecks before the full
 residual and then fail exact-zero residual. The gate also probes `1 - x`, `x`,
 `1/(1 - 1)`, and `1 - x + a**2*r*x`. These are rejected respectively as known
 anchors, undefined expressions, or finite-spin anchor-like expressions whose
@@ -219,16 +217,16 @@ diagram states what enters Lagra and what measurement comes out.
 Artifact hashes:
 
 ```text
-e1679740b5bc21f710b14b9f5467885628f1edb42cc205c62f1ee05a35ccf637  docs/lagra-force-free-adapter-paper.html
-14689f82c54b1da4a5673659a8002b2bb7d72bfe800bd64e422dfb840682fdf4  docs/lagra-force-free-adapter-paper.pdf
-f2f60f1d1ab9fb0f16dc88871b301a4a4d4385948e5ced345c6586199931cfa0  tools/render_lagra_force_free_adapter_paper.py
+319b42aad872913727987fac631c16da2e2e64bbed3029e588500469f201f9c6  docs/lagra-force-free-adapter-paper.html
+fdb1ad6b5e805b9ce98023b0a14327da2860e196eb8a0b474739d195778b575f  docs/lagra-force-free-adapter-paper.pdf
+4fc6f842f2376fa012b302f1302b3e0e7996cb1faba18ca2e7d84c8b7b8aa3fa  tools/render_lagra_force_free_adapter_paper.py
 f67202596b8fe94c85b6ca9ebba02267a7891ef6929add75bf0a0b5f73f67d6c  docs/force-free-novel-discoveries.json
 b6073e74d079d19d7183101f5a21770064e0f3ea450fd257c803afc9e2cd301c  docs/force-free-novel-discoveries.md
 cd5999772df7b0e2a06d10831f9863ddb51ea5ecca5276e314eedc6d76517b41  tools/export_force_free_novel_discoveries.py
-a289a9019fd85f269c9700895bb5c4c12bcec7c6490a4c53d0938673978ee888  docs/discovery-process-and-next-target.md
-5c2ebe122566f40b1582341b5ca3e10ed59360d913aa9dbb0032ade959f28d47  docs/kerr-paper-target-gate.json
-5b8db0b6100226c53290e3a2dabbbdb769468e054686d77f8276638bf4d06e7a  docs/kerr-paper-target-gate.md
-a9bffe70e4fa327f2d74ea94745c892d22216bf57e2f45cbc2b53f7ace0acf41  tools/export_kerr_paper_target_gate.py
+de15db7c7f38c0202b17824671aaf5523db4b4a6dd928aa9d0100d422ea0f897  docs/discovery-process-and-next-target.md
+fa7d020e922dfa52b56ef74f65187e9487cd32d12139992270e662290378dd0a  docs/kerr-paper-target-gate.json
+711f1377453bca2d93a540349e9749627bf4da4f81c5c322f1b5a25003b502b9  docs/kerr-paper-target-gate.md
+93136f3ce83c016b3928a1827f7cff6593468fbef44fd253874d12cc258713ba  tools/export_kerr_paper_target_gate.py
 ```
 
 ## Reproduction commands

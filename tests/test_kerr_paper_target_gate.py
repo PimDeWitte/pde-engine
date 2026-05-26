@@ -2,7 +2,9 @@ import sympy as sp
 import unittest
 
 from tools.export_kerr_paper_target_gate import (
+    CORRECTION_ANGULAR_FACTORS,
     CORRECTION_COEFFICIENTS,
+    CORRECTION_RADIAL_FACTORS,
     FULL_TARGET_REJECTION,
     assess_expression,
     correction_basis,
@@ -59,13 +61,19 @@ class KerrPaperTargetGateTest(unittest.TestCase):
 
         self.assertEqual(
             len(rows),
-            len(correction_basis()) * len(CORRECTION_COEFFICIENTS),
+            len(CORRECTION_ANGULAR_FACTORS)
+            * len(CORRECTION_RADIAL_FACTORS)
+            * len(CORRECTION_COEFFICIENTS),
+        )
+        self.assertEqual(
+            len(correction_basis()),
+            len(CORRECTION_ANGULAR_FACTORS) * len(CORRECTION_RADIAL_FACTORS),
         )
         self.assertEqual(len({row.expression for row in rows}), len(rows))
         for row in rows:
             expr = sp.sympify(row.expression, locals=locals_map)
             self.assertEqual(row.source, "anchor_correction_grammar")
-            self.assertIn("anchor correction grammar:", row.validation_reason or "")
+            self.assertIn("expanded anchor correction grammar:", row.validation_reason or "")
             self.assertEqual(sp.simplify(sp.limit(expr, a, 0) - (1 - x)), 0)
             self.assertNotEqual(sp.simplify(expr - (1 - x)), 0)
             self.assertTrue(

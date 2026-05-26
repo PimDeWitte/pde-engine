@@ -170,22 +170,34 @@ python3 tools/export_kerr_paper_target_gate.py \
   --timeout-s 90 --validation-timeout-s 3
 ```
 
-It generated `306` engine rows, completed `306` validations, appended `28`
+It generated `306` engine rows, completed `306` validations, appended `192`
 bounded finite-spin correction candidates of the form
 `Psi = 1 - x + a**2*c*basis(r,x)`, scanned those plus four probes, and admitted
-`0` paper candidates. The correction grammar used
-`c in {-1, -1/2, 1/2, 1}` and the basis functions:
+`0` paper candidates across `502` total candidate inputs. The correction grammar used
+`c in {-1, -1/2, 1/2, 1}`, `8` angular factors, and `6` radial factors.
 
-- `x*(1-x**2)/r`
-- `x*(1-x**2)/r**2`
-- `x*(1-x**2)/(r - 2*M)`
-- `(1-x**2)/r`
-- `(1-x**2)/r**2`
-- `x/r`
-- `x/r**2`
+Angular factors:
 
-All `28` correction candidates pass the cheap strict prechecks and reach the
-full nonlinear residual; all `28` fail exact-zero residual. The probes
+- `1`
+- `x`
+- `x**2`
+- `1-x**2`
+- `x*(1-x**2)`
+- `(1-x**2)**2`
+- `x**2*(1-x**2)`
+- `x*(1-x**2)**2`
+
+Radial factors:
+
+- `1/r`
+- `1/r**2`
+- `1/r**3`
+- `1/(r - 2*M)`
+- `1/(r - 2*M)**2`
+- `1/(r*(r - 2*M))`
+
+All `192` correction candidates pass the cheap strict prechecks and reach the
+full nonlinear residual; all `192` fail exact-zero residual. The probes
 `1 - x`, `x`, `1/(1 - 1)`, and `1 - x + a**2*r*x` prove that the gate rejects
 known anchors and undefined expressions and evaluates the full nonlinear
 residual on an anchor-like finite-spin expression.
