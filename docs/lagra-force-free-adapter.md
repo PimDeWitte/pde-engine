@@ -174,6 +174,14 @@ and SymPy `linsolve` returns `EmptySet`. That rules out the entire one-term
 basis as a leading-order correction family rather than only the sampled
 coefficients.
 
+The artifact also carries a criteria-status matrix. It marks the literature
+target, bounded engine generation, strict prechecks, nonlinear residual screen,
+finite-spin correction screens, and coefficient solve as implemented. It marks
+broader equivalence filtering and global horizon/axis/light-surface regularity
+as not sufficient for a positive paper claim. This is deliberate: the current
+artifact is a negative gate and a target packet, not a claim that all positive
+paper criteria have been implemented.
+
 ## Literature sources
 
 - Geoffrey Compere, Samuel E. Gralla, Alexandru Lupsasca, "Force-Free
@@ -232,16 +240,16 @@ measurement comes out.
 Artifact hashes:
 
 ```text
-16bb78130cb390fa06a806232f81ec0fcbca163c46f7309e7e298e98516cd390  docs/lagra-force-free-adapter-paper.html
-5540351f16aba39a2951285d7e3b3af435ddec9f9ae8d3d378239ab56163c650  docs/lagra-force-free-adapter-paper.pdf
-af90404d69ae833728fdaeb450a25a01410f501a6a91d7fe3ce5ec8bd6d10675  tools/render_lagra_force_free_adapter_paper.py
+85badcaec38fccab164a477ec14275a5629e8aec70d78b241f5438579392cc3f  docs/lagra-force-free-adapter-paper.html
+200d0bf0985d65ca81579f6ae809e7c6f48d693ae7e6dcd317bdacb3ea28c8bc  docs/lagra-force-free-adapter-paper.pdf
+4dc3d29a1f186f5db5e08366c6843a2881eb1eddcd3b4c30974b0de070f88675  tools/render_lagra_force_free_adapter_paper.py
 f67202596b8fe94c85b6ca9ebba02267a7891ef6929add75bf0a0b5f73f67d6c  docs/force-free-novel-discoveries.json
 b6073e74d079d19d7183101f5a21770064e0f3ea450fd257c803afc9e2cd301c  docs/force-free-novel-discoveries.md
 cd5999772df7b0e2a06d10831f9863ddb51ea5ecca5276e314eedc6d76517b41  tools/export_force_free_novel_discoveries.py
-43f741d7a85a54989ee93facdd78677c68d6b546a2c19fefa865904ab708a110  docs/discovery-process-and-next-target.md
-ecffbc4df150e5dead02ee794ddc34e8ea227f7e690366efdc87ce448726f7c2  docs/kerr-paper-target-gate.json
-35a569bdfe10911c1697a96c10f06be6bb0c4d290a89d37e1fe53bdcd82e5ff3  docs/kerr-paper-target-gate.md
-7ee116c5d2123fc57d5ed2dff58be1535b2c87f050fad176812595bfff619fae  tools/export_kerr_paper_target_gate.py
+5b3e0bd4cedb1877c7c9347b1be18ae5ed1a8c1f3ec76c0fddc4dbeda6b08e61  docs/discovery-process-and-next-target.md
+d9f3396bf63c60df470886d0cf1dea30611b4d3ed7d7cbe3b0f3a57ef152c30c  docs/kerr-paper-target-gate.json
+c9d25aa13593754aa90ea2410bf3492952e50e346731b56edce00526649b61ff  docs/kerr-paper-target-gate.md
+b1f20d53d6b7bc65853872a4b6a07931c0b5fd41dc0f0c3abde8f1f76a869c65  tools/export_kerr_paper_target_gate.py
 ```
 
 ## Reproduction commands

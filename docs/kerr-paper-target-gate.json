@@ -70378,6 +70378,56 @@
     }
   ],
   "candidate_inputs_scanned": 766,
+  "criteria_status": [
+    {
+      "criterion": "Target equation and no-known-exact-solution boundary are cited from the literature.",
+      "evidence": "Mahlmann et al. 2018 supplies the Kerr GSE target; Camilloni et al. 2020 supplies the no-known-exact-analytic extreme-Kerr boundary.",
+      "id": "literature_target",
+      "status": "implemented"
+    },
+    {
+      "criterion": "The engine supplies a bounded expression table rather than hand-picked paper rows.",
+      "evidence": "306 generated expressions loaded for the full target gate.",
+      "id": "engine_generation",
+      "status": "implemented"
+    },
+    {
+      "criterion": "Candidate rows must depend on r, x, and a, be finite on rational safe points, meet the small-spin anchor, and not equal the known anchor.",
+      "evidence": "Every assessment records strict_prechecks before the full nonlinear residual is evaluated.",
+      "id": "strict_prechecks",
+      "status": "implemented"
+    },
+    {
+      "criterion": "Candidate rows must pass the closed split-monopole nonlinear Kerr Grad-Shafranov residual.",
+      "evidence": "0 candidates have exact-zero full residual; admitted_count=0.",
+      "id": "full_residual",
+      "status": "implemented_negative"
+    },
+    {
+      "criterion": "The split-monopole anchor is tested with bounded one-term and two-term finite-spin correction grammars.",
+      "evidence": "192 one-term and 264 two-term rows generated; 456 pass strict prechecks; 0 exact-zero residual rows.",
+      "id": "bounded_correction_screens",
+      "status": "implemented_negative"
+    },
+    {
+      "criterion": "The one-term basis is tested with arbitrary leading-order coefficients, not only sampled constants.",
+      "evidence": "66 equations, 48 unknowns, matrix [66, 48], linsolve=EmptySet.",
+      "id": "coefficient_solve",
+      "status": "no_leading_order_solution"
+    },
+    {
+      "criterion": "Candidate rows must not be equivalent to known solutions under broader gauge, scaling, coordinate, or reparameterization transformations.",
+      "evidence": "The current gate rejects exact known anchors and trivial equivalents only; broader equivalence filters remain future work.",
+      "id": "equivalence_filters",
+      "status": "partial_not_sufficient_for_positive_claim"
+    },
+    {
+      "criterion": "Candidate rows must pass horizon, axis, and light-surface regularity checks for a positive paper claim.",
+      "evidence": "The current gate checks symbolic finiteness and denominator safety on rational safe points; it does not prove global horizon/axis/light-surface regularity.",
+      "id": "global_regularities",
+      "status": "not_implemented_for_positive_claim"
+    }
+  ],
   "gate": {
     "coefficient_solve_screen": {
       "ansatz": "Psi = 1 - x + a**2 * sum_i c_i*basis_i(r,x)",

@@ -724,6 +724,97 @@ def assess_expression(expression: str, row: CandidateRow | None = None) -> dict[
     }
 
 
+def criteria_status_matrix(
+    assessments: list[dict[str, Any]],
+    run_summary: dict[str, Any],
+    correction_rows: list[CandidateRow],
+    pair_correction_rows: list[CandidateRow],
+    coefficient_solve_metadata: dict[str, Any],
+    admitted_count: int,
+) -> list[dict[str, Any]]:
+    correction_assessments = [
+        item for item in assessments if item["source"] == "anchor_correction_grammar"
+    ]
+    pair_correction_assessments = [
+        item for item in assessments if item["source"] == "anchor_pair_correction_grammar"
+    ]
+    correction_prechecks = [
+        item
+        for item in correction_assessments
+        if item["strict_prechecks"]["passed_before_full_target_residual"]
+    ]
+    pair_correction_prechecks = [
+        item
+        for item in pair_correction_assessments
+        if item["strict_prechecks"]["passed_before_full_target_residual"]
+    ]
+    full_exact_zero = [
+        item
+        for item in assessments
+        if item["strict_prechecks"]["passed_before_full_target_residual"]
+        and item["full_target"]["exact_zero"]
+    ]
+    return [
+        {
+            "id": "literature_target",
+            "criterion": "Target equation and no-known-exact-solution boundary are cited from the literature.",
+            "status": "implemented",
+            "evidence": "Mahlmann et al. 2018 supplies the Kerr GSE target; Camilloni et al. 2020 supplies the no-known-exact-analytic extreme-Kerr boundary.",
+        },
+        {
+            "id": "engine_generation",
+            "criterion": "The engine supplies a bounded expression table rather than hand-picked paper rows.",
+            "status": "implemented" if run_summary.get("rows_loaded_for_full_target_gate", 0) else "not_run",
+            "evidence": f"{run_summary.get('rows_loaded_for_full_target_gate', 0)} generated expressions loaded for the full target gate.",
+        },
+        {
+            "id": "strict_prechecks",
+            "criterion": "Candidate rows must depend on r, x, and a, be finite on rational safe points, meet the small-spin anchor, and not equal the known anchor.",
+            "status": "implemented",
+            "evidence": "Every assessment records strict_prechecks before the full nonlinear residual is evaluated.",
+        },
+        {
+            "id": "full_residual",
+            "criterion": "Candidate rows must pass the closed split-monopole nonlinear Kerr Grad-Shafranov residual.",
+            "status": "implemented_negative",
+            "evidence": f"{len(full_exact_zero)} candidates have exact-zero full residual; admitted_count={admitted_count}.",
+        },
+        {
+            "id": "bounded_correction_screens",
+            "criterion": "The split-monopole anchor is tested with bounded one-term and two-term finite-spin correction grammars.",
+            "status": "implemented_negative",
+            "evidence": (
+                f"{len(correction_rows)} one-term and {len(pair_correction_rows)} two-term rows generated; "
+                f"{len(correction_prechecks) + len(pair_correction_prechecks)} pass strict prechecks; "
+                f"{len(full_exact_zero)} exact-zero residual rows."
+            ),
+        },
+        {
+            "id": "coefficient_solve",
+            "criterion": "The one-term basis is tested with arbitrary leading-order coefficients, not only sampled constants.",
+            "status": coefficient_solve_metadata.get("status", "not_run"),
+            "evidence": (
+                f"{coefficient_solve_metadata.get('equation_count', 0)} equations, "
+                f"{coefficient_solve_metadata.get('unknown_count', 0)} unknowns, "
+                f"matrix {coefficient_solve_metadata.get('matrix_shape', [])}, "
+                f"linsolve={coefficient_solve_metadata.get('linsolve_result', '<not-run>')}."
+            ),
+        },
+        {
+            "id": "equivalence_filters",
+            "criterion": "Candidate rows must not be equivalent to known solutions under broader gauge, scaling, coordinate, or reparameterization transformations.",
+            "status": "partial_not_sufficient_for_positive_claim",
+            "evidence": "The current gate rejects exact known anchors and trivial equivalents only; broader equivalence filters remain future work.",
+        },
+        {
+            "id": "global_regularities",
+            "criterion": "Candidate rows must pass horizon, axis, and light-surface regularity checks for a positive paper claim.",
+            "status": "not_implemented_for_positive_claim",
+            "evidence": "The current gate checks symbolic finiteness and denominator safety on rational safe points; it does not prove global horizon/axis/light-surface regularity.",
+        },
+    ]
+
+
 def run_engine(max_depth: int, validators: int, timeout_s: float, validation_timeout_s: float) -> DbRun:
     command = [
         sys.executable,
@@ -847,12 +938,21 @@ def build_artifact(
     assessments = [assess_expression(row.expression, row) for row in candidate_rows]
     admitted = [item for item in assessments if item["paper_admissible"]]
     status = "candidate_found" if admitted else "no_candidate_yet"
+    criteria_status = criteria_status_matrix(
+        assessments,
+        run_summary,
+        correction_rows,
+        pair_correction_rows,
+        coefficient_solve_metadata,
+        len(admitted),
+    )
 
     return {
         "schema": "kerr_paper_target_gate_v1",
         "status": status,
         "paper_target": PAPER_TARGET,
         "literature_sources": LITERATURE_SOURCES,
+        "criteria_status": criteria_status,
         "gate": {
             "required_variables": sorted(REQUIRED_VARIABLES),
             "safe_points": [{key: sp.sstr(value) for key, value in point.items()} for point in SAFE_POINTS],
@@ -1032,6 +1132,17 @@ exact-zero full residual.
             )
         )
     table = "\n".join(rows)
+    criteria_rows = []
+    for item in artifact["criteria_status"]:
+        criteria_rows.append(
+            "| `{}` | {} | {} | {} |".format(
+                item["id"],
+                item["criterion"],
+                item["status"],
+                item["evidence"],
+            )
+        )
+    criteria_table = "\n".join(criteria_rows)
 
     return f"""# Kerr paper-target gate
 
@@ -1073,6 +1184,16 @@ The finite-spin paper target remains intentionally hard: the Schwarzschild
 anchor is used only as an `a -> 0` limit, not as a finite-spin solution.
 
 {grammar_section}
+
+## Criteria status matrix
+
+This matrix prevents the negative artifact from being overread. It states
+which parts of the paper criteria are implemented in this gate and which remain
+future work before a positive solution claim.
+
+| Criterion id | Criterion | Current status | Evidence |
+| --- | --- | --- | --- |
+{criteria_table}
 
 ## Source run
 

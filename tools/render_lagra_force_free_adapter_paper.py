@@ -700,6 +700,16 @@ T = u_z*d_rho - u_rho*d_z</pre>
     nonlinear residual, this ansatz family has no leading-order correction.
   </p>
   <p>
+    The JSON artifact now includes a criteria-status matrix.  It marks the
+    literature target, bounded engine generation, strict prechecks, nonlinear
+    residual screen, finite-spin correction screens, and leading-order
+    coefficient solve as implemented.  It deliberately marks broader
+    equivalence filters and global horizon/axis/light-surface regularity as
+    not sufficient for a positive paper claim.  That distinction matters: this
+    is a target packet and negative gate for a no-known-exact-solution problem,
+    not a positive exact Kerr solution.
+  </p>
+  <p>
     The literature motivation is explicitly separated from the current
     surrogate.  Mahlmann et al. frame static, axisymmetric, force-free Kerr
     magnetospheres around the relativistic Grad-Shafranov equation and numerical

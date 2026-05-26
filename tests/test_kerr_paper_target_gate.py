@@ -10,6 +10,7 @@ from tools.export_kerr_paper_target_gate import (
     PAIR_CORRECTION_COEFFICIENTS,
     PAIR_CORRECTION_RADIAL_FACTORS,
     assess_expression,
+    build_artifact,
     correction_basis,
     exact_zero,
     generate_anchor_pair_correction_rows,
@@ -126,6 +127,35 @@ class KerrPaperTargetGateTest(unittest.TestCase):
         self.assertEqual(metadata["matrix_shape"], [66, 48])
         self.assertEqual(metadata["linsolve_result"], "EmptySet")
         self.assertEqual(metadata["generated_candidates"], 0)
+
+    def test_artifact_records_implemented_and_missing_paper_criteria(self):
+        artifact = build_artifact(
+            None,
+            [],
+            {
+                "total_generated": 0,
+                "total_completed": 0,
+                "total_valid_rows": 0,
+                "known_solution_rows": 0,
+                "rows_loaded_for_full_target_gate": 0,
+            },
+            include_probes=True,
+            include_corrections=False,
+            include_pair_corrections=False,
+            include_coefficient_solve=False,
+        )
+        criteria = {item["id"]: item for item in artifact["criteria_status"]}
+
+        self.assertEqual(criteria["full_residual"]["status"], "implemented_negative")
+        self.assertEqual(
+            criteria["global_regularities"]["status"],
+            "not_implemented_for_positive_claim",
+        )
+        self.assertIn("rational safe points", criteria["global_regularities"]["evidence"])
+        self.assertEqual(
+            criteria["equivalence_filters"]["status"],
+            "partial_not_sufficient_for_positive_claim",
+        )
 
 
 if __name__ == "__main__":

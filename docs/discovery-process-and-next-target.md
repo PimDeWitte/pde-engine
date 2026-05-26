@@ -145,7 +145,10 @@ manifest and validator gate for the Kerr paper target:
 - denominator/singularity rejection before validation
 - nontriviality requirements: dependence on `r`, `x`, and `a`
 - small-spin or NHEK anchor condition from the target paper
-- axis/horizon/light-surface regularity checks
+- symbolic finiteness and denominator checks on rational safe points
+- an explicit criteria-status matrix that marks broader horizon/axis/light-surface
+  regularity and broader equivalence filtering as future work for any positive
+  claim
 - equivalence filters for constant shifts, scalings, and known anchors
 - JSON exporter with a `no_candidate_yet` result if no row meets all criteria
 - targeted finite-spin correction grammar around the split-monopole anchor

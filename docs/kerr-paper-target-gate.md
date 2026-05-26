@@ -115,6 +115,23 @@ returned `EmptySet`.  It therefore generated
 
 
 
+## Criteria status matrix
+
+This matrix prevents the negative artifact from being overread. It states
+which parts of the paper criteria are implemented in this gate and which remain
+future work before a positive solution claim.
+
+| Criterion id | Criterion | Current status | Evidence |
+| --- | --- | --- | --- |
+| `literature_target` | Target equation and no-known-exact-solution boundary are cited from the literature. | implemented | Mahlmann et al. 2018 supplies the Kerr GSE target; Camilloni et al. 2020 supplies the no-known-exact-analytic extreme-Kerr boundary. |
+| `engine_generation` | The engine supplies a bounded expression table rather than hand-picked paper rows. | implemented | 306 generated expressions loaded for the full target gate. |
+| `strict_prechecks` | Candidate rows must depend on r, x, and a, be finite on rational safe points, meet the small-spin anchor, and not equal the known anchor. | implemented | Every assessment records strict_prechecks before the full nonlinear residual is evaluated. |
+| `full_residual` | Candidate rows must pass the closed split-monopole nonlinear Kerr Grad-Shafranov residual. | implemented_negative | 0 candidates have exact-zero full residual; admitted_count=0. |
+| `bounded_correction_screens` | The split-monopole anchor is tested with bounded one-term and two-term finite-spin correction grammars. | implemented_negative | 192 one-term and 264 two-term rows generated; 456 pass strict prechecks; 0 exact-zero residual rows. |
+| `coefficient_solve` | The one-term basis is tested with arbitrary leading-order coefficients, not only sampled constants. | no_leading_order_solution | 66 equations, 48 unknowns, matrix [66, 48], linsolve=EmptySet. |
+| `equivalence_filters` | Candidate rows must not be equivalent to known solutions under broader gauge, scaling, coordinate, or reparameterization transformations. | partial_not_sufficient_for_positive_claim | The current gate rejects exact known anchors and trivial equivalents only; broader equivalence filters remain future work. |
+| `global_regularities` | Candidate rows must pass horizon, axis, and light-surface regularity checks for a positive paper claim. | not_implemented_for_positive_claim | The current gate checks symbolic finiteness and denominator safety on rational safe points; it does not prove global horizon/axis/light-surface regularity. |
+
 ## Source run
 
 - Run id: `paper_repro_20260526_104304_2b096bdc`
