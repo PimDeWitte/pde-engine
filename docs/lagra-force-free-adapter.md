@@ -30,6 +30,12 @@ adapter gate.
 Lagra used pde-engine as an external operator and registry boundary, not as an
 internal source of truth.
 
+The literature target is Geoffrey Compere, Samuel E. Gralla, and Alexandru
+Lupsasca, "Force-Free Foliations," Phys. Rev. D 94, 124012 (2016),
+arXiv:1606.06727, DOI:10.1103/PhysRevD.94.124012. The implemented equation is
+the stationary axisymmetric non-rotating force-free foliation determinant from
+Eq. 2.14 / Section 2.4 of that paper.
+
 The Lagra gate
 `experiments/proof-search/pde_engine_force_free_point_gate.py` imports the
 local pde-engine force-free symbols and loads the seven known force-free
@@ -38,6 +44,14 @@ force-free determinant
 
 ```text
 det([[L_T(A), L_T(B)], [L_T^2(A), L_T^2(B)]])
+```
+
+with
+
+```text
+A = u_rho_rho + u_z_z - u_rho/rho
+B = u_rho**2 + u_z**2
+T = u_z*d_rho - u_rho*d_z
 ```
 
 with its own exact SymPy adapter and records the result into its proof-search
@@ -90,6 +104,14 @@ Novelty is scoped to the repository registry: these rows are not identical to
 the seven registered `known_solutions`. This is not a literature-priority
 claim.
 
+## Literature sources
+
+- Geoffrey Compere, Samuel E. Gralla, Alexandru Lupsasca, "Force-Free
+  Foliations," Phys. Rev. D 94, 124012 (2016), arXiv:1606.06727,
+  DOI:10.1103/PhysRevD.94.124012.
+- arXiv: <https://arxiv.org/abs/1606.06727>
+- DOI: <https://doi.org/10.1103/PhysRevD.94.124012>
+
 ## Claim boundary
 
 This is a positive pde-engine adapter, exact symbolic determinant check, point
@@ -126,12 +148,12 @@ diagram states what enters Lagra and what measurement comes out.
 Artifact hashes:
 
 ```text
-276d62d04c25163713d93a6cf2cdee6411d75c8650f617a4d55c19cd7e208369  docs/lagra-force-free-adapter-paper.html
-41189d9b2a4000dafdf765cafa34e18264161642499b44765d7e5bdfde8b1a02  docs/lagra-force-free-adapter-paper.pdf
-80988342b7e719212599941e199a1a5d010937ab363b36d2fb2d240bbc991965  tools/render_lagra_force_free_adapter_paper.py
-7554ceef41776dfab13151ad4f891b8d8fee464aceec673479481d0db4a21488  docs/force-free-novel-discoveries.json
-b038e4da247b6d13c2aaa0565157bd6f0f967821a49c54585879088b4afed426  docs/force-free-novel-discoveries.md
-70975317bf0606f66c9e9b2c6c97f8dac3ff65623a491e08095174a1ecc6e7a7  tools/export_force_free_novel_discoveries.py
+7fc1466a8fd5b2f7c3be0bf4d381928c5cc532133a1cae9a0ac4a9b2bc11b6e7  docs/lagra-force-free-adapter-paper.html
+707ee4538ed9ea7851bdac446f015847c6e1196fb44a845455409d877a4622b3  docs/lagra-force-free-adapter-paper.pdf
+225cc5a17f1c169b2b76c875ba1679b9af6fc2e193397358dfa5f48999941736  tools/render_lagra_force_free_adapter_paper.py
+5bf9a4f1c16384eb689316ff0d03975dcd9bde9dd2194cdbf076310e80b0f3ba  docs/force-free-novel-discoveries.json
+50ec409796a4146505f8a6028834257cdbee351bae8b3f7a82d2a105de04ad60  docs/force-free-novel-discoveries.md
+82dfc82fc0c9cce79b5817535d9c07821736293048e6b209c8ad7ad3e95d8df8  tools/export_force_free_novel_discoveries.py
 7feafdfd3e9dee42cbeed306ca2bf62a55d49a1659c23d662de360a83da6f44b  pde_engine_force_free_point_gate.json
 e5a4c2b7ce63ba4044dcdfa5f0aa58758b3e2e5db92e12b8936e01770d3f99a1  pde_engine_reproduction_health_gate.json
 ```

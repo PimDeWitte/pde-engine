@@ -549,9 +549,13 @@ def html() -> str:
   <h2>2. What exactly is measured</h2>
   <p>
     For an expression <code>u(rho,z)</code>, the adapter evaluates the force-free
-    determinant
+    determinant from Compere, Gralla, and Lupsasca, <em>Force-Free
+    Foliations</em>, Phys. Rev. D 94, 124012 (2016), Eq. 2.14 / Section 2.4:
   </p>
   <pre>det([[L_T(A), L_T(B)], [L_T^2(A), L_T^2(B)]])</pre>
+  <pre>A = u_rho_rho + u_z_z - u_rho/rho
+B = u_rho**2 + u_z**2
+T = u_z*d_rho - u_rho*d_z</pre>
   <p>
     The strict measurements are:
   </p>
@@ -635,7 +639,21 @@ python3 experiments/proof-search/render_yukawa_finite_range_paper.py
 python3 experiments/proof-search/publication_readiness_audit.py
 python3 experiments/proof-search/proof_search_integrity_gate.py</pre>
 
-  <h2>6. Boundary</h2>
+  <h2>6. References</h2>
+  <p>
+    [1] Geoffrey Compere, Samuel E. Gralla, Alexandru Lupsasca,
+    <em>Force-Free Foliations</em>, Phys. Rev. D 94, 124012 (2016),
+    arXiv:1606.06727, DOI:10.1103/PhysRevD.94.124012.
+    The paper formulates force-free electrodynamics in terms of field-line
+    foliations; in the stationary axisymmetric case the object used here is a
+    foliation of the half-plane.
+  </p>
+  <p>
+    Links: <code>https://arxiv.org/abs/1606.06727</code> and
+    <code>https://doi.org/10.1103/PhysRevD.94.124012</code>.
+  </p>
+
+  <h2>7. Boundary</h2>
   <p class="claim">
     The adapter is a positive exact-symbolic and pointwise Lagra measurement of
     the pde-engine force-free boundary.  It is not a Lean theorem.  It is not a

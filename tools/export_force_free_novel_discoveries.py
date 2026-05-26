@@ -49,6 +49,35 @@ DISCOVERY_NAMES = {
     "rho/(1 - z)": ("geometric_ratio", "rational geometric-sum foliation"),
 }
 
+LITERATURE_SOURCES = [
+    {
+        "id": "compere_gralla_lupsasca_2016_force_free_foliations",
+        "citation": (
+            "Geoffrey Compere, Samuel E. Gralla, Alexandru Lupsasca, "
+            "Force-Free Foliations, Phys. Rev. D 94, 124012 (2016)"
+        ),
+        "arxiv": "1606.06727",
+        "arxiv_url": "https://arxiv.org/abs/1606.06727",
+        "doi": "10.1103/PhysRevD.94.124012",
+        "doi_url": "https://doi.org/10.1103/PhysRevD.94.124012",
+        "paper_equation": "Eq. 2.14",
+        "paper_section": "Section 2.4",
+    }
+]
+
+SOLUTION_TARGET = {
+    "name": "stationary axisymmetric non-rotating force-free foliation constraint",
+    "source": "compere_gralla_lupsasca_2016_force_free_foliations",
+    "equation": "det([[L_T(A), L_T(B)], [L_T^2(A), L_T^2(B)]]) = 0",
+    "definitions": {
+        "A": "u_rho_rho + u_z_z - u_rho/rho",
+        "B": "u_rho**2 + u_z**2",
+        "T": "u_z*d_rho - u_rho*d_z",
+    },
+    "coordinates": ["rho", "z"],
+    "domain_description": "half-plane coordinates used for stationary axisymmetric field-line foliations",
+}
+
 
 @dataclass(frozen=True)
 class DbRun:
@@ -281,6 +310,8 @@ def build_artifact(run: DbRun, rows: list[CandidateRow], run_summary: dict[str, 
             "Novel relative to the repository's seven registered force-free "
             "known_solutions. This is not a literature-priority claim."
         ),
+        "solution_target": SOLUTION_TARGET,
+        "literature_sources": LITERATURE_SOURCES,
         "problem": "force_free",
         "source_engine_run": {
             "run_id": run.run_id,
@@ -318,6 +349,26 @@ def markdown_from_artifact(artifact: dict[str, Any]) -> str:
 This artifact records pde-engine discoveries that are novel relative to the
 repository's seven registered force-free `known_solutions`. It is not a
 literature-priority claim.
+
+## What these solve
+
+The candidates solve the stationary axisymmetric non-rotating force-free
+foliation constraint from Compere, Gralla, and Lupsasca, *Force-Free
+Foliations*, Phys. Rev. D 94, 124012 (2016), arXiv:1606.06727, DOI
+10.1103/PhysRevD.94.124012. The implemented target is Eq. 2.14 / Section 2.4:
+
+```text
+det([[L_T(A), L_T(B)], [L_T^2(A), L_T^2(B)]]) = 0
+
+A = u_rho_rho + u_z_z - u_rho/rho
+B = u_rho**2 + u_z**2
+T = u_z*d_rho - u_rho*d_z
+```
+
+Source links:
+
+- https://arxiv.org/abs/1606.06727
+- https://doi.org/10.1103/PhysRevD.94.124012
 
 ## Source run
 

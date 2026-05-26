@@ -4,11 +4,31 @@ This artifact records pde-engine discoveries that are novel relative to the
 repository's seven registered force-free `known_solutions`. It is not a
 literature-priority claim.
 
+## What these solve
+
+The candidates solve the stationary axisymmetric non-rotating force-free
+foliation constraint from Compere, Gralla, and Lupsasca, *Force-Free
+Foliations*, Phys. Rev. D 94, 124012 (2016), arXiv:1606.06727, DOI
+10.1103/PhysRevD.94.124012. The implemented target is Eq. 2.14 / Section 2.4:
+
+```text
+det([[L_T(A), L_T(B)], [L_T^2(A), L_T^2(B)]]) = 0
+
+A = u_rho_rho + u_z_z - u_rho/rho
+B = u_rho**2 + u_z**2
+T = u_z*d_rho - u_rho*d_z
+```
+
+Source links:
+
+- https://arxiv.org/abs/1606.06727
+- https://doi.org/10.1103/PhysRevD.94.124012
+
 ## Source run
 
-- Run id: `paper_repro_20260526_071520_c7dcbaa2`
-- Database: `problems/force_free/outputs/parallel_runs_paper_repro_20260526_071520_c7dcbaa2.db`
-- Table: `expressions_paper_repro_20260526_071520_c7dcbaa2`
+- Run id: `paper_repro_20260526_083818_410ffa6c`
+- Database: `problems/force_free/outputs/parallel_runs_paper_repro_20260526_083818_410ffa6c.db`
+- Table: `expressions_paper_repro_20260526_083818_410ffa6c`
 - Command: `python3 general_method_paper_reproduction.py --problem force_free --max-depth 2 --validators 1`
 - Total generated: `112`
 - Completed validations: `112`
