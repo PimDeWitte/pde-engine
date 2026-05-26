@@ -1689,15 +1689,19 @@ class GeneralFoliationDiscovery:
         except Exception:
             pass
 
-        # Build problem-specific validator and sympify locals
+        # Build problem-specific validator and sympify locals. This worker runs
+        # in a spawned child process, so imports must be local and use the
+        # repository package names available in that process.
+        problem = None
         try:
-            from physics_agent.problems import load_problem
+            from problems import load_problem
             problem = load_problem(problem_name)
             validator = getattr(problem, 'validator', None)
         except Exception:
             validator = None
         if validator is None:
             # Fallback to precise foliation validator
+            from problems.force_free.validator import PreciseFoliationValidator
             validator = PreciseFoliationValidator(cache_db=f"cache_{run_id}_{os.getpid()}.db", use_lean=True, Omega=0)
 
         # Prepare locals for sympify (symbols, constants, and unary ops)
