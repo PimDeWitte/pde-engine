@@ -169,13 +169,13 @@ python3 tools/export_kerr_paper_target_gate.py \
   --timeout-s 90 --validation-timeout-s 3
 ```
 
-It generated `306` rows, completed `306` validations, found `0` valid rows in
-the current linear surrogate run, and admitted `0` paper candidates. It also
-probed `1 - x`, `x`, `1/(1 - 1)`, and `1 - x + a**2*r*x` to prove that the
-gate rejects known anchors, undefined expressions, and anchor-like expressions
-until the full nonlinear Kerr force-free Grad-Shafranov validator is
-implemented.
+It generated `306` rows, completed `306` validations, scanned all `306`
+generated expressions plus four probes, and admitted `0` paper candidates. It
+also probed `1 - x`, `x`, `1/(1 - 1)`, and `1 - x + a**2*r*x` to prove that
+the gate rejects known anchors and undefined expressions, and actually
+evaluates the full nonlinear residual on the only anchor-like expression that
+passes the cheap prechecks.
 
 The status is therefore **`no_candidate_yet`**. That is intentional. It is the
-right artifact for the next paper program until the real target equation,
-regularity conditions, and equivalence filters are encoded.
+right artifact for the next paper program: the residual gate now exists for
+the closed split-monopole target, but no generated row meets the full criteria.

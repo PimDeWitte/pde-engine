@@ -410,13 +410,13 @@ def svg9_kerr_gate() -> str:
         text(330, 230, "axis / horizon regular", 11, INK, "start"),
         rect(552, 150, 176, 64, "#fff0f6", stroke=MAGENTA, rx=5),
         text(572, 174, "measured output", 12, MAGENTA, "start", weight="700"),
-        text(572, 194, "306 rows, 0 valid", 11, INK, "start"),
-        text(572, 210, "4 probes, 0 admitted", 11, INK, "start"),
+        text(572, 194, "306 rows scanned", 11, INK, "start"),
+        text(572, 210, "310 inputs, 0 admitted", 11, INK, "start"),
         arrow(226, 182, 310, 192),
         arrow(486, 192, 552, 188),
         rect(248, 286, 294, 46, "#fbf9f5", stroke=LINE, rx=5),
         text(395, 308, "guardrail: surrogate rows cannot become Kerr paper claims", 12, INK, weight="700"),
-        text(395, 326, "full nonlinear target validator is still the blocker", 11, MUTED),
+        text(395, 326, "full residual exists; no expression passes it", 11, MUTED),
         arrow(505, 108, 430, 286, dash=True),
         "</svg>",
     ]
@@ -477,7 +477,7 @@ def html() -> str:
             9,
             "Kerr paper-target gate",
             svg9_kerr_gate(),
-            "The next target uses the same measurement discipline in the negative direction. The bounded Kerr surrogate search generated 306 rows and no valid rows; the strict gate also probes known anchors and a nontrivial anchor-like expression, then emits no_candidate_yet because the repository still lacks the full nonlinear Kerr force-free Grad-Shafranov validator.",
+            "The next target uses the same measurement discipline in the negative direction. The bounded Kerr run generated 306 rows; the strict gate scans all rows plus known-anchor and undefined-expression probes against the closed split-monopole nonlinear Kerr Grad-Shafranov residual, then emits no_candidate_yet because no expression passes the criteria.",
         ),
     ]
 
@@ -658,18 +658,21 @@ T = u_z*d_rho - u_rho*d_z</pre>
     The next target gate is now a concrete artifact, not only a paragraph:
     <code>docs/kerr-paper-target-gate.json</code> and
     <code>docs/kerr-paper-target-gate.md</code>.  It ran the current
-    <code>kerr_magnetosphere</code> engine harness at depth 2 and recorded
-    <code>306</code> generated rows, <code>306</code> completed validations,
-    <code>0</code> valid rows, and <code>0</code> admitted paper candidates.
+    <code>kerr_magnetosphere</code> engine harness at depth 2, recorded
+    <code>306</code> generated rows and <code>306</code> completed validations,
+    then scanned all <code>306</code> generated expressions plus four probes
+    against the full gate.  It admitted <code>0</code> paper candidates.
   </p>
   <p>
     This is the right failure mode.  The current repository target is only a
-    linear surrogate.  The strict gate requires dependence on <code>r</code>,
-    <code>x</code>, and <code>a</code>; finite denominators on rational safe
-    points; a small-spin anchor to <code>1 - x</code> or <code>x</code>; rejection of
-    those exact anchors as known; and, most importantly, a full nonlinear Kerr
-    force-free Grad-Shafranov residual.  Since that full target validator is not
-    implemented yet, the artifact status is <code>no_candidate_yet</code>.
+    linear surrogate for generation, while paper admission is now decided by
+    the closed split-monopole nonlinear residual from Mahlmann et al. Eq.
+    <code>GSLightCylinder</code>, rewritten with <code>x = cos(theta)</code>.  The
+    strict gate requires dependence on <code>r</code>, <code>x</code>, and
+    <code>a</code>; finite denominators on rational safe points; a small-spin
+    anchor to <code>1 - x</code> or <code>x</code>; rejection of those exact anchors
+    as known; and exact full-residual zero after the point checks.  No row meets
+    all of those criteria, so the artifact status is <code>no_candidate_yet</code>.
   </p>
   <p>
     The literature motivation is explicitly separated from the current
@@ -772,7 +775,8 @@ python3 experiments/proof-search/proof_search_integrity_gate.py</pre>
     vertical canonical forms and does not recover the seven known Compere
     solutions.  The Kerr gate is a separate <code>no_candidate_yet</code> artifact:
     it prevents the current linear surrogate from being promoted into the next
-    paper target before the full nonlinear validator exists.
+    paper target and now checks the closed split-monopole nonlinear residual
+    directly.
   </p>
 </main>
 </body>

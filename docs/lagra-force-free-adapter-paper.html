@@ -531,16 +531,16 @@
 <text x="330" y="230" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">axis / horizon regular</text>
 <rect x="552" y="150" width="176" height="64" rx="5" fill="#fff0f6" stroke="#c6246b"/>
 <text x="572" y="174" font-size="12" fill="#c6246b" text-anchor="start" font-weight="700" font-family="Georgia, serif">measured output</text>
-<text x="572" y="194" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">306 rows, 0 valid</text>
-<text x="572" y="210" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">4 probes, 0 admitted</text>
+<text x="572" y="194" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">306 rows scanned</text>
+<text x="572" y="210" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">310 inputs, 0 admitted</text>
 <line x1="226" y1="182" x2="310" y2="192" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
 <line x1="486" y1="192" x2="552" y2="188" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
 <rect x="248" y="286" width="294" height="46" rx="5" fill="#fbf9f5" stroke="#9aa5b1"/>
 <text x="395" y="308" font-size="12" fill="#243043" text-anchor="middle" font-weight="700" font-family="Georgia, serif">guardrail: surrogate rows cannot become Kerr paper claims</text>
-<text x="395" y="326" font-size="11" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">full nonlinear target validator is still the blocker</text>
+<text x="395" y="326" font-size="11" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">full residual exists; no expression passes it</text>
 <line x1="505" y1="108" x2="430" y2="286" stroke="#243043" stroke-width="1.8" stroke-dasharray="5 5" marker-end="url(#arrow)"/>
 </svg>
-      <figcaption><strong>Figure 9: Kerr paper-target gate.</strong> The next target uses the same measurement discipline in the negative direction. The bounded Kerr surrogate search generated 306 rows and no valid rows; the strict gate also probes known anchors and a nontrivial anchor-like expression, then emits no_candidate_yet because the repository still lacks the full nonlinear Kerr force-free Grad-Shafranov validator.</figcaption>
+      <figcaption><strong>Figure 9: Kerr paper-target gate.</strong> The next target uses the same measurement discipline in the negative direction. The bounded Kerr run generated 306 rows; the strict gate scans all rows plus known-anchor and undefined-expression probes against the closed split-monopole nonlinear Kerr Grad-Shafranov residual, then emits no_candidate_yet because no expression passes the criteria.</figcaption>
     </figure>
 
 
@@ -621,18 +621,21 @@ T = u_z*d_rho - u_rho*d_z</pre>
     The next target gate is now a concrete artifact, not only a paragraph:
     <code>docs/kerr-paper-target-gate.json</code> and
     <code>docs/kerr-paper-target-gate.md</code>.  It ran the current
-    <code>kerr_magnetosphere</code> engine harness at depth 2 and recorded
-    <code>306</code> generated rows, <code>306</code> completed validations,
-    <code>0</code> valid rows, and <code>0</code> admitted paper candidates.
+    <code>kerr_magnetosphere</code> engine harness at depth 2, recorded
+    <code>306</code> generated rows and <code>306</code> completed validations,
+    then scanned all <code>306</code> generated expressions plus four probes
+    against the full gate.  It admitted <code>0</code> paper candidates.
   </p>
   <p>
     This is the right failure mode.  The current repository target is only a
-    linear surrogate.  The strict gate requires dependence on <code>r</code>,
-    <code>x</code>, and <code>a</code>; finite denominators on rational safe
-    points; a small-spin anchor to <code>1 - x</code> or <code>x</code>; rejection of
-    those exact anchors as known; and, most importantly, a full nonlinear Kerr
-    force-free Grad-Shafranov residual.  Since that full target validator is not
-    implemented yet, the artifact status is <code>no_candidate_yet</code>.
+    linear surrogate for generation, while paper admission is now decided by
+    the closed split-monopole nonlinear residual from Mahlmann et al. Eq.
+    <code>GSLightCylinder</code>, rewritten with <code>x = cos(theta)</code>.  The
+    strict gate requires dependence on <code>r</code>, <code>x</code>, and
+    <code>a</code>; finite denominators on rational safe points; a small-spin
+    anchor to <code>1 - x</code> or <code>x</code>; rejection of those exact anchors
+    as known; and exact full-residual zero after the point checks.  No row meets
+    all of those criteria, so the artifact status is <code>no_candidate_yet</code>.
   </p>
   <p>
     The literature motivation is explicitly separated from the current
@@ -718,7 +721,8 @@ python3 experiments/proof-search/proof_search_integrity_gate.py</pre>
     vertical canonical forms and does not recover the seven known Compere
     solutions.  The Kerr gate is a separate <code>no_candidate_yet</code> artifact:
     it prevents the current linear surrogate from being promoted into the next
-    paper target before the full nonlinear validator exists.
+    paper target and now checks the closed split-monopole nonlinear residual
+    directly.
   </p>
 </main>
 </body>

@@ -33,8 +33,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 
-PAPER_TARGET_VALIDATOR_IMPLEMENTED = False
-TARGET_BLOCKER = "full nonlinear Kerr force-free Grad-Shafranov validator is not implemented"
+PAPER_TARGET_VALIDATOR_IMPLEMENTED = True
+FULL_TARGET_REJECTION = "full nonlinear Kerr split-monopole GSE residual is not exact zero"
 REQUIRED_VARIABLES = {"r", "x", "a"}
 
 DEFAULT_PROBES = [
@@ -78,16 +78,17 @@ LITERATURE_SOURCES = [
 
 PAPER_TARGET = {
     "name": "Kerr force-free magnetosphere / relativistic Grad-Shafranov paper target",
-    "status": "not_implemented_in_repo",
+    "status": "closed_split_monopole_residual_gate_implemented",
     "validator_implemented": PAPER_TARGET_VALIDATOR_IMPLEMENTED,
     "claim": (
-        "No pde-engine row is a paper candidate until the full nonlinear Kerr "
-        "force-free target equation, physical domain, and regularity gates are encoded."
+        "Rows are paper candidates only if they pass the nonlinear Kerr "
+        "force-free Grad-Shafranov residual with the fixed split-monopole "
+        "potential functions plus the domain, anchor, and singularity gates."
     ),
     "current_repo_problem": "kerr_magnetosphere",
     "current_repo_problem_boundary": (
-        "linear surrogate only; useful as a harness, not sufficient for the "
-        "paper target"
+        "linear surrogate used only to generate a bounded expression table; "
+        "paper admission is decided by the full split-monopole residual gate"
     ),
 }
 
@@ -152,6 +153,142 @@ def kerr_surrogate_lhs(u: sp.Basic) -> sp.Basic:
     delta = r**2 - 2 * m * r + a**2
     g = 1 - (2 * m * r) / (r**2 + a**2 * x**2)
     return sp.diff(g / (1 - x**2) * sp.diff(u, r), r) + sp.diff(g / delta * sp.diff(u, x), x)
+
+
+def full_kerr_split_monopole_residual(psi: sp.Basic) -> sp.Basic:
+    """Mahlmann et al. Eq. GSLightCylinder in x = cos(theta) coordinates.
+
+    The target is closed by the split-monopole potential functions used as the
+    paper's setup anchor:
+
+        omega(Psi) = (1/2) * a / (r_+**2 + a**2)
+        I(Psi) = -(1/2) * omega * Psi * (2 - Psi)
+
+    The GSE uses II' = I(Psi) dI/dPsi.  Since omega is fixed for this closed
+    gate, omega_,r and omega_,theta vanish.
+    """
+    locals_map = sympify_locals()
+    r = locals_map["r"]
+    x = locals_map["x"]
+    m = locals_map["M"]
+    a = locals_map["a"]
+    psi = psi.subs(
+        [
+            (s, {"r": r, "x": x, "M": m, "a": a}[str(s)])
+            for s in psi.free_symbols
+            if str(s) in {"r", "x", "M", "a"}
+        ]
+    )
+
+    s2 = 1 - x**2
+    sigma = r**2 + a**2 * x**2
+    delta = r**2 - 2 * m * r + a**2
+    big_a = (r**2 + a**2) ** 2 - delta * a**2 * s2
+    r_plus = m + sp.sqrt(m**2 - a**2)
+    omega = a / (2 * (r_plus**2 + a**2))
+    ii_prime = sp.Rational(1, 2) * omega**2 * psi * (2 - psi) * (1 - psi)
+
+    psi_r = sp.diff(psi, r)
+    psi_x = sp.diff(psi, x)
+    psi_rr = sp.diff(psi, r, 2)
+    psi_xx = sp.diff(psi, x, 2)
+
+    sigma_r = sp.diff(sigma, r)
+    big_a_r = sp.diff(big_a, r)
+
+    second_order_block = (
+        psi_rr
+        + (s2 / delta) * psi_xx
+        + (big_a_r / big_a - sigma_r / sigma) * psi_r
+    )
+    light_surface_factor = (
+        omega**2 * big_a * s2 / sigma
+        - 4 * m * a * r * omega * s2 / sigma
+        - 1
+        + 2 * m * r / sigma
+    )
+
+    term_r_metric = (big_a_r / big_a - sigma_r / sigma) * psi_r
+    term_a_theta = 8 * m * a**3 * r * omega * x * s2**2 / (sigma * big_a) * psi_x
+    term_sigma_theta = -4 * m * r * a**2 * x * s2 / (delta * sigma**2) * psi_x
+    theta_factor_times_psi_theta = (
+        -2 * x
+        + 2 * delta * a**2 * x * s2 / big_a
+        - 2 * a**2 * x * s2 / sigma
+    ) * psi_x
+    term_light_theta = (
+        theta_factor_times_psi_theta
+        * big_a
+        * omega
+        * (omega - 4 * m * a * r / big_a)
+        * s2
+        / (delta * sigma)
+    )
+    term_r_drag = -(
+        2 * m * r / sigma - 4 * m * a * r * omega * s2 / sigma
+    ) * (big_a_r / big_a - 1 / r) * psi_r
+
+    rhs = (
+        second_order_block * light_surface_factor
+        + term_r_metric
+        + term_a_theta
+        + term_sigma_theta
+        + term_light_theta
+        + term_r_drag
+    )
+    lhs = 4 * sigma / delta * ii_prime
+    return rhs - lhs
+
+
+def full_target_validation(expr: sp.Basic) -> dict[str, Any]:
+    try:
+        residual = full_kerr_split_monopole_residual(expr)
+    except Exception as exc:
+        return {
+            "residual_defined": False,
+            "exact_zero": False,
+            "point_checks": [],
+            "residual_simplified": f"<residual-error: {exc}>",
+            "reason": f"full target residual error: {exc}",
+        }
+
+    point_checks = []
+    all_points_zero = True
+    for point in SAFE_POINTS:
+        try:
+            value = sp.factor(sp.cancel(sp.together(residual.subs(_point_subs(point)))))
+            is_zero = value == 0 or sp.simplify(value) == 0
+            value_repr = sp.sstr(value)
+        except Exception as exc:
+            is_zero = False
+            value_repr = f"<point-error: {exc}>"
+        if not is_zero:
+            all_points_zero = False
+        point_checks.append(
+            {
+                "point": {key: sp.sstr(value) for key, value in point.items()},
+                "value": value_repr[:2000],
+                "zero": bool(is_zero),
+            }
+        )
+
+    exact = False
+    residual_repr = "<skipped; point checks nonzero>"
+    if all_points_zero:
+        try:
+            simplified = sp.factor(sp.cancel(sp.together(residual)))
+            exact = simplified == 0 or sp.simplify(simplified) == 0
+            residual_repr = sp.sstr(simplified)[:2000]
+        except Exception as exc:
+            residual_repr = f"<exact-simplify-error: {exc}>"
+
+    return {
+        "residual_defined": True,
+        "exact_zero": bool(exact),
+        "point_checks": point_checks,
+        "residual_simplified": residual_repr,
+        "reason": "valid" if exact else FULL_TARGET_REJECTION,
+    }
 
 
 def _point_subs(point: dict[str, sp.Basic]) -> dict[sp.Symbol, sp.Basic]:
@@ -255,44 +392,33 @@ def equivalent_to_known_anchor(expr: sp.Basic) -> bool:
 
 
 def surrogate_validation(expr: sp.Basic) -> dict[str, Any]:
-    from problems.kerr_magnetosphere.validator import KerrMagnetosphereValidator
-
     try:
         lhs = kerr_surrogate_lhs(expr)
-        lhs_simplified = sp.factor(sp.cancel(sp.together(lhs)))
-        independent_exact_zero = exact_zero(lhs)
+        point_checks = []
+        all_points_zero = True
+        for point in SAFE_POINTS:
+            value = sp.factor(sp.cancel(sp.together(lhs.subs(_point_subs(point)))))
+            is_zero = value == 0 or sp.simplify(value) == 0
+            if not is_zero:
+                all_points_zero = False
+            point_checks.append(
+                {
+                    "point": {key: sp.sstr(value) for key, value in point.items()},
+                    "value": sp.sstr(value)[:500],
+                    "zero": bool(is_zero),
+                }
+            )
     except Exception as exc:
-        lhs_simplified = f"<lhs-error: {exc}>"
-        independent_exact_zero = False
-
-    try:
-        locals_map = sympify_locals()
-        validator = KerrMagnetosphereValidator(
-            locals_map["r"],
-            locals_map["x"],
-            locals_map["M"],
-            locals_map["a"],
-            M_value=sp.Integer(1),
-            a_value=sp.Rational(1, 10),
-            use_lean=False,
-        )
-        is_valid, reason = validator.validate(
-            expr,
-            check_regularity=True,
-            fast_point_only=False,
-            lean_first=False,
-            defer_heavy_checks=False,
-            enforce_anchor=True,
-        )
-    except Exception as exc:
-        is_valid = False
-        reason = f"surrogate validator error: {exc}"
+        point_checks = []
+        all_points_zero = False
+        reason = f"linear surrogate diagnostic error: {exc}"
+    else:
+        reason = "linear surrogate point checks zero" if all_points_zero else "linear surrogate point checks nonzero"
 
     return {
-        "independent_linear_surrogate_exact_zero": bool(independent_exact_zero),
-        "linear_surrogate_lhs_simplified": sp.sstr(lhs_simplified)[:2000],
-        "repo_linear_surrogate_valid": bool(is_valid),
-        "repo_linear_surrogate_reason": reason,
+        "independent_linear_surrogate_point_zero": bool(all_points_zero),
+        "linear_surrogate_point_checks": point_checks,
+        "linear_surrogate_reason": reason,
     }
 
 
@@ -313,10 +439,16 @@ def assess_expression(expression: str, row: CandidateRow | None = None) -> dict[
     limit_matches_anchor = False
     anchor_equivalent = False
     surrogate = {
-        "independent_linear_surrogate_exact_zero": False,
-        "linear_surrogate_lhs_simplified": "<not-evaluated>",
-        "repo_linear_surrogate_valid": False,
-        "repo_linear_surrogate_reason": "not evaluated",
+        "independent_linear_surrogate_point_zero": False,
+        "linear_surrogate_point_checks": [],
+        "linear_surrogate_reason": "not evaluated",
+    }
+    full_target = {
+        "residual_defined": False,
+        "exact_zero": False,
+        "point_checks": [],
+        "residual_simplified": "<not-evaluated>",
+        "reason": "not evaluated",
     }
 
     if expr is not None:
@@ -337,18 +469,24 @@ def assess_expression(expression: str, row: CandidateRow | None = None) -> dict[
             rejections.append("equivalent to known small-spin anchor")
 
         surrogate = surrogate_validation(expr)
-        if not surrogate["repo_linear_surrogate_valid"]:
-            rejections.append("does not pass current repo linear surrogate heavy validation")
 
-    if not PAPER_TARGET_VALIDATOR_IMPLEMENTED:
-        rejections.append(TARGET_BLOCKER)
+        pre_target_rejections = list(rejections)
+        if not pre_target_rejections:
+            full_target = full_target_validation(expr)
+            if not full_target["exact_zero"]:
+                rejections.append(full_target["reason"])
+        else:
+            full_target["reason"] = "skipped because strict prechecks failed"
 
     deduped_rejections = list(dict.fromkeys(rejections))
     strict_prechecks_pass = not [
-        reason
-        for reason in deduped_rejections
-        if reason != TARGET_BLOCKER
+        reason for reason in deduped_rejections if reason != FULL_TARGET_REJECTION
     ]
+    paper_admissible = (
+        PAPER_TARGET_VALIDATOR_IMPLEMENTED
+        and strict_prechecks_pass
+        and bool(full_target["exact_zero"])
+    )
 
     return {
         "row_id": row.row_id if row else None,
@@ -361,13 +499,14 @@ def assess_expression(expression: str, row: CandidateRow | None = None) -> dict[
         "small_spin_anchor_matches": limit_matches_anchor,
         "equivalent_to_known_anchor": anchor_equivalent,
         "strict_prechecks": {
-            "passed_before_full_target_blocker": strict_prechecks_pass,
-            "rejections_before_full_target_blocker": [
-                reason for reason in deduped_rejections if reason != TARGET_BLOCKER
+            "passed_before_full_target_residual": strict_prechecks_pass,
+            "rejections_before_full_target_residual": [
+                reason for reason in deduped_rejections if reason != FULL_TARGET_REJECTION
             ],
         },
         "linear_surrogate": surrogate,
-        "paper_admissible": False if not PAPER_TARGET_VALIDATOR_IMPLEMENTED else strict_prechecks_pass,
+        "full_target": full_target,
+        "paper_admissible": paper_admissible,
         "paper_rejection_reasons": deduped_rejections,
         "engine_depth": row.depth if row else None,
         "engine_validation_reason": row.validation_reason if row else None,
@@ -437,7 +576,6 @@ def load_rows(run: DbRun, max_rows: int) -> tuple[list[CandidateRow], dict[str, 
             f"""
             SELECT id, expression, depth, validation_reason
             FROM {run.table_name}
-            WHERE is_valid = 1
             ORDER BY id
             LIMIT ?
             """,
@@ -459,7 +597,7 @@ def load_rows(run: DbRun, max_rows: int) -> tuple[list[CandidateRow], dict[str, 
         "total_completed": total_completed,
         "total_valid_rows": total_valid,
         "known_solution_rows": known_rows,
-        "valid_rows_loaded_for_strict_gate": len(rows),
+        "rows_loaded_for_full_target_gate": len(rows),
     }
 
 
@@ -491,7 +629,15 @@ def build_artifact(
             "requires_small_spin_anchor": "limit a -> 0 must equal 1 - x or x",
             "rejects_known_anchors": ["1 - x", "x"],
             "rejects_singular_denominators": True,
-            "requires_full_target_validator": True,
+            "full_target_residual": {
+                "source_equation": "Mahlmann et al. 2018 Eq. GSLightCylinder",
+                "coordinate_change": "x = cos(theta)",
+                "closed_potential_functions": (
+                    "split-monopole setup: omega = a/(2*(r_+**2 + a**2)), "
+                    "I(Psi)=-(omega/2)*Psi*(2-Psi), II'=I*dI/dPsi"
+                ),
+                "implemented": PAPER_TARGET_VALIDATOR_IMPLEMENTED,
+            },
         },
         "source_engine_run": None
         if run is None
@@ -533,8 +679,8 @@ def markdown_from_artifact(artifact: dict[str, Any]) -> str:
             "| `{}` | {} | {} | {} | {} |".format(
                 item["expression"],
                 ", ".join(item["variables"]) or "-",
-                item["strict_prechecks"]["passed_before_full_target_blocker"],
-                item["linear_surrogate"]["repo_linear_surrogate_valid"],
+                item["strict_prechecks"]["passed_before_full_target_residual"],
+                item["full_target"]["exact_zero"],
                 reasons,
             )
         )
@@ -544,9 +690,10 @@ def markdown_from_artifact(artifact: dict[str, Any]) -> str:
 
 Status: **{artifact["status"]}**.
 
-This artifact is the strict admission gate for the next paper target. It does
-not upgrade the current `kerr_magnetosphere` linear surrogate into a nonlinear
-Kerr force-free / Grad-Shafranov result.
+This artifact is the strict admission gate for the next paper target. The
+current `kerr_magnetosphere` linear surrogate is used only to generate an
+expression table; admission is decided by the nonlinear Kerr force-free
+Grad-Shafranov residual gate below.
 
 ## Literature target
 
@@ -561,19 +708,22 @@ Kerr force-free / Grad-Shafranov result.
 
 ## Gate boundary
 
-The current repo problem is explicitly a linear surrogate. A row is not a paper
-candidate unless the full nonlinear target validator exists and the expression
-passes the following checks:
+A row is not a paper candidate unless it passes the closed split-monopole form
+of the nonlinear Kerr force-free Grad-Shafranov equation:
 
 - depends on `r`, `x`, and `a`
 - has no singular denominator on the rational safe points
 - is finite on the rational safe points
 - has small-spin limit `1 - x` or `x`
 - is not exactly the known small-spin anchor
-- passes axis, horizon, and target-specific regularity checks
-- passes the full nonlinear Kerr force-free Grad-Shafranov residual
+- passes the full nonlinear Kerr force-free Grad-Shafranov residual from
+  Mahlmann et al. Eq. `GSLightCylinder`, rewritten with `x = cos(theta)`
+- uses the split-monopole potential functions
+  `omega = a/(2*(r_+**2 + a**2))` and
+  `I(Psi)=-(omega/2)*Psi*(2-Psi)`
 
-Current full-target blocker: `{TARGET_BLOCKER}`.
+The finite-spin paper target remains intentionally hard: the Schwarzschild
+anchor is used only as an `a -> 0` limit, not as a finite-spin solution.
 
 ## Source run
 
@@ -582,7 +732,7 @@ Current full-target blocker: `{TARGET_BLOCKER}`.
 
 Only the first 20 assessments are shown here; the JSON contains the full list.
 
-| Expression | Variables | Strict prechecks before target blocker | Linear surrogate valid | First rejection reasons |
+| Expression | Variables | Strict prechecks before full residual | Full residual exact zero | First rejection reasons |
 | --- | --- | --- | --- | --- |
 {table}
 """
@@ -598,7 +748,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--db-path", type=Path)
     parser.add_argument("--table-name")
     parser.add_argument("--run-id", default="manual")
-    parser.add_argument("--max-rows", type=int, default=200)
+    parser.add_argument("--max-rows", type=int, default=1000)
     parser.add_argument("--include-probes", action="store_true", default=True)
     parser.add_argument("--output", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--markdown", type=Path, default=DEFAULT_MD)
@@ -614,7 +764,7 @@ def main() -> int:
         "total_completed": 0,
         "total_valid_rows": 0,
         "known_solution_rows": 0,
-        "valid_rows_loaded_for_strict_gate": 0,
+        "rows_loaded_for_full_target_gate": 0,
     }
 
     if args.run_engine:
