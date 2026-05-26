@@ -60,10 +60,13 @@ full pde-engine reproduction claim. It is not a claim that the parallel
 discovery path is green.
 
 The Lagra health gate still records the broader pde-engine reproduction path
-as non-green on the local checkout used for this paper: the bounded depth-2
-smoke no longer hits the old `PreciseFoliationValidator` worker `NameError`,
-but the run still times out after generating expressions, and the local Lean
-build state is non-green.
+as not fully reproduced on the local checkout used for this paper. After the
+second patch, the bounded depth-2 smoke no longer hits the old
+`PreciseFoliationValidator` worker `NameError`, no longer fails the Lean build,
+and no longer times out under the 20 second health wrapper. It exits with
+return code `0`, generates `112` expressions, reports `76` valid rows, and finds
+`2` known vertical canonical forms. That is a process-clean smoke, not a full
+seven-solution Compere reproduction.
 
 ## Included paper artifacts
 
@@ -81,9 +84,9 @@ enters Lagra and what measurement comes out.
 Artifact hashes:
 
 ```text
-cd97460a592b330e47a95970adcfb10511270ac8a89a8a297728465a7f5878da  docs/lagra-force-free-adapter-paper.html
-a896c6ce14d132b8b867d7a97f59f40c0b55598bc55f1e1c7b457f062a46a18e  docs/lagra-force-free-adapter-paper.pdf
-d5ce3462b1eefe92bb7ff1482fcf9752f98ed4126e0fafa5bf60c3f64ad9bd0a  tools/render_lagra_force_free_adapter_paper.py
+671fdc29cb8e6cf04df7067f188b56a282c77b25861366671439cd0edc2f012e  docs/lagra-force-free-adapter-paper.html
+6691e3758f516344c1d0a2ee5f283c244dafbf58cd4e4dff77c8e7fd581ce83d  docs/lagra-force-free-adapter-paper.pdf
+12cf5c125541fedcc7884cc3d13d911f68bbf82878f61d608852bbe741697e2c  tools/render_lagra_force_free_adapter_paper.py
 7feafdfd3e9dee42cbeed306ca2bf62a55d49a1659c23d662de360a83da6f44b  pde_engine_force_free_point_gate.json
 e5a4c2b7ce63ba4044dcdfa5f0aa58758b3e2e5db92e12b8936e01770d3f99a1  pde_engine_reproduction_health_gate.json
 ```

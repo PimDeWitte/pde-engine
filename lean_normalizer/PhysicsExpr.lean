@@ -1,18 +1,16 @@
 import Lean
-import Mathlib.Data.Real.Basic  
-import Mathlib.Data.Rat.Defs
 
 namespace PhysicsExpr
 
 /-- Representation of expressions for force-free foliations -/
 inductive Expr where
   | Var : String → Expr
-  | Num : Rat → Expr
+  | Num : Int → Expr
   | Add : Expr → Expr → Expr
   | Sub : Expr → Expr → Expr
   | Mul : Expr → Expr → Expr
   | Div : Expr → Expr → Expr
-  | Pow : Expr → Rat → Expr
+  | Pow : Expr → Int → Expr
   | Sqrt : Expr → Expr
   | Exp : Expr → Expr
   | Log : Expr → Expr
@@ -22,7 +20,7 @@ inductive Expr where
 /-- Convert expression to string -/
 partial def Expr.toString : Expr → String
   | Var s => s
-  | Num n => if n.den = 1 then n.num.repr else s!"({n.num}/{n.den})"
+  | Num n => s!"{n}"
   | Add e1 e2 => s!"({e1.toString} + {e2.toString})"
   | Sub e1 e2 => s!"({e1.toString} - {e2.toString})"
   | Mul e1 e2 => s!"({e1.toString} * {e2.toString})"
@@ -127,7 +125,7 @@ partial def simplify : Expr → Expr
   | Expr.Pow e n =>
     let e' := simplify e
     match e', n with
-    | Expr.Num m, n => if n.den = 1 && n.num ≥ 0 then Expr.Num (m ^ n.num.natAbs) else Expr.Pow (Expr.Num m) n  -- Simplified power
+    | Expr.Num m, n => if n ≥ 0 then Expr.Num (m ^ n.natAbs) else Expr.Pow (Expr.Num m) n  -- Simplified power
     | _, 0 => Expr.Num 1
     | _, 1 => e'
     | _, _ => Expr.Pow e' n
@@ -159,12 +157,12 @@ partial def simplify : Expr → Expr
 /-- Compute signature hash for expression -/
 partial def signature : Expr → Nat
   | Expr.Var s => s.hash.toNat
-  | Expr.Num n => n.num.natAbs + 37 * n.den
+  | Expr.Num n => n.natAbs
   | Expr.Add e1 e2 => 2 + 31 * signature e1 + 37 * signature e2
   | Expr.Sub e1 e2 => 3 + 31 * signature e1 + 37 * signature e2
   | Expr.Mul e1 e2 => 5 + 31 * signature e1 + 37 * signature e2
   | Expr.Div e1 e2 => 7 + 31 * signature e1 + 37 * signature e2
-  | Expr.Pow e n => 11 + 31 * signature e + 37 * n.num.natAbs
+  | Expr.Pow e n => 11 + 31 * signature e + 37 * n.natAbs
   | Expr.Sqrt e => 13 + 31 * signature e
   | Expr.Exp e => 17 + 31 * signature e
   | Expr.Log e => 19 + 31 * signature e
@@ -175,7 +173,7 @@ partial def parseExpr (s : String) : Option Expr := do
   let s := s.trim
   if s == "rho" then return Expr.Var "rho"
   if s == "z" then return Expr.Var "z"
-  if s.isNat then return Expr.Num (s.toNat!: Rat)
+  if s.isNat then return Expr.Num (Int.ofNat s.toNat!)
   -- More complex parsing would go here
   -- For now, return none for complex expressions
   none

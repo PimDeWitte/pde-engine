@@ -844,7 +844,11 @@ class GeneralFoliationDiscovery:
                     conn_wait = sqlite3.connect(self.db_path, timeout=60)
                     cur_wait = conn_wait.cursor()
                     while True:
-                        cur_wait.execute(f"SELECT COUNT(*), COUNT(CASE WHEN validation_status != 'pending' THEN 1 END) FROM {self.table_name}")
+                        cur_wait.execute(f"""
+                            SELECT COUNT(*),
+                                   COUNT(CASE WHEN validation_status IN ('completed', 'error') THEN 1 END)
+                            FROM {self.table_name}
+                        """)
                         total_generated, total_validated = cur_wait.fetchone()
                         if (total_generated or 0) > 0 and total_generated == (total_validated or 0):
                             break
@@ -887,6 +891,9 @@ class GeneralFoliationDiscovery:
             for vp in validator_processes:
                 try:
                     vp.join(timeout=5.0)
+                    if vp.is_alive():
+                        vp.terminate()
+                        vp.join(timeout=2.0)
                 except Exception:
                     pass
 
@@ -897,6 +904,9 @@ class GeneralFoliationDiscovery:
                 pass
             try:
                 writer_process.join(timeout=5.0)
+                if writer_process.is_alive():
+                    writer_process.terminate()
+                    writer_process.join(timeout=2.0)
             except Exception:
                 pass
 
@@ -1129,6 +1139,7 @@ class GeneralFoliationDiscovery:
                     if item is None:
                         break
                     # Parse message
+                    structured_message = False
                     if len(item) >= 3 and isinstance(item[2], str):
                         # Start/end message
                         rid, worker_pid, msg_type = item[:3]
@@ -1149,16 +1160,21 @@ class GeneralFoliationDiscovery:
                                 conn.commit()
                             except Exception:
                                 pass
+                            continue
                         elif msg_type == 'end':
+                            structured_message = True
                             _, _, _, results = item
                             try:
                                 worker_counts[worker_pid] = worker_counts.get(worker_pid, 0) + len(results)
                             except Exception:
                                 pass
                             batch.extend(results)
-                        continue
+                        else:
+                            continue
                     # Legacy bulk results
-                    if len(item) == 3:
+                    if structured_message:
+                        pass
+                    elif len(item) == 3:
                         rid, worker_pid, results = item
                         if rid != run_id:
                             continue
@@ -1191,7 +1207,7 @@ class GeneralFoliationDiscovery:
                         try:
                             for pid, cnt in list(worker_counts.items()):
                                 cursor.execute(
-                                    "UPDATE worker_progress SET validated = COALESCE(validated,0) + ?, last_completed_id = (SELECT MAX(id) FROM (SELECT id FROM {table_name} WHERE validation_status = 'completed')), last_completed_at = CURRENT_TIMESTAMP, current_expr_id = NULL, current_expr_snippet = NULL, updated_at = CURRENT_TIMESTAMP WHERE run_id = ? AND pid = ?",
+                                    f"UPDATE worker_progress SET validated = COALESCE(validated,0) + ?, last_completed_id = (SELECT MAX(id) FROM (SELECT id FROM {table_name} WHERE validation_status = 'completed')), last_completed_at = CURRENT_TIMESTAMP, current_expr_id = NULL, current_expr_snippet = NULL, updated_at = CURRENT_TIMESTAMP WHERE run_id = ? AND pid = ?",
                                     (cnt, run_id, pid)
                                 )
                                 del worker_counts[pid]
@@ -1206,7 +1222,11 @@ class GeneralFoliationDiscovery:
                 # Periodically refresh run metadata
                 if time.time() - last_meta > 1.0:
                     try:
-                        cursor.execute(f"SELECT COUNT(*), COUNT(CASE WHEN validation_status != 'pending' THEN 1 END) FROM {table_name}")
+                        cursor.execute(f"""
+                            SELECT COUNT(*),
+                                   COUNT(CASE WHEN validation_status IN ('completed', 'error') THEN 1 END)
+                            FROM {table_name}
+                        """)
                         tg, tv = cursor.fetchone()
                         conn.execute(
                             "UPDATE run_metadata SET total_generated = ?, total_validated = ? WHERE run_id = ?",
@@ -1720,6 +1740,11 @@ class GeneralFoliationDiscovery:
         import time
         import time, queue as _queue
         worker_pid = os.getpid()
+        validation_timeout_s = float(os.environ.get("PDE_ENGINE_VALIDATION_TIMEOUT_S", "3"))
+
+        def _timeout_handler(signum, frame):
+            raise TimeoutError(f"validation exceeded {validation_timeout_s:.1f}s")
+
         while True:
             try:
                 claimed: list[tuple[int, str]] = []
@@ -1731,7 +1756,15 @@ class GeneralFoliationDiscovery:
                             # Explicit shutdown
                             break
                         expr_id, expr_str = item
-                        claimed = [(expr_id, expr_str)]
+                        cursor.execute(
+                            f"UPDATE {table_name} SET validation_status = 'in_progress' WHERE id = ? AND validation_status = 'pending'",
+                            (expr_id,)
+                        )
+                        if cursor.rowcount == 1:
+                            conn.commit()
+                            claimed = [(expr_id, expr_str)]
+                        else:
+                            conn.commit()
                     except _queue.Empty:
                         pass
                     except Exception:
@@ -1783,7 +1816,14 @@ class GeneralFoliationDiscovery:
                             call_kwargs = {k: v for k, v in base_kwargs.items() if k in allowed}
                         except Exception:
                             call_kwargs = {'check_regularity': False, 'fast_point_only': False}
-                        is_valid, reason = validator.validate(u, **call_kwargs)
+                        old_handler = signal.getsignal(signal.SIGALRM)
+                        signal.signal(signal.SIGALRM, _timeout_handler)
+                        signal.setitimer(signal.ITIMER_REAL, validation_timeout_s)
+                        try:
+                            is_valid, reason = validator.validate(u, **call_kwargs)
+                        finally:
+                            signal.setitimer(signal.ITIMER_REAL, 0)
+                            signal.signal(signal.SIGALRM, old_handler)
                         is_paper_solution = False
                         paper_name = None
                         if is_valid:
@@ -1812,7 +1852,10 @@ class GeneralFoliationDiscovery:
                                 pass
                     except Exception as e:
                         print(f"[{run_id}] Error validating expression {expr_id}: {e}")
-                        results_batch.append(('error', None, f"Validator Error: {e}", None, None, expr_id))
+                        if isinstance(e, TimeoutError):
+                            results_batch.append(('completed', False, f"Validation timeout: {e}", False, None, expr_id))
+                        else:
+                            results_batch.append(('error', None, f"Validator Error: {e}", None, None, expr_id))
 
                 # Push results to centralized writer (include worker PID)
                 if result_queue is not None and results_batch:

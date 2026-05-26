@@ -165,7 +165,7 @@ def svg2_vocab() -> str:
             chip(292, 62, 205, 72, PURPLE, "NegativeControl", ["input: rho*z, exp(rho*z)", "measure: det M != 0"]),
             chip(531, 62, 205, 72, ORANGE, "PointCheck", ["input: rational points", "measure: abs(det M)"]),
             chip(54, 158, 205, 72, TEAL, "RotationContext", ["input: Omega in cache key", "measure: valid/invalid split"]),
-            chip(292, 158, 205, 72, BLUE, "HealthSmoke", ["input: bounded CLI run", "measure: non-green reasons"]),
+            chip(292, 158, 205, 72, BLUE, "HealthSmoke", ["input: bounded CLI run", "measure: rc0 / counts"]),
             chip(531, 158, 205, 72, MAGENTA, "PaperArtifact", ["input: JSON catalog", "measure: exact hashes"]),
             text(394, 252, "Every chip has a typed input, a deterministic measurement, and an admitted output field.", 12, MUTED),
             "</svg>",
@@ -274,7 +274,7 @@ def svg5_kernel() -> str:
         chip(42, 236, 160, 70, GREEN, "Known", ["det M == 0", "count -> 7"]),
         chip(221, 236, 160, 70, PURPLE, "Control", ["det M != 0", "count -> 2"]),
         chip(400, 236, 160, 70, TEAL, "Cache", ["hash0 != hash1", "valid != invalid"]),
-        chip(579, 236, 160, 70, BLUE, "Health", ["timeout recorded", "Lean non-green"]),
+        chip(579, 236, 160, 70, BLUE, "Health", ["112 generated", "rc0, no Lean fail"]),
         text(394, 333, "Adding a new adapter measurement is adding a check, not editing the loop.", 12, INK),
         "</svg>",
     ]
@@ -304,9 +304,9 @@ def svg6_triangle() -> str:
         text(454, 128, "all validators + Lean path reproduce", 11, INK, "start", family="Courier New, monospace"),
         rect(455, 162, 220, 48, "#f4efff", stroke=PURPLE, rx=5),
         text(474, 184, "witness", 12, PURPLE, "start", weight="700"),
-        text(474, 202, "bounded smoke: timeout + Lean fail", 11, INK, "start"),
+        text(474, 202, "bounded smoke: rc0, 2 known", 11, INK, "start"),
         rect(455, 235, 220, 38, "#fff0f6", stroke=MAGENTA, rx=5),
-        text(474, 259, "checker: boundary -> NOT GREEN", 11, INK, "start", weight="700"),
+        text(474, 259, "checker: full 7-solution path not green", 11, INK, "start", weight="700"),
         arrow(565, 136, 565, 162),
         arrow(565, 210, 565, 235),
         text(394, 313, "Same discipline as the Lagra verifier triangle; different claim admitted.", 12, MUTED),
@@ -386,7 +386,7 @@ def html() -> str:
             6,
             "Verifier triangle for the adapter and the full reproduction boundary",
             svg6_triangle(),
-            "This copies the structural shape of the Lagra verifier triangle while keeping the trust event honest. The adapter proposition passes with JSON witnesses and source hashes. The full pde-engine reproduction proposition remains non-green because the bounded smoke records a timeout and Lean build failure.",
+            "This copies the structural shape of the Lagra verifier triangle while keeping the trust event honest. The adapter proposition passes with JSON witnesses and source hashes. The bounded pde-engine smoke is now process-clean: return code 0, no Lean build failure, 112 generated expressions, 76 valid rows, and 2 known vertical forms. The full seven-solution reproduction proposition still remains non-green because the bounded depth-2 smoke does not recover all seven known solutions.",
         ),
         figure(
             7,
@@ -484,8 +484,9 @@ def html() -> str:
     three rational checkpoints separate known solutions from controls; and a
     rotation-context cache regression proves that the validator cache key must
     include <code>Omega</code> and the validation mode.  The negative result is equally
-    important: the full pde-engine/Lean reproduction path remains non-green on
-    this checkout and is recorded as a boundary, not upgraded into a proof.
+    important: the bounded pde-engine smoke is now process-clean, but the full
+    seven-solution pde-engine/Lean reproduction path remains non-green on this
+    checkout and is recorded as a boundary, not upgraded into a proof.
   </p>
 
   {figures}
@@ -569,10 +570,11 @@ python3 experiments/proof-search/proof_search_integrity_gate.py</pre>
   <p class="claim">
     The adapter is a positive exact-symbolic and pointwise Lagra measurement of
     the pde-engine force-free boundary.  It is not a Lean theorem.  It is not a
-    full pde-engine paper reproduction.  It is not a claim that the parallel
-    discovery path is green.  The bounded health gate is included precisely so
-    the paper cannot confuse this narrow positive result with the broader
-    non-green reproduction path.
+    full pde-engine paper reproduction.  The bounded depth-2 pde-engine smoke is
+    now process-clean, but it only finds two known vertical canonical forms; it
+    does not recover the seven known Compere solutions.  The bounded health gate
+    is included precisely so the paper cannot confuse this narrow positive
+    result with a full reproduction claim.
   </p>
 </main>
 </body>

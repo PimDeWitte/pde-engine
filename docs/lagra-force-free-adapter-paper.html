@@ -85,8 +85,9 @@
     three rational checkpoints separate known solutions from controls; and a
     rotation-context cache regression proves that the validator cache key must
     include <code>Omega</code> and the validation mode.  The negative result is equally
-    important: the full pde-engine/Lean reproduction path remains non-green on
-    this checkout and is recorded as a boundary, not upgraded into a proof.
+    important: the bounded pde-engine smoke is now process-clean, but the full
+    seven-solution pde-engine/Lean reproduction path remains non-green on this
+    checkout and is recorded as a boundary, not upgraded into a proof.
   </p>
 
 
@@ -177,7 +178,7 @@
 <rect x="292" y="158" width="205" height="72" rx="5" fill="#3f4fc6"/>
 <text x="394" y="180" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">HealthSmoke</text>
 <text x="394" y="200" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">input: bounded CLI run</text>
-<text x="394" y="218" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">measure: non-green reasons</text>
+<text x="394" y="218" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">measure: rc0 / counts</text>
 <rect x="531" y="158" width="205" height="72" rx="5" fill="#c6246b"/>
 <text x="633" y="180" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">PaperArtifact</text>
 <text x="633" y="200" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">input: JSON catalog</text>
@@ -330,8 +331,8 @@
 <text x="480" y="296" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">valid != invalid</text>
 <rect x="579" y="236" width="160" height="70" rx="5" fill="#3f4fc6"/>
 <text x="659" y="258" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Health</text>
-<text x="659" y="278" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">timeout recorded</text>
-<text x="659" y="296" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">Lean non-green</text>
+<text x="659" y="278" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">112 generated</text>
+<text x="659" y="296" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">rc0, no Lean fail</text>
 <text x="394" y="333" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">Adding a new adapter measurement is adding a check, not editing the loop.</text>
 </svg>
       <figcaption><strong>Figure 5: The adapter kernel, exploded.</strong> The loop is deliberately boring. Heterogeneity lives in check.run(context), not in the loop. Adding a Kerr no-promotion guard, a force-free cache regression, or a future PDE boundary check means adding a new typed check with a measurement contract.</figcaption>
@@ -371,14 +372,14 @@
 <text x="454" y="128" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Courier New, monospace">all validators + Lean path reproduce</text>
 <rect x="455" y="162" width="220" height="48" rx="5" fill="#f4efff" stroke="#6c48c9"/>
 <text x="474" y="184" font-size="12" fill="#6c48c9" text-anchor="start" font-weight="700" font-family="Georgia, serif">witness</text>
-<text x="474" y="202" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">bounded smoke: timeout + Lean fail</text>
+<text x="474" y="202" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">bounded smoke: rc0, 2 known</text>
 <rect x="455" y="235" width="220" height="38" rx="5" fill="#fff0f6" stroke="#c6246b"/>
-<text x="474" y="259" font-size="11" fill="#243043" text-anchor="start" font-weight="700" font-family="Georgia, serif">checker: boundary -> NOT GREEN</text>
+<text x="474" y="259" font-size="11" fill="#243043" text-anchor="start" font-weight="700" font-family="Georgia, serif">checker: full 7-solution path not green</text>
 <line x1="565" y1="136" x2="565" y2="162" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
 <line x1="565" y1="210" x2="565" y2="235" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
 <text x="394" y="313" font-size="12" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">Same discipline as the Lagra verifier triangle; different claim admitted.</text>
 </svg>
-      <figcaption><strong>Figure 6: Verifier triangle for the adapter and the full reproduction boundary.</strong> This copies the structural shape of the Lagra verifier triangle while keeping the trust event honest. The adapter proposition passes with JSON witnesses and source hashes. The full pde-engine reproduction proposition remains non-green because the bounded smoke records a timeout and Lean build failure.</figcaption>
+      <figcaption><strong>Figure 6: Verifier triangle for the adapter and the full reproduction boundary.</strong> This copies the structural shape of the Lagra verifier triangle while keeping the trust event honest. The adapter proposition passes with JSON witnesses and source hashes. The bounded pde-engine smoke is now process-clean: return code 0, no Lean build failure, 112 generated expressions, 76 valid rows, and 2 known vertical forms. The full seven-solution reproduction proposition still remains non-green because the bounded depth-2 smoke does not recover all seven known solutions.</figcaption>
     </figure>
 
 
@@ -500,10 +501,11 @@ python3 experiments/proof-search/proof_search_integrity_gate.py</pre>
   <p class="claim">
     The adapter is a positive exact-symbolic and pointwise Lagra measurement of
     the pde-engine force-free boundary.  It is not a Lean theorem.  It is not a
-    full pde-engine paper reproduction.  It is not a claim that the parallel
-    discovery path is green.  The bounded health gate is included precisely so
-    the paper cannot confuse this narrow positive result with the broader
-    non-green reproduction path.
+    full pde-engine paper reproduction.  The bounded depth-2 pde-engine smoke is
+    now process-clean, but it only finds two known vertical canonical forms; it
+    does not recover the seven known Compere solutions.  The bounded health gate
+    is included precisely so the paper cannot confuse this narrow positive
+    result with a full reproduction claim.
   </p>
 </main>
 </body>

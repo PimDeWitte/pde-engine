@@ -407,9 +407,13 @@ class PreciseFoliationValidator:
             
             # Optional full-plane check (slow). Only run when not in fast mode.
             if not fast_point_only:
-                # Prefer Lean only for small expressions
+                # Prefer Lean only for small expressions.  Do not let a failed
+                # cheap path fall through into unbounded SymPy expansion: the
+                # discovery runner must reject/defer oversized determinants
+                # instead of wedging a validator worker.
                 det_str = str(det_M)
-                if self.use_lean and self.lean_normalizer and len(det_str) < 3000:
+                max_symbolic_chars = 3000
+                if self.use_lean and self.lean_normalizer and len(det_str) < max_symbolic_chars:
                     det_symbolic_simpl = self._simplify_with_lean(det_M)
                     if det_symbolic_simpl == 0:
                         result = (True, "Valid foliation (Lean: det = 0 symbolically)")
@@ -417,6 +421,13 @@ class PreciseFoliationValidator:
                         return result
                     result = (False, "Invalid (Lean could not simplify det to 0 symbolically)")
                     self._save_to_cache(expr_hash, str(u), False, "lean_symbolic", result[1])
+                    return result
+                if len(det_str) >= max_symbolic_chars:
+                    result = (
+                        False,
+                        f"Skipped full symbolic check (determinant too large: {len(det_str)} chars)",
+                    )
+                    self._save_to_cache(expr_hash, str(u), False, "symbolic_deferred", result[1])
                     return result
                 else:
                     # Last resort: expanded check
