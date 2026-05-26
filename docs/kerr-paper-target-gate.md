@@ -98,12 +98,28 @@ candidates. In this run, `264` passed strict
 prechecks before the full residual, and `0` had
 exact-zero full residual.
 
+The gate then runs a leading-order coefficient solve over the full one-term
+basis instead of only trying fixed scalar coefficients:
+
+```text
+Psi = 1 - x + a**2 * sum_i c_i*basis_i(r,x)
+coefficient of a**2 in full residual series through O(a**4)
+M = 1
+```
+
+This screen produced `66` polynomial
+equations in `48` unknown coefficients.  The
+linear system matrix shape was `[66, 48]`, and SymPy
+returned `EmptySet`.  It therefore generated
+`0` additional candidates.
+
+
 
 ## Source run
 
-- Run id: `paper_repro_20260526_095755_50aca069`
-- Database: `problems/kerr_magnetosphere/outputs/parallel_runs_paper_repro_20260526_095755_50aca069.db`
-- Table: `expressions_paper_repro_20260526_095755_50aca069`
+- Run id: `paper_repro_20260526_104304_2b096bdc`
+- Database: `problems/kerr_magnetosphere/outputs/parallel_runs_paper_repro_20260526_104304_2b096bdc.db`
+- Table: `expressions_paper_repro_20260526_104304_2b096bdc`
 - Command: `python3 general_method_paper_reproduction.py --problem kerr_magnetosphere --max-depth 2 --validators 1`
 - Bounds: `max_depth=2`, `validators=1`, `per_expression_validation_timeout_s=3.0`
 

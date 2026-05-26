@@ -381,7 +381,7 @@ def svg8_discoveries() -> str:
 
 def svg9_kerr_gate() -> str:
     parts = [
-        '<svg class="figure-svg" viewBox="0 0 790 360" role="img" aria-label="Kerr paper target gate">',
+        '<svg class="figure-svg" viewBox="0 0 790 380" role="img" aria-label="Kerr paper target gate">',
         defs(),
         rect(38, 48, 158, 60, BLUE, rx=5),
         text(117, 72, "Literature target", 12, "white", weight="700"),
@@ -408,16 +408,17 @@ def svg9_kerr_gate() -> str:
         text(330, 198, "finite denominators", 11, INK, "start"),
         text(330, 214, "small-spin anchor", 11, INK, "start"),
         text(330, 230, "axis / horizon regular", 11, INK, "start"),
-        rect(552, 150, 176, 64, "#fff0f6", stroke=MAGENTA, rx=5),
+        rect(552, 150, 176, 82, "#fff0f6", stroke=MAGENTA, rx=5),
         text(572, 174, "measured output", 12, MAGENTA, "start", weight="700"),
         text(572, 194, "306 rows + 456 corrections", 11, INK, "start"),
-        text(572, 210, "766 inputs, 0 admitted", 11, INK, "start"),
+        text(572, 210, "48-coeff solve: EmptySet", 11, INK, "start"),
+        text(572, 226, "766 inputs, 0 admitted", 11, INK, "start"),
         arrow(226, 182, 310, 192),
         arrow(486, 192, 552, 188),
-        rect(248, 286, 294, 46, "#fbf9f5", stroke=LINE, rx=5),
-        text(395, 308, "guardrail: surrogate rows cannot become Kerr paper claims", 12, INK, weight="700"),
-        text(395, 326, "full residual exists; no expression passes it", 11, MUTED),
-        arrow(505, 108, 430, 286, dash=True),
+        rect(248, 306, 294, 46, "#fbf9f5", stroke=LINE, rx=5),
+        text(395, 328, "guardrail: surrogate rows cannot become Kerr paper claims", 12, INK, weight="700"),
+        text(395, 346, "full residual exists; no expression passes it", 11, MUTED),
+        arrow(505, 108, 430, 306, dash=True),
         "</svg>",
     ]
     return "\n".join(parts)
@@ -477,7 +478,7 @@ def html() -> str:
             9,
             "Kerr paper-target gate",
             svg9_kerr_gate(),
-            "The next target uses the same measurement discipline in the negative direction. The bounded Kerr run generated 306 rows; the strict gate scans those rows, 456 targeted finite-spin corrections, and four probes against the closed split-monopole nonlinear Kerr Grad-Shafranov residual, then emits no_candidate_yet because no expression passes the criteria.",
+            "The next target uses the same measurement discipline in the negative direction. The bounded Kerr run generated 306 rows; the strict gate scans those rows, 456 targeted finite-spin corrections, and four probes against the closed split-monopole nonlinear Kerr Grad-Shafranov residual. It also solves the 48-coefficient leading-order ansatz and gets EmptySet, then emits no_candidate_yet because no expression passes the criteria.",
         ),
     ]
 
@@ -572,8 +573,9 @@ def html() -> str:
     exports six non-registered, independently rechecked candidate foliations
     as a process-control baseline rather than as a publication target.
     A second gate records the next Kerr paper target, appends targeted one-term
-    and two-term finite-spin correction grammars, and emits <code>no_candidate_yet</code>
-    rather than promoting the current linear surrogate.
+    and two-term finite-spin correction grammars, runs a 48-coefficient
+    leading-order solve, and emits <code>no_candidate_yet</code> rather than
+    promoting the current linear surrogate.
     The negative result is equally
     important: the bounded pde-engine smoke is now process-clean, but the full
     seven-solution pde-engine/Lean reproduction path remains non-green on this
@@ -689,6 +691,15 @@ T = u_z*d_rho - u_rho*d_z</pre>
     residual.
   </p>
   <p>
+    The stricter screen is not a larger fixed-coefficient search.  It solves the
+    leading <code>a**2</code> residual coefficient for the full one-term basis:
+    <code>Psi = 1 - x + a**2*sum_i c_i*basis_i(r,x)</code> with <code>M = 1</code>.
+    That produces <code>66</code> polynomial equations in <code>48</code> unknown
+    coefficients; the matrix has shape <code>[66, 48]</code>, and
+    <code>linsolve</code> returns <code>EmptySet</code>.  So even before the full
+    nonlinear residual, this ansatz family has no leading-order correction.
+  </p>
+  <p>
     The literature motivation is explicitly separated from the current
     surrogate.  Mahlmann et al. frame static, axisymmetric, force-free Kerr
     magnetospheres around the relativistic Grad-Shafranov equation and numerical
@@ -790,7 +801,9 @@ python3 experiments/proof-search/proof_search_integrity_gate.py</pre>
     solutions.  The Kerr gate is a separate <code>no_candidate_yet</code> artifact:
     it prevents the current linear surrogate from being promoted into the next
     paper target, appends targeted finite-spin corrections, and checks the
-    closed split-monopole nonlinear residual directly.
+    closed split-monopole nonlinear residual directly.  Its leading-order
+    coefficient solve also returns <code>EmptySet</code> for the 48-function
+    one-term ansatz.
   </p>
 </main>
 </body>

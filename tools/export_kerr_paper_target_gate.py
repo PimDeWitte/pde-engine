@@ -90,6 +90,8 @@ PAIR_CORRECTION_RADIAL_FACTORS = [
     "1/(r - 2*M)",
 ]
 
+COEFFICIENT_SOLVE_SERIES_ORDER = 4
+
 LITERATURE_SOURCES = [
     {
         "id": "mahlmann_cerda_duran_aloy_2018_kerr_gse_numerics",
@@ -255,6 +257,78 @@ def generate_anchor_pair_correction_rows() -> list[CandidateRow]:
                 )
             )
     return rows
+
+
+def solve_leading_order_coefficient_rows() -> tuple[list[CandidateRow], dict[str, Any]]:
+    locals_map = sympify_locals()
+    a = locals_map["a"]
+    x = locals_map["x"]
+    m = locals_map["M"]
+    r = locals_map["r"]
+    basis = correction_basis()
+    coeff_symbols = sp.symbols(f"c0:{len(basis)}")
+    correction = sum(coeff * basis_expr for coeff, (_, basis_expr) in zip(coeff_symbols, basis))
+    psi = 1 - x + a**2 * correction
+    residual = full_kerr_split_monopole_residual(psi)
+    leading_residual = (
+        sp.series(residual.subs(m, 1), a, 0, COEFFICIENT_SOLVE_SERIES_ORDER)
+        .removeO()
+        .coeff(a, 2)
+    )
+    numerator = sp.factor(sp.together(leading_residual).as_numer_denom()[0])
+    polynomial = sp.Poly(numerator, r, x)
+    equations = [sp.expand(coeff) for coeff in polynomial.coeffs()]
+    matrix, rhs = sp.linear_eq_to_matrix(equations, coeff_symbols)
+    solution_set = sp.linsolve((matrix, rhs), coeff_symbols)
+
+    exact_solutions: list[tuple[sp.Basic, ...]] = []
+    skipped_parametric = 0
+    if solution_set != sp.EmptySet:
+        for solution in solution_set:
+            if any(value.free_symbols for value in solution):
+                skipped_parametric += 1
+                continue
+            exact_solutions.append(tuple(solution))
+
+    rows: list[CandidateRow] = []
+    for solution in exact_solutions:
+        solved_correction = sum(
+            value * basis_expr for value, (_, basis_expr) in zip(solution, basis)
+        )
+        expr = sp.factor(1 - x + a**2 * solved_correction)
+        rows.append(
+            CandidateRow(
+                row_id=None,
+                expression=sp.sstr(expr),
+                depth=None,
+                validation_reason="leading-order coefficient solve candidate",
+                source="coefficient_solve_grammar",
+            )
+        )
+
+    if solution_set == sp.EmptySet:
+        status = "no_leading_order_solution"
+    elif skipped_parametric:
+        status = "parametric_solution_not_exported"
+    else:
+        status = "candidate_generated" if rows else "no_candidate_generated"
+
+    return rows, {
+        "enabled": True,
+        "status": status,
+        "ansatz": "Psi = 1 - x + a**2 * sum_i c_i*basis_i(r,x)",
+        "basis_source": "targeted_search_grammar.basis",
+        "mass_normalization": "M = 1",
+        "series": f"coefficient of a**2 in full residual series through O(a**{COEFFICIENT_SOLVE_SERIES_ORDER})",
+        "polynomial_variables": ["r", "x"],
+        "unknown_count": len(coeff_symbols),
+        "equation_count": len(equations),
+        "matrix_shape": [int(matrix.rows), int(matrix.cols)],
+        "linsolve_result": "EmptySet" if solution_set == sp.EmptySet else sp.sstr(solution_set)[:2000],
+        "exact_solution_count": len(exact_solutions),
+        "skipped_parametric_solution_count": skipped_parametric,
+        "generated_candidates": len(rows),
+    }
 
 
 def sympify_locals() -> dict[str, Any]:
@@ -745,6 +819,7 @@ def build_artifact(
     include_probes: bool,
     include_corrections: bool,
     include_pair_corrections: bool,
+    include_coefficient_solve: bool,
 ) -> dict[str, Any]:
     candidate_rows = list(rows)
     correction_rows: list[CandidateRow] = []
@@ -755,6 +830,14 @@ def build_artifact(
     if include_pair_corrections:
         pair_correction_rows = generate_anchor_pair_correction_rows()
         candidate_rows.extend(pair_correction_rows)
+    coefficient_solve_rows: list[CandidateRow] = []
+    coefficient_solve_metadata: dict[str, Any] = {
+        "enabled": False,
+        "generated_candidates": 0,
+    }
+    if include_coefficient_solve:
+        coefficient_solve_rows, coefficient_solve_metadata = solve_leading_order_coefficient_rows()
+        candidate_rows.extend(coefficient_solve_rows)
     if include_probes:
         candidate_rows.extend(
             CandidateRow(None, expr, None, "manual strict-gate probe", "probe")
@@ -805,6 +888,7 @@ def build_artifact(
                 "basis_construction": "unordered pairs from the cartesian product basis",
                 "generated_candidates": len(pair_correction_rows),
             },
+            "coefficient_solve_screen": coefficient_solve_metadata,
         },
         "source_engine_run": None
         if run is None
@@ -841,6 +925,7 @@ def markdown_from_artifact(artifact: dict[str, Any]) -> str:
 
     grammar = artifact["gate"]["targeted_search_grammar"]
     pair_grammar = artifact["gate"]["two_term_search_grammar"]
+    coefficient_solve = artifact["gate"]["coefficient_solve_screen"]
     correction_assessments = [
         item for item in artifact["assessments"] if item["source"] == "anchor_correction_grammar"
     ]
@@ -869,6 +954,25 @@ def markdown_from_artifact(artifact: dict[str, Any]) -> str:
     radial_lines = "\n".join(f"- `{item}`" for item in grammar["radial_factors"])
     pair_angular_lines = "\n".join(f"- `{item}`" for item in pair_grammar["angular_factors"])
     pair_radial_lines = "\n".join(f"- `{item}`" for item in pair_grammar["radial_factors"])
+    if coefficient_solve.get("enabled"):
+        coefficient_section = f"""
+The gate then runs a leading-order coefficient solve over the full one-term
+basis instead of only trying fixed scalar coefficients:
+
+```text
+{coefficient_solve["ansatz"]}
+{coefficient_solve["series"]}
+{coefficient_solve["mass_normalization"]}
+```
+
+This screen produced `{coefficient_solve["equation_count"]}` polynomial
+equations in `{coefficient_solve["unknown_count"]}` unknown coefficients.  The
+linear system matrix shape was `{coefficient_solve["matrix_shape"]}`, and SymPy
+returned `{coefficient_solve["linsolve_result"]}`.  It therefore generated
+`{coefficient_solve["generated_candidates"]}` additional candidates.
+"""
+    else:
+        coefficient_section = "\nThe leading-order coefficient solve screen was disabled for this artifact.\n"
     grammar_section = f"""## Targeted finite-spin correction grammar
 
 The gate also appends an expanded bounded correction grammar around the
@@ -912,6 +1016,7 @@ This generated `{pair_grammar["generated_candidates"]}` two-term correction
 candidates. In this run, `{len(pair_correction_prechecks)}` passed strict
 prechecks before the full residual, and `{len(pair_correction_exact)}` had
 exact-zero full residual.
+{coefficient_section}
 """
 
     rows = []
@@ -1000,6 +1105,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Do not add the bounded two-term anchor-preserving correction grammar.",
     )
+    parser.add_argument(
+        "--no-coefficient-solve",
+        action="store_true",
+        help="Do not run the leading-order coefficient solve screen.",
+    )
     parser.add_argument("--output", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--markdown", type=Path, default=DEFAULT_MD)
     return parser.parse_args()
@@ -1052,6 +1162,7 @@ def main() -> int:
         include_probes=args.include_probes,
         include_corrections=not args.no_corrections,
         include_pair_corrections=not args.no_pair_corrections,
+        include_coefficient_solve=not args.no_coefficient_solve,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.markdown.parent.mkdir(parents=True, exist_ok=True)

@@ -70379,6 +70379,28 @@
   ],
   "candidate_inputs_scanned": 766,
   "gate": {
+    "coefficient_solve_screen": {
+      "ansatz": "Psi = 1 - x + a**2 * sum_i c_i*basis_i(r,x)",
+      "basis_source": "targeted_search_grammar.basis",
+      "enabled": true,
+      "equation_count": 66,
+      "exact_solution_count": 0,
+      "generated_candidates": 0,
+      "linsolve_result": "EmptySet",
+      "mass_normalization": "M = 1",
+      "matrix_shape": [
+        66,
+        48
+      ],
+      "polynomial_variables": [
+        "r",
+        "x"
+      ],
+      "series": "coefficient of a**2 in full residual series through O(a**4)",
+      "skipped_parametric_solution_count": 0,
+      "status": "no_leading_order_solution",
+      "unknown_count": 48
+    },
     "full_target_residual": {
       "closed_potential_functions": "split-monopole setup: omega = a/(2*(r_+**2 + a**2)), I(Psi)=-(omega/2)*Psi*(2-Psi), II'=I*dI/dPsi",
       "coordinate_change": "x = cos(theta)",
@@ -70579,15 +70601,15 @@
       "--validators",
       "1"
     ],
-    "db_path": "problems/kerr_magnetosphere/outputs/parallel_runs_paper_repro_20260526_095755_50aca069.db",
-    "run_id": "paper_repro_20260526_095755_50aca069",
+    "db_path": "problems/kerr_magnetosphere/outputs/parallel_runs_paper_repro_20260526_104304_2b096bdc.db",
+    "run_id": "paper_repro_20260526_104304_2b096bdc",
     "search_bounds": {
       "max_depth": 2,
       "per_expression_validation_timeout_s": 3.0,
       "validators": 1,
       "wall_timeout_s": 90.0
     },
-    "table_name": "expressions_paper_repro_20260526_095755_50aca069"
+    "table_name": "expressions_paper_repro_20260526_104304_2b096bdc"
   },
   "status": "no_candidate_yet"
 }

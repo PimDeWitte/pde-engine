@@ -88,8 +88,9 @@
     exports six non-registered, independently rechecked candidate foliations
     as a process-control baseline rather than as a publication target.
     A second gate records the next Kerr paper target, appends targeted one-term
-    and two-term finite-spin correction grammars, and emits <code>no_candidate_yet</code>
-    rather than promoting the current linear surrogate.
+    and two-term finite-spin correction grammars, runs a 48-coefficient
+    leading-order solve, and emits <code>no_candidate_yet</code> rather than
+    promoting the current linear surrogate.
     The negative result is equally
     important: the bounded pde-engine smoke is now process-clean, but the full
     seven-solution pde-engine/Lean reproduction path remains non-green on this
@@ -492,7 +493,7 @@
 
 
     <figure>
-      <svg class="figure-svg" viewBox="0 0 790 360" role="img" aria-label="Kerr paper target gate">
+      <svg class="figure-svg" viewBox="0 0 790 380" role="img" aria-label="Kerr paper target gate">
 
     <defs>
       <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5"
@@ -530,18 +531,19 @@
 <text x="330" y="198" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">finite denominators</text>
 <text x="330" y="214" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">small-spin anchor</text>
 <text x="330" y="230" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">axis / horizon regular</text>
-<rect x="552" y="150" width="176" height="64" rx="5" fill="#fff0f6" stroke="#c6246b"/>
+<rect x="552" y="150" width="176" height="82" rx="5" fill="#fff0f6" stroke="#c6246b"/>
 <text x="572" y="174" font-size="12" fill="#c6246b" text-anchor="start" font-weight="700" font-family="Georgia, serif">measured output</text>
 <text x="572" y="194" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">306 rows + 456 corrections</text>
-<text x="572" y="210" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">766 inputs, 0 admitted</text>
+<text x="572" y="210" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">48-coeff solve: EmptySet</text>
+<text x="572" y="226" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">766 inputs, 0 admitted</text>
 <line x1="226" y1="182" x2="310" y2="192" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
 <line x1="486" y1="192" x2="552" y2="188" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
-<rect x="248" y="286" width="294" height="46" rx="5" fill="#fbf9f5" stroke="#9aa5b1"/>
-<text x="395" y="308" font-size="12" fill="#243043" text-anchor="middle" font-weight="700" font-family="Georgia, serif">guardrail: surrogate rows cannot become Kerr paper claims</text>
-<text x="395" y="326" font-size="11" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">full residual exists; no expression passes it</text>
-<line x1="505" y1="108" x2="430" y2="286" stroke="#243043" stroke-width="1.8" stroke-dasharray="5 5" marker-end="url(#arrow)"/>
+<rect x="248" y="306" width="294" height="46" rx="5" fill="#fbf9f5" stroke="#9aa5b1"/>
+<text x="395" y="328" font-size="12" fill="#243043" text-anchor="middle" font-weight="700" font-family="Georgia, serif">guardrail: surrogate rows cannot become Kerr paper claims</text>
+<text x="395" y="346" font-size="11" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">full residual exists; no expression passes it</text>
+<line x1="505" y1="108" x2="430" y2="306" stroke="#243043" stroke-width="1.8" stroke-dasharray="5 5" marker-end="url(#arrow)"/>
 </svg>
-      <figcaption><strong>Figure 9: Kerr paper-target gate.</strong> The next target uses the same measurement discipline in the negative direction. The bounded Kerr run generated 306 rows; the strict gate scans those rows, 456 targeted finite-spin corrections, and four probes against the closed split-monopole nonlinear Kerr Grad-Shafranov residual, then emits no_candidate_yet because no expression passes the criteria.</figcaption>
+      <figcaption><strong>Figure 9: Kerr paper-target gate.</strong> The next target uses the same measurement discipline in the negative direction. The bounded Kerr run generated 306 rows; the strict gate scans those rows, 456 targeted finite-spin corrections, and four probes against the closed split-monopole nonlinear Kerr Grad-Shafranov residual. It also solves the 48-coefficient leading-order ansatz and gets EmptySet, then emits no_candidate_yet because no expression passes the criteria.</figcaption>
     </figure>
 
 
@@ -652,6 +654,15 @@ T = u_z*d_rho - u_rho*d_z</pre>
     residual.
   </p>
   <p>
+    The stricter screen is not a larger fixed-coefficient search.  It solves the
+    leading <code>a**2</code> residual coefficient for the full one-term basis:
+    <code>Psi = 1 - x + a**2*sum_i c_i*basis_i(r,x)</code> with <code>M = 1</code>.
+    That produces <code>66</code> polynomial equations in <code>48</code> unknown
+    coefficients; the matrix has shape <code>[66, 48]</code>, and
+    <code>linsolve</code> returns <code>EmptySet</code>.  So even before the full
+    nonlinear residual, this ansatz family has no leading-order correction.
+  </p>
+  <p>
     The literature motivation is explicitly separated from the current
     surrogate.  Mahlmann et al. frame static, axisymmetric, force-free Kerr
     magnetospheres around the relativistic Grad-Shafranov equation and numerical
@@ -736,7 +747,9 @@ python3 experiments/proof-search/proof_search_integrity_gate.py</pre>
     solutions.  The Kerr gate is a separate <code>no_candidate_yet</code> artifact:
     it prevents the current linear surrogate from being promoted into the next
     paper target, appends targeted finite-spin corrections, and checks the
-    closed split-monopole nonlinear residual directly.
+    closed split-monopole nonlinear residual directly.  Its leading-order
+    coefficient solve also returns <code>EmptySet</code> for the 48-function
+    one-term ansatz.
   </p>
 </main>
 </body>

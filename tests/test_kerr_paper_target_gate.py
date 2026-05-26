@@ -16,6 +16,7 @@ from tools.export_kerr_paper_target_gate import (
     full_kerr_split_monopole_residual,
     generate_anchor_correction_rows,
     pair_correction_basis,
+    solve_leading_order_coefficient_rows,
     sympify_locals,
 )
 
@@ -113,6 +114,18 @@ class KerrPaperTargetGateTest(unittest.TestCase):
             self.assertTrue(
                 {"a", "r", "x"}.issubset({str(symbol) for symbol in expr.free_symbols})
             )
+
+    def test_leading_order_coefficient_solve_finds_no_one_term_solution(self):
+        rows, metadata = solve_leading_order_coefficient_rows()
+
+        self.assertEqual(rows, [])
+        self.assertTrue(metadata["enabled"])
+        self.assertEqual(metadata["status"], "no_leading_order_solution")
+        self.assertEqual(metadata["unknown_count"], len(correction_basis()))
+        self.assertEqual(metadata["equation_count"], 66)
+        self.assertEqual(metadata["matrix_shape"], [66, 48])
+        self.assertEqual(metadata["linsolve_result"], "EmptySet")
+        self.assertEqual(metadata["generated_candidates"], 0)
 
 
 if __name__ == "__main__":

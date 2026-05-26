@@ -149,6 +149,9 @@ manifest and validator gate for the Kerr paper target:
 - equivalence filters for constant shifts, scalings, and known anchors
 - JSON exporter with a `no_candidate_yet` result if no row meets all criteria
 - targeted finite-spin correction grammar around the split-monopole anchor
+- leading-order coefficient solve over the targeted basis, so the run tests
+  an arbitrary one-term coefficient combination instead of only fixed scalar
+  coefficients
 
 Only after that should the engine search matter. A negative result under the
 strict gate is useful; a degenerate "valid" row is not.
@@ -207,6 +210,21 @@ residual; all `456` fail exact-zero residual. The probes
 `1 - x`, `x`, `1/(1 - 1)`, and `1 - x + a**2*r*x` prove that the gate rejects
 known anchors and undefined expressions and evaluates the full nonlinear
 residual on an anchor-like finite-spin expression.
+
+The PR then added a stricter algebraic screen over the full one-term basis:
+
+```text
+Psi = 1 - x + a**2 * sum_i c_i*basis_i(r,x)
+M = 1
+coefficient of a**2 in full residual series through O(a**4)
+```
+
+This is not another fixed-coefficient engine sample. It solves for arbitrary
+coefficients in the same 48-function basis. The leading-order residual produces
+`66` polynomial equations in `48` unknown coefficients, the linear system has
+matrix shape `[66, 48]`, and SymPy returns `EmptySet`. Therefore the one-term
+finite-spin ansatz has no leading-order correction in this basis and contributes
+`0` additional candidate rows.
 
 The status is therefore **`no_candidate_yet`**. That is intentional. It is the
 right artifact for the next paper program: the residual gate now exists for
