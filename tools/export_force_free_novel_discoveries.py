@@ -85,6 +85,10 @@ class DbRun:
     table_name: str
     run_id: str
     command: list[str] | None = None
+    max_depth: int | None = None
+    validators: int | None = None
+    wall_timeout_s: float | None = None
+    validation_timeout_s: float | None = None
 
 
 @dataclass(frozen=True)
@@ -196,7 +200,16 @@ def run_engine(max_depth: int, validators: int, timeout_s: float, validation_tim
     else:
         db_path = ROOT / "problems" / "force_free" / "outputs" / f"parallel_runs_{run_id}.db"
     table_name = f"expressions_{run_id.replace('-', '_')}"
-    return DbRun(db_path=db_path, table_name=table_name, run_id=run_id, command=display_command)
+    return DbRun(
+        db_path=db_path,
+        table_name=table_name,
+        run_id=run_id,
+        command=display_command,
+        max_depth=max_depth,
+        validators=validators,
+        wall_timeout_s=timeout_s,
+        validation_timeout_s=validation_timeout_s,
+    )
 
 
 def load_candidate_rows(run: DbRun) -> tuple[list[CandidateRow], dict[str, Any]]:
@@ -313,6 +326,30 @@ def build_artifact(run: DbRun, rows: list[CandidateRow], run_summary: dict[str, 
         "solution_target": SOLUTION_TARGET,
         "literature_sources": LITERATURE_SOURCES,
         "problem": "force_free",
+        "process": {
+            "role": "process-control baseline, not the final publication target",
+            "engine_action": "fresh bounded pde-engine run, then post-filtered export",
+            "search_bounds": {
+                "max_depth": run.max_depth,
+                "validators": run.validators,
+                "wall_timeout_s": run.wall_timeout_s,
+                "per_expression_validation_timeout_s": run.validation_timeout_s,
+            },
+            "positive_filters_applied": [
+                "row was marked valid by the bounded force-free validator",
+                "row was not flagged as one of the registered known_solutions",
+                "expression contains both rho and z",
+                "independent determinant rebuild simplified exactly to zero",
+                "determinant at (rho,z)=(4/5,6/7) was exactly zero",
+            ],
+            "not_yet_applied": [
+                "literature-priority search",
+                "foliation reparameterization equivalence classification",
+                "global regularity and boundary-condition analysis",
+                "physical acceptability analysis",
+                "full depth-4 seven-solution pde-engine reproduction",
+            ],
+        },
         "source_engine_run": {
             "run_id": run.run_id,
             "db_path": str(run.db_path.relative_to(ROOT)),
@@ -350,6 +387,10 @@ This artifact records pde-engine discoveries that are novel relative to the
 repository's seven registered force-free `known_solutions`. It is not a
 literature-priority claim.
 
+This force-free run is a process-control baseline. It proves that the engine,
+adapter, and export criteria can produce a reproducible evidence artifact; it
+is not the final research target.
+
 ## What these solve
 
 The candidates solve the stationary axisymmetric non-rotating force-free
@@ -376,6 +417,9 @@ Source links:
 - Database: `{artifact["source_engine_run"]["db_path"]}`
 - Table: `{artifact["source_engine_run"]["table_name"]}`
 - Command: `{command_str}`
+- Bounds: `max_depth={artifact["process"]["search_bounds"]["max_depth"]}`,
+  `validators={artifact["process"]["search_bounds"]["validators"]}`,
+  `per_expression_validation_timeout_s={artifact["process"]["search_bounds"]["per_expression_validation_timeout_s"]}`
 - Total generated: `{artifact["run_summary"]["total_generated"]}`
 - Completed validations: `{artifact["run_summary"]["total_completed"]}`
 - Valid rows: `{artifact["run_summary"]["total_valid_rows"]}`
@@ -391,6 +435,22 @@ Selection policy: {artifact["selection_policy"]}.
 The determinant was rebuilt by `tools/export_force_free_novel_discoveries.py`
 instead of trusting the validator cache. Each row also has
 `not_identical_to_registered_known_solutions=true` in the JSON artifact.
+
+## Process boundary
+
+This was not an exhaustive force-free search. The engine run was deliberately
+bounded at depth 2 with one validator worker and a three-second per-expression
+validation timeout. The exporter then applied tighter post-hoc filters:
+
+- valid row from the bounded run
+- not flagged as one of the registered known solutions
+- both `rho` and `z` occur
+- independent determinant rebuild simplifies exactly to zero
+- determinant at `(rho,z)=(4/5,6/7)` is exactly zero
+
+The artifact does not yet classify reparameterization equivalence, prove global
+regularity, prove physical acceptability, or establish literature priority.
+Those are the criteria for the next target, not for this control run.
 """
 
 

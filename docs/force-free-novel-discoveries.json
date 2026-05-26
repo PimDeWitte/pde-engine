@@ -118,6 +118,30 @@
   ],
   "novelty_scope": "Novel relative to the repository's seven registered force-free known_solutions. This is not a literature-priority claim.",
   "problem": "force_free",
+  "process": {
+    "engine_action": "fresh bounded pde-engine run, then post-filtered export",
+    "not_yet_applied": [
+      "literature-priority search",
+      "foliation reparameterization equivalence classification",
+      "global regularity and boundary-condition analysis",
+      "physical acceptability analysis",
+      "full depth-4 seven-solution pde-engine reproduction"
+    ],
+    "positive_filters_applied": [
+      "row was marked valid by the bounded force-free validator",
+      "row was not flagged as one of the registered known_solutions",
+      "expression contains both rho and z",
+      "independent determinant rebuild simplified exactly to zero",
+      "determinant at (rho,z)=(4/5,6/7) was exactly zero"
+    ],
+    "role": "process-control baseline, not the final publication target",
+    "search_bounds": {
+      "max_depth": 2,
+      "per_expression_validation_timeout_s": 3.0,
+      "validators": 1,
+      "wall_timeout_s": 90.0
+    }
+  },
   "run_summary": {
     "candidate_rows": 74,
     "known_solution_rows": 2,
@@ -153,9 +177,9 @@
       "--validators",
       "1"
     ],
-    "db_path": "problems/force_free/outputs/parallel_runs_paper_repro_20260526_083818_410ffa6c.db",
-    "run_id": "paper_repro_20260526_083818_410ffa6c",
-    "table_name": "expressions_paper_repro_20260526_083818_410ffa6c"
+    "db_path": "problems/force_free/outputs/parallel_runs_paper_repro_20260526_091146_fa5af2b9.db",
+    "run_id": "paper_repro_20260526_091146_fa5af2b9",
+    "table_name": "expressions_paper_repro_20260526_091146_fa5af2b9"
   },
   "witness_point": {
     "rho": "4/5",

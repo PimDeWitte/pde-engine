@@ -21,9 +21,12 @@ adapter gate.
   when they share the same cache database.
 - `tools/export_force_free_novel_discoveries.py` runs a bounded force-free
   engine pass, mines valid non-registered rows, independently rebuilds the
-  determinant, and emits JSON/Markdown discovery artifacts.
+  determinant, and emits JSON/Markdown process-control artifacts.
 - `tests/test_force_free_novel_discoveries.py` checks the independent
   determinant builder and the registry-novel candidate filter.
+- `docs/discovery-process-and-next-target.md` records the full process,
+  including the search bounds, post-hoc filters, missing criteria, and the next
+  Kerr-force-free target.
 
 ## How Lagra used pde-engine
 
@@ -71,9 +74,10 @@ Lagra binds those results into its `.lagra` proof-search constants and checks
 them through publication-readiness and integrity gates before the result is
 allowed into the rendered paper.
 
-## Engine-discovered candidates
+## Engine process-control candidates
 
-The bounded depth-2 engine run now produces a committed discovery artifact:
+The bounded depth-2 engine run now produces a committed process-control
+artifact:
 
 - `docs/force-free-novel-discoveries.json`
 - `docs/force-free-novel-discoveries.md`
@@ -104,6 +108,11 @@ Novelty is scoped to the repository registry: these rows are not identical to
 the seven registered `known_solutions`. This is not a literature-priority
 claim.
 
+The full process record is in
+`docs/discovery-process-and-next-target.md`. The important correction is that
+this force-free list is not the final research target. It is the control
+problem used to debug and document the pde-engine/Lagra evidence path.
+
 ## Literature sources
 
 - Geoffrey Compere, Samuel E. Gralla, Alexandru Lupsasca, "Force-Free
@@ -117,7 +126,7 @@ claim.
 This is a positive pde-engine adapter, exact symbolic determinant check, point
 check, and validator-cache regression. It is not a Lean proof. It is not a
 full pde-engine reproduction claim. The new candidate artifact is a bounded
-engine-discovery result, not a claim of literature priority.
+engine process-control result, not a claim of literature priority.
 
 The Lagra health gate still records the broader pde-engine reproduction path
 as not fully reproduced on the local checkout used for this paper. After the
@@ -126,8 +135,9 @@ second patch, the bounded depth-2 smoke no longer hits the old
 and no longer times out under the 20 second health wrapper. It exits with
 return code `0`, generates `112` expressions, reports `76` valid rows, and finds
 `2` known vertical canonical forms. It also exports six independently rechecked
-non-registered candidates. That is a process-clean smoke and a bounded discovery
-artifact, not a full seven-solution Compere reproduction.
+non-registered process-control candidates. That is a process-clean smoke and a
+bounded evidence-path artifact, not a full seven-solution Compere reproduction
+and not the paper target.
 
 ## Included paper artifacts
 
@@ -135,6 +145,7 @@ artifact, not a full seven-solution Compere reproduction.
 - `docs/lagra-force-free-adapter-paper.html`
 - `docs/force-free-novel-discoveries.json`
 - `docs/force-free-novel-discoveries.md`
+- `docs/discovery-process-and-next-target.md`
 - `tools/render_lagra_force_free_adapter_paper.py`
 - `tools/export_force_free_novel_discoveries.py`
 
@@ -148,12 +159,13 @@ diagram states what enters Lagra and what measurement comes out.
 Artifact hashes:
 
 ```text
-7fc1466a8fd5b2f7c3be0bf4d381928c5cc532133a1cae9a0ac4a9b2bc11b6e7  docs/lagra-force-free-adapter-paper.html
-707ee4538ed9ea7851bdac446f015847c6e1196fb44a845455409d877a4622b3  docs/lagra-force-free-adapter-paper.pdf
-225cc5a17f1c169b2b76c875ba1679b9af6fc2e193397358dfa5f48999941736  tools/render_lagra_force_free_adapter_paper.py
-5bf9a4f1c16384eb689316ff0d03975dcd9bde9dd2194cdbf076310e80b0f3ba  docs/force-free-novel-discoveries.json
-50ec409796a4146505f8a6028834257cdbee351bae8b3f7a82d2a105de04ad60  docs/force-free-novel-discoveries.md
-82dfc82fc0c9cce79b5817535d9c07821736293048e6b209c8ad7ad3e95d8df8  tools/export_force_free_novel_discoveries.py
+2da86b8029a0ad252c4ba8907b7e10019df42b8b949721a281b0f1db5cde5995  docs/lagra-force-free-adapter-paper.html
+2555cb05126b691127c3d5db1900a94409ce02d86a78c23f61e81e86c8c0bf52  docs/lagra-force-free-adapter-paper.pdf
+7a9c0cc5219b697843e6c80d9d263cc55537b3fefad34d4cd553c5b8d1887d2d  tools/render_lagra_force_free_adapter_paper.py
+f67202596b8fe94c85b6ca9ebba02267a7891ef6929add75bf0a0b5f73f67d6c  docs/force-free-novel-discoveries.json
+b6073e74d079d19d7183101f5a21770064e0f3ea450fd257c803afc9e2cd301c  docs/force-free-novel-discoveries.md
+cd5999772df7b0e2a06d10831f9863ddb51ea5ecca5276e314eedc6d76517b41  tools/export_force_free_novel_discoveries.py
+53a95f937062e0817358e5fbb0cb00ba4183b7eafd376fdd7175c6d7e3a0d334  docs/discovery-process-and-next-target.md
 7feafdfd3e9dee42cbeed306ca2bf62a55d49a1659c23d662de360a83da6f44b  pde_engine_force_free_point_gate.json
 e5a4c2b7ce63ba4044dcdfa5f0aa58758b3e2e5db92e12b8936e01770d3f99a1  pde_engine_reproduction_health_gate.json
 ```
