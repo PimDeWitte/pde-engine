@@ -236,6 +236,8 @@ and not the paper target.
 - `docs/discovery-process-and-next-target.md`
 - `docs/kerr-paper-target-gate.json`
 - `docs/kerr-paper-target-gate.md`
+- `docs/kerr-perturbative-anchor-paper.tex`
+- `docs/kerr-perturbative-anchor-paper.pdf`
 - `tools/render_lagra_force_free_adapter_paper.py`
 - `tools/export_force_free_novel_discoveries.py`
 - `tools/export_kerr_paper_target_gate.py`
@@ -260,6 +262,8 @@ cd5999772df7b0e2a06d10831f9863ddb51ea5ecca5276e314eedc6d76517b41  tools/export_f
 024919b59a15aca96c17da99f1522097633715e072a88f9bd4e494ef463bce0b  docs/discovery-process-and-next-target.md
 3c03c4114ca86268bd213aa71ee0e41be023bdd73201986a5b4bcfb1154679f8  docs/kerr-paper-target-gate.json
 ba389f6999d42c79e6db15956d3a25ab6a5e4dba3324714cbe6a9a2a4134fb3f  docs/kerr-paper-target-gate.md
+49ccd16d62833a935e530a7b3b00c2e663cdb512f69c0686eafae52c655f93b6  docs/kerr-perturbative-anchor-paper.tex
+27697e75c801c5c59474c0a805e54e8f57447db5ff9b2fbedda65556166fcc19  docs/kerr-perturbative-anchor-paper.pdf
 b06927bdb7165c5b076d5440189b3fb8dadfd35b807f5bee0827804b429dd8be  tools/export_kerr_paper_target_gate.py
 ```
 
@@ -291,6 +295,11 @@ python3 tools/export_kerr_paper_target_gate.py \
   --timeout-s 90 --validation-timeout-s 3
 
 python3 tools/render_lagra_force_free_adapter_paper.py
+
+tectonic docs/kerr-perturbative-anchor-paper.tex --outdir docs
+
+pdftotext docs/kerr-perturbative-anchor-paper.pdf - | \
+  rg -n "A Reproducible Kerr|no_candidate_yet|Blandford-Znajek|Tanabe|Pan|Mahlmann|Camilloni|EmptySet|766|456|66|48"
 ```
 
 From the Lagra checkout that produced the included paper:
