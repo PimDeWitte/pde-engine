@@ -194,11 +194,30 @@ class PreciseFoliationValidator:
         """)
         self.conn.commit()
         
-    def _get_expr_hash(self, expr: sp.Basic) -> str:
-        """Get a hash for an expression for caching."""
-        # Use string representation for hashing
-        expr_str = str(expr)
-        return hashlib.sha256(expr_str.encode()).hexdigest()
+    def _get_expr_hash(
+        self,
+        expr: sp.Basic,
+        check_regularity: bool = True,
+        fast_point_only: bool = False,
+    ) -> str:
+        """Get a cache hash for an expression and validation context.
+
+        The force-free constraint changes when Omega changes, and validation
+        answers can also depend on whether axis regularity or point-only mode is
+        requested.  Keep those knobs in the cache key so a cheap non-rotating
+        result cannot be replayed as a rotating result.
+        """
+        cache_payload = {
+            "schema": "force_free_validator_v2",
+            "expr": sp.sstr(expr),
+            "omega": sp.sstr(self.Omega),
+            "check_regularity": bool(check_regularity),
+            "fast_point_only": bool(fast_point_only),
+            "use_lean": bool(self.use_lean),
+        }
+        return hashlib.sha256(
+            json.dumps(cache_payload, sort_keys=True).encode()
+        ).hexdigest()
         
     def _check_cache(self, expr_hash: str) -> Optional[Tuple[bool, str]]:
         """Check if result is in cache."""
@@ -274,7 +293,11 @@ class PreciseFoliationValidator:
             (is_valid, reason) tuple
         """
         # Check cache first
-        expr_hash = self._get_expr_hash(u)
+        expr_hash = self._get_expr_hash(
+            u,
+            check_regularity=check_regularity,
+            fast_point_only=fast_point_only,
+        )
         cached_result = self._check_cache(expr_hash)
         if cached_result is not None:
             return cached_result
@@ -292,18 +315,16 @@ class PreciseFoliationValidator:
                     self._save_to_cache(expr_hash, str(u), False, "N/A", result[1])
                     return result
             
-            # Compute derivatives quickly at the point using AD if fast mode
+            # Compute symbolic derivatives. In fast_point_only mode we still
+            # build the exact determinant, but stop after the exact paper point
+            # check instead of attempting Lean/full-plane simplification. The
+            # previous placeholder-AD shortcut only carried second derivatives,
+            # while L_T(A), L_T(B), and the second Lie derivative require higher
+            # derivatives.
             rho_pt = sp.Rational(4, 5)
             z_pt = sp.Rational(6, 7)
-            if fast_point_only:
-                u_val, u_rho_pt, u_z_pt, u_rr_pt, u_zz_pt, u_rz_pt = self._ad_eval_point(u, rho_pt, z_pt)
-                u_rho = sp.Function('u_rho')
-                u_z = sp.Function('u_z')
-                u_rho_rho = sp.Function('u_rr')
-                u_z_z = sp.Function('u_zz')
-            else:
-                u_rho = u.diff(self.rho)
-                u_z = u.diff(self.z)
+            u_rho = u.diff(self.rho)
+            u_z = u.diff(self.z)
             
             # Check if gradient is zero (trivial case)
             if u_rho == 0 and u_z == 0:
@@ -312,12 +333,8 @@ class PreciseFoliationValidator:
                 return result
             
             # Second derivatives
-            if fast_point_only:
-                u_rho_rho = sp.Function('u_rr')
-                u_z_z = sp.Function('u_zz')
-            else:
-                u_rho_rho = u_rho.diff(self.rho)
-                u_z_z = u_z.diff(self.z)
+            u_rho_rho = u_rho.diff(self.rho)
+            u_z_z = u_z.diff(self.z)
             
             # A and B (Eq. 2.10), with optional rotation
             A_non_rotating = u_rho_rho + u_z_z - u_rho/self.rho
@@ -348,19 +365,6 @@ class PreciseFoliationValidator:
             
             # Step 1 (paper): check at (ρ, z) = (4/5, 6/7)
             test_point = {self.rho: rho_pt, self.z: z_pt}
-            if fast_point_only:
-                # Substitute first- and second-order derivatives numerically at the point to avoid symbolic growth
-                subs_map = {
-                    self.rho: rho_pt,
-                    self.z: z_pt,
-                    u_rho: u_rho_pt,
-                    u_z: u_z_pt,
-                    u_rho_rho: u_rr_pt,
-                    u_z_z: u_zz_pt,
-                }
-                det_at_point = det_M.subs(subs_map)
-            else:
-                det_at_point = det_M.subs(test_point)
             det_at_point = det_M.subs(test_point)
             
             # Fast path: avoid Lean, prefer cheap simplifications
@@ -403,9 +407,13 @@ class PreciseFoliationValidator:
             
             # Optional full-plane check (slow). Only run when not in fast mode.
             if not fast_point_only:
-                # Prefer Lean only for small expressions
+                # Prefer Lean only for small expressions.  Do not let a failed
+                # cheap path fall through into unbounded SymPy expansion: the
+                # discovery runner must reject/defer oversized determinants
+                # instead of wedging a validator worker.
                 det_str = str(det_M)
-                if self.use_lean and self.lean_normalizer and len(det_str) < 3000:
+                max_symbolic_chars = 3000
+                if self.use_lean and self.lean_normalizer and len(det_str) < max_symbolic_chars:
                     det_symbolic_simpl = self._simplify_with_lean(det_M)
                     if det_symbolic_simpl == 0:
                         result = (True, "Valid foliation (Lean: det = 0 symbolically)")
@@ -413,6 +421,13 @@ class PreciseFoliationValidator:
                         return result
                     result = (False, "Invalid (Lean could not simplify det to 0 symbolically)")
                     self._save_to_cache(expr_hash, str(u), False, "lean_symbolic", result[1])
+                    return result
+                if len(det_str) >= max_symbolic_chars:
+                    result = (
+                        False,
+                        f"Skipped full symbolic check (determinant too large: {len(det_str)} chars)",
+                    )
+                    self._save_to_cache(expr_hash, str(u), False, "symbolic_deferred", result[1])
                     return result
                 else:
                     # Last resort: expanded check

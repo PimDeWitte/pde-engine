@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lagra force-free adapter for pde-engine</title>
+  <style>
+    @page { size: A4; margin: 17mm 18mm; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #f0eee9;
+      color: #243043;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 13.5px;
+      line-height: 1.44;
+    }
+    main {
+      width: 210mm;
+      margin: 0 auto;
+      background: #fffefa;
+      padding: 17mm 18mm 20mm;
+      min-height: 297mm;
+    }
+    .running { color: #a0a0a0; font-size: 10px; margin-bottom: 28px; }
+    h1 {
+      text-align: center;
+      font-size: 18px;
+      line-height: 1.25;
+      margin: 0 0 24px;
+    }
+    .byline { text-align: center; font-size: 12px; margin-bottom: 36px; }
+    .abstract-title { text-align: center; font-weight: 700; margin: 0 0 12px; }
+    .abstract { max-width: 620px; margin: 0 auto 30px; text-align: justify; }
+    h2 { font-size: 16px; margin: 26px 0 8px; }
+    h3 { font-size: 14px; margin: 20px 0 6px; }
+    p { text-align: justify; margin: 0 0 10px; }
+    code, pre { font-family: "Courier New", monospace; }
+    pre {
+      background: #f3f2ed;
+      padding: 10px 12px;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+      font-size: 11.5px;
+      line-height: 1.35;
+    }
+    figure { margin: 25px 0 26px; break-inside: avoid; }
+    .pagebreak { break-before: page; page-break-before: always; }
+    .figure-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto 8px;
+    }
+    figcaption { font-size: 12.5px; line-height: 1.35; text-align: left; }
+    .math { font-family: Georgia, "Times New Roman", serif; font-style: italic; }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 12px; }
+    th, td { border-bottom: 1px solid #ddd8ce; padding: 6px 7px; text-align: left; vertical-align: top; }
+    th { background: #f6f2e8; }
+    .claim { border-left: 3px solid #c6246b; padding-left: 10px; }
+    @media print {
+      body { background: #fffefa; }
+      main { width: auto; margin: 0; padding: 0; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <div class="running">Lagra force-free adapter for pde-engine</div>
+  <h1>Lagra as a measurement harness for pde-engine force-free validation</h1>
+  <div class="byline">Pim de Witte · Lagra Project · pde-engine adapter note · May 26, 2026</div>
+
+  <div class="abstract-title">Abstract</div>
+  <p class="abstract">
+    This note rewrites the pde-engine force-free adapter in the visual style of
+    <em>Lagra: A differentiable physics kernel for verifiable domain operations</em>.
+    The purpose is narrower than the Lagra kernel paper.  We do not claim a new
+    literature-priority result or a full reproduction of the pde-engine discovery
+    pipeline.  We show how Lagra enters a local pde-engine checkout, which
+    inputs are admitted into the Lagra proof-search graph, which quantities are
+    measured, and which claims are allowed into the paper.  The positive result
+    is exact and useful: seven pde-engine registry force-free foliations simplify
+    to determinant zero; two negative controls simplify to nonzero determinants;
+    three rational checkpoints separate known solutions from controls; and a
+    rotation-context cache regression proves that the validator cache key must
+    include <code>Omega</code> and the validation mode; and a bounded engine pass
+    exports six non-registered, independently rechecked candidate foliations
+    as a process-control baseline rather than as a publication target.
+    A second gate records the next Kerr paper target, appends targeted one-term
+    and two-term finite-spin correction grammars, runs a 48-coefficient
+    leading-order solve, checks the literature slow-rotation perturbative
+    anchor, and emits <code>no_candidate_yet</code> rather than promoting the
+    current linear surrogate.
+    The negative result is equally
+    important: the bounded pde-engine smoke is now process-clean, but the full
+    seven-solution pde-engine/Lean reproduction path remains non-green on this
+    checkout and is recorded as a boundary, not upgraded into a proof.
+  </p>
+
+
+    <figure>
+      <svg class="figure-svg" viewBox="0 0 790 235" role="img" aria-label="Lagra adapter pipeline">
+
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#243043"/>
+      </marker>
+      <marker id="arrowMagenta" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c6246b"/>
+      </marker>
+    </defs>
+
+<text x="210" y="54" font-size="12" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">compile-time</text>
+<text x="552" y="54" font-size="12" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">per-run measurement loop</text>
+<rect x="34" y="88" width="106" height="58" rx="5" fill="#139f73"/>
+<text x="87" y="113" font-size="14" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">.lagra</text>
+<text x="87" y="132" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">adapter scene</text>
+<rect x="174" y="88" width="118" height="58" rx="5" fill="#15839c"/>
+<text x="233" y="113" font-size="14" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Lagrangian</text>
+<text x="233" y="132" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Graph</text>
+<rect x="326" y="88" width="126" height="58" rx="5" fill="#6c48c9"/>
+<text x="389" y="113" font-size="14" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Action</text>
+<text x="389" y="132" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Adapter</text>
+<rect x="486" y="88" width="126" height="58" rx="5" fill="#3f4fc6"/>
+<text x="549" y="113" font-size="14" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">pde-engine</text>
+<text x="549" y="132" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Validator</text>
+<rect x="646" y="88" width="110" height="58" rx="5" fill="#c6246b"/>
+<text x="701" y="113" font-size="14" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Verifier</text>
+<text x="701" y="132" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">gates</text>
+<line x1="140" y1="117" x2="174" y2="117" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="292" y1="117" x2="326" y2="117" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="452" y1="117" x2="486" y2="117" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="612" y1="117" x2="646" y2="117" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="87" y="168" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">typed proof-search</text>
+<text x="87" y="184" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">constants and gates</text>
+<text x="233" y="168" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">vertices = checks</text>
+<text x="233" y="184" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">edges = measurements</text>
+<text x="389" y="168" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">imports symbols,</text>
+<text x="389" y="184" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">builds det M</text>
+<text x="549" y="168" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">valid / invalid,</text>
+<text x="549" y="184" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">cache hashes</text>
+<text x="701" y="168" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">PASS -> paper</text>
+<text x="701" y="184" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">FAIL -> boundary</text>
+<path d="M 704 146 L 704 207 L 389 207 L 389 147" fill="none" stroke="#c6246b" stroke-width="1.4" stroke-dasharray="5 5" marker-end="url(#arrowMagenta)"/>
+<text x="546" y="226" font-size="12" fill="#c6246b" text-anchor="middle" font-weight="400" font-family="Georgia, serif">paper output is admitted only after integrity + readiness gates pass</text>
+</svg>
+      <figcaption><strong>Figure 1: The Lagra/pde-engine adapter pipeline in one figure.</strong> This is the direct analogue of the Lagra pipeline figure. The input is a typed Lagra proof-search source plus a local pde-engine checkout. The measured output is not a trajectory; it is a JSON evidence artifact and an admitted paper section. The dashed return path is the strict gate: failed measurements do not become prose.</figcaption>
+    </figure>
+
+
+    <figure>
+      <svg class="figure-svg" viewBox="0 0 790 270" role="img" aria-label="Adapter vocabulary chips">
+
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#243043"/>
+      </marker>
+      <marker id="arrowMagenta" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c6246b"/>
+      </marker>
+    </defs>
+
+<text x="394" y="24" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">AdapterKind = RegistrySolution | NegativeControl | PointCheck</text>
+<text x="394" y="43" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">| RotationContext | HealthSmoke | PaperArtifact</text>
+<rect x="54" y="62" width="205" height="72" rx="5" fill="#139f73"/>
+<text x="156" y="84" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">RegistrySolution</text>
+<text x="156" y="104" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">input: KNOWN_SOLUTIONS</text>
+<text x="156" y="122" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">measure: det M == 0</text>
+<rect x="292" y="62" width="205" height="72" rx="5" fill="#6c48c9"/>
+<text x="394" y="84" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">NegativeControl</text>
+<text x="394" y="104" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">input: rho*z, exp(rho*z)</text>
+<text x="394" y="122" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">measure: det M != 0</text>
+<rect x="531" y="62" width="205" height="72" rx="5" fill="#c97606"/>
+<text x="633" y="84" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">PointCheck</text>
+<text x="633" y="104" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">input: rational points</text>
+<text x="633" y="122" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">measure: abs(det M)</text>
+<rect x="54" y="158" width="205" height="72" rx="5" fill="#15839c"/>
+<text x="156" y="180" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">RotationContext</text>
+<text x="156" y="200" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">input: Omega in cache key</text>
+<text x="156" y="218" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">measure: valid/invalid split</text>
+<rect x="292" y="158" width="205" height="72" rx="5" fill="#3f4fc6"/>
+<text x="394" y="180" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">HealthSmoke</text>
+<text x="394" y="200" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">input: bounded CLI run</text>
+<text x="394" y="218" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">measure: rc0 / counts</text>
+<rect x="531" y="158" width="205" height="72" rx="5" fill="#c6246b"/>
+<text x="633" y="180" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">PaperArtifact</text>
+<text x="633" y="200" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">input: JSON catalog</text>
+<text x="633" y="218" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">measure: exact hashes</text>
+<text x="394" y="252" font-size="12" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">Every chip has a typed input, a deterministic measurement, and an admitted output field.</text>
+</svg>
+      <figcaption><strong>Figure 2: The adapter vocabulary.</strong> The original Lagra vocabulary figure lists LagrangianNode variants. Here the closed vocabulary is the set of adapter checks. Each variant names exactly what enters the check and exactly what is measured on the way out.</figcaption>
+    </figure>
+
+
+    <figure>
+      <svg class="figure-svg" viewBox="0 0 790 355" role="img" aria-label="Anatomy of Lagra adapter graph">
+
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#243043"/>
+      </marker>
+      <marker id="arrowMagenta" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c6246b"/>
+      </marker>
+    </defs>
+
+<text x="154" y="52" font-size="12" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif" style="font-style:italic">external inputs</text>
+<text x="625" y="52" font-size="12" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif" style="font-style:italic">measured outputs</text>
+<rect x="48" y="78" width="152" height="46" rx="5" fill="#139f73"/>
+<text x="124" y="105" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">pde-engine registry</text>
+<rect x="48" y="147" width="152" height="46" rx="5" fill="#6c48c9"/>
+<text x="124" y="174" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">control expressions</text>
+<rect x="48" y="216" width="152" height="46" rx="5" fill="#15839c"/>
+<text x="124" y="243" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">context: Omega</text>
+<rect x="310" y="82" width="170" height="46" rx="5" fill="#fbfaf7" stroke="#9aa5b1"/>
+<text x="395" y="110" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">symbols rho, z</text>
+<rect x="310" y="151" width="170" height="46" rx="5" fill="#fbfaf7" stroke="#9aa5b1"/>
+<text x="395" y="179" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">A, B, L_T operators</text>
+<rect x="310" y="220" width="170" height="46" rx="5" fill="#fbfaf7" stroke="#9aa5b1"/>
+<text x="395" y="248" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">determinant M</text>
+<line x1="200" y1="101" x2="310" y2="105" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="200" y1="170" x2="310" y2="174" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="200" y1="239" x2="310" y2="243" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="395" y1="128" x2="395" y2="151" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="395" y1="197" x2="395" y2="220" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="594" y="73" width="154" height="50" rx="5" fill="#139f73"/>
+<text x="671" y="102" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">7/7 exact zero</text>
+<rect x="594" y="139" width="154" height="50" rx="5" fill="#6c48c9"/>
+<text x="671" y="168" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">2/2 exact nonzero</text>
+<rect x="594" y="205" width="154" height="50" rx="5" fill="#15839c"/>
+<text x="671" y="234" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Omega cache split</text>
+<rect x="594" y="271" width="154" height="50" rx="5" fill="#c6246b"/>
+<text x="671" y="300" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">paper/integrity pass</text>
+<line x1="480" y1="105" x2="594" y2="98" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="480" y1="174" x2="594" y2="164" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="480" y1="243" x2="594" y2="230" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="480" y1="243" x2="594" y2="296" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 268 308 H 522" fill="none" stroke="#333" stroke-width="1.2"/>
+<text x="395" y="300" font-size="12" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">Lagra edge sum:</text>
+<text x="395" y="326" font-size="13" fill="#243043" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">E = E_registry + E_controls + E_rotation + E_health + E_artifact</text>
+</svg>
+      <figcaption><strong>Figure 3: Anatomy of the Lagra adapter graph.</strong> The external pde-engine registry, control expressions, and validation context enter as graph-visible inputs. The edges are measurement obligations. The outputs are the counts and facts consumed by the proof-search catalog: exact-zero solutions, exact-nonzero controls, rotation-cache separation, and paper-readiness status.</figcaption>
+    </figure>
+
+
+    <figure>
+      <svg class="figure-svg" viewBox="0 0 790 270" role="img" aria-label="One adapter run as data flow">
+
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#243043"/>
+      </marker>
+      <marker id="arrowMagenta" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c6246b"/>
+      </marker>
+    </defs>
+
+<rect x="40" y="62" width="130" height="48" rx="5" fill="#15839c"/>
+<text x="105" y="83" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Lagra catalog</text>
+<text x="105" y="101" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">constants</text>
+<rect x="40" y="145" width="130" height="48" rx="5" fill="#c97606"/>
+<text x="105" y="166" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Current input</text>
+<text x="105" y="184" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">u(rho,z), Omega</text>
+<rect x="244" y="100" width="130" height="60" rx="5" fill="#6c48c9"/>
+<text x="309" y="122" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Exact adapter</text>
+<text x="309" y="141" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">u -> det M</text>
+<rect x="436" y="100" width="132" height="60" rx="5" fill="#fbfaf7" stroke="#9aa5b1"/>
+<text x="502" y="122" font-size="12" fill="#243043" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Measurements</text>
+<text x="502" y="141" font-size="11" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">zero/nonzero/abs</text>
+<rect x="632" y="100" width="126" height="60" rx="5" fill="#3f4fc6"/>
+<text x="695" y="122" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Output JSON</text>
+<text x="695" y="141" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">same type each run</text>
+<line x1="170" y1="86" x2="244" y2="119" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="170" y1="169" x2="244" y2="141" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="374" y1="130" x2="436" y2="130" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="568" y1="130" x2="632" y2="130" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="107" y="128" font-size="11" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">explicit inputs</text>
+<text x="309" y="187" font-size="11" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">rebuilds det M for this context</text>
+<text x="502" y="187" font-size="11" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">exact + point measurements</text>
+<text x="695" y="187" font-size="11" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">readiness-audit input</text>
+</svg>
+      <figcaption><strong>Figure 4: One adapter run as a data-flow diagram.</strong> This mirrors the one-timestep figure in the Lagra paper. The action is not a mechanical time step; it is one deterministic validation pass. The adapter rebuilds the symbolic determinant for the current expression and context, measures exact and pointwise quantities, and writes a typed JSON artifact.</figcaption>
+    </figure>
+
+
+    <figure class="pagebreak">
+      <svg class="figure-svg" viewBox="0 0 790 355" role="img" aria-label="Adapter kernel exploded">
+
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#243043"/>
+      </marker>
+      <marker id="arrowMagenta" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c6246b"/>
+      </marker>
+    </defs>
+
+<rect x="42" y="62" width="142" height="50" rx="5" fill="#15839c"/>
+<text x="113" y="84" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Gate graph</text>
+<text x="113" y="102" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">active checks</text>
+<rect x="42" y="139" width="142" height="50" rx="5" fill="#c97606"/>
+<text x="113" y="161" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">State</text>
+<text x="113" y="179" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">pde checkout + data</text>
+<rect x="260" y="69" width="310" height="116" rx="6" fill="#f4f0ff" stroke="#6c48c9"/>
+<text x="282" y="94" font-size="13" fill="#6c48c9" text-anchor="start" font-weight="700" font-family="Georgia, serif">Adapter kernel</text>
+<text x="282" y="120" font-size="12" fill="#243043" text-anchor="start" font-weight="400" font-family="Courier New, monospace">for check in graph.active_checks():</text>
+<text x="302" y="140" font-size="12" fill="#243043" text-anchor="start" font-weight="400" font-family="Courier New, monospace">measurement = check.run(context)</text>
+<text x="302" y="160" font-size="12" fill="#243043" text-anchor="start" font-weight="400" font-family="Courier New, monospace">artifact.accumulate(measurement)</text>
+<rect x="634" y="101" width="110" height="52" rx="5" fill="#c6246b"/>
+<text x="689" y="123" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Artifact</text>
+<text x="689" y="141" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">metrics</text>
+<line x1="184" y1="87" x2="260" y2="105" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="184" y1="164" x2="260" y2="149" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="570" y1="127" x2="634" y2="127" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="604" y="113" font-size="11" fill="#c6246b" text-anchor="middle" font-weight="400" font-family="Georgia, serif" style="font-style:italic">accumulate</text>
+<text x="395" y="218" font-size="12" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">each check.run(context) dispatches to one of:</text>
+<rect x="42" y="236" width="160" height="70" rx="5" fill="#139f73"/>
+<text x="122" y="258" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Known</text>
+<text x="122" y="278" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">det M == 0</text>
+<text x="122" y="296" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">count -> 7</text>
+<rect x="221" y="236" width="160" height="70" rx="5" fill="#6c48c9"/>
+<text x="301" y="258" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Control</text>
+<text x="301" y="278" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">det M != 0</text>
+<text x="301" y="296" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">count -> 2</text>
+<rect x="400" y="236" width="160" height="70" rx="5" fill="#15839c"/>
+<text x="480" y="258" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Cache</text>
+<text x="480" y="278" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">hash0 != hash1</text>
+<text x="480" y="296" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">valid != invalid</text>
+<rect x="579" y="236" width="160" height="70" rx="5" fill="#3f4fc6"/>
+<text x="659" y="258" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Health</text>
+<text x="659" y="278" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">112 generated</text>
+<text x="659" y="296" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">rc0, no Lean fail</text>
+<text x="394" y="333" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">Adding a new adapter measurement is adding a check, not editing the loop.</text>
+</svg>
+      <figcaption><strong>Figure 5: The adapter kernel, exploded.</strong> The loop is deliberately boring. Heterogeneity lives in check.run(context), not in the loop. Adding a Kerr no-promotion guard, a force-free cache regression, or a future PDE boundary check means adding a new typed check with a measurement contract.</figcaption>
+    </figure>
+
+
+    <figure>
+      <svg class="figure-svg" viewBox="0 0 790 330" role="img" aria-label="Verifier triangle for Lagra and pde-engine">
+
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#243043"/>
+      </marker>
+      <marker id="arrowMagenta" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c6246b"/>
+      </marker>
+    </defs>
+
+<rect x="70" y="40" width="310" height="250" rx="6" fill="#f7fbf8"/>
+<rect x="410" y="40" width="310" height="250" rx="6" fill="#fbf9f5"/>
+<text x="225" y="66" font-size="13" fill="#243043" text-anchor="middle" font-weight="700" font-family="Georgia, serif">(a) Lagra adapter verifier</text>
+<text x="565" y="66" font-size="13" fill="#243043" text-anchor="middle" font-weight="700" font-family="Georgia, serif">(b) Full pde-engine reproduction</text>
+<rect x="95" y="88" width="260" height="48" rx="5" fill="#e8fbf2" stroke="#139f73"/>
+<text x="114" y="110" font-size="12" fill="#139f73" text-anchor="start" font-weight="700" font-family="Georgia, serif">proposition</text>
+<text x="114" y="128" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Courier New, monospace">7/7 det M zero; cache split holds</text>
+<rect x="115" y="162" width="220" height="48" rx="5" fill="#f4efff" stroke="#6c48c9"/>
+<text x="134" y="184" font-size="12" fill="#6c48c9" text-anchor="start" font-weight="700" font-family="Georgia, serif">witness</text>
+<text x="134" y="202" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">JSON metrics + source hashes</text>
+<rect x="115" y="235" width="220" height="38" rx="5" fill="#fff0f6" stroke="#c6246b"/>
+<text x="134" y="259" font-size="11" fill="#243043" text-anchor="start" font-weight="700" font-family="Georgia, serif">checker: integrity gate -> PASS</text>
+<line x1="225" y1="136" x2="225" y2="162" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="225" y1="210" x2="225" y2="235" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="435" y="88" width="260" height="48" rx="5" fill="#e8fbf2" stroke="#139f73"/>
+<text x="454" y="110" font-size="12" fill="#139f73" text-anchor="start" font-weight="700" font-family="Georgia, serif">proposition</text>
+<text x="454" y="128" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Courier New, monospace">all validators + Lean path reproduce</text>
+<rect x="455" y="162" width="220" height="48" rx="5" fill="#f4efff" stroke="#6c48c9"/>
+<text x="474" y="184" font-size="12" fill="#6c48c9" text-anchor="start" font-weight="700" font-family="Georgia, serif">witness</text>
+<text x="474" y="202" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">bounded smoke: rc0, 2 known</text>
+<rect x="455" y="235" width="220" height="38" rx="5" fill="#fff0f6" stroke="#c6246b"/>
+<text x="474" y="259" font-size="11" fill="#243043" text-anchor="start" font-weight="700" font-family="Georgia, serif">checker: full 7-solution path not green</text>
+<line x1="565" y1="136" x2="565" y2="162" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="565" y1="210" x2="565" y2="235" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="394" y="313" font-size="12" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">Same discipline as the Lagra verifier triangle; different claim admitted.</text>
+</svg>
+      <figcaption><strong>Figure 6: Verifier triangle for the adapter and the full reproduction boundary.</strong> This copies the structural shape of the Lagra verifier triangle while keeping the trust event honest. The adapter proposition passes with JSON witnesses and source hashes. The bounded pde-engine smoke is now process-clean: return code 0, no Lean build failure, 112 generated expressions, 76 valid rows, and 2 known vertical forms. The full seven-solution reproduction proposition still remains non-green because the bounded depth-2 smoke does not recover all seven known solutions.</figcaption>
+    </figure>
+
+
+    <figure>
+      <svg class="figure-svg" viewBox="0 0 790 360" role="img" aria-label="Derivation-style cache regression">
+
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#243043"/>
+      </marker>
+      <marker id="arrowMagenta" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c6246b"/>
+      </marker>
+    </defs>
+
+<rect x="250" y="34" width="290" height="56" rx="5" fill="#f4efff" stroke="#6c48c9"/>
+<text x="395" y="58" font-size="14" fill="#243043" text-anchor="middle" font-weight="700" font-family="Georgia, serif">u = rho^2 exp(-2 z)</text>
+<text x="395" y="78" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">same expression, two validation contexts</text>
+<text x="152" y="115" font-size="12" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif" style="font-style:italic">Omega = 0 branch</text>
+<rect x="62" y="132" width="190" height="52" rx="5" fill="#e8fbf2" stroke="#139f73"/>
+<text x="157" y="154" font-size="12" fill="#243043" text-anchor="middle" font-weight="700" font-family="Georgia, serif">pde-engine validator</text>
+<text x="157" y="172" font-size="11" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">valid == True</text>
+<rect x="62" y="216" width="190" height="52" rx="5" fill="#e8fbf2" stroke="#139f73"/>
+<text x="157" y="238" font-size="12" fill="#243043" text-anchor="middle" font-weight="700" font-family="Georgia, serif">cache hash H0</text>
+<text x="157" y="256" font-size="11" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">context includes Omega=0</text>
+<text x="638" y="115" font-size="12" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif" style="font-style:italic">Omega = 1 branch</text>
+<rect x="538" y="132" width="190" height="52" rx="5" fill="#fff0f6" stroke="#c6246b"/>
+<text x="633" y="154" font-size="12" fill="#243043" text-anchor="middle" font-weight="700" font-family="Georgia, serif">pde-engine validator</text>
+<text x="633" y="172" font-size="11" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">valid == False</text>
+<rect x="538" y="216" width="190" height="52" rx="5" fill="#fff0f6" stroke="#c6246b"/>
+<text x="633" y="238" font-size="12" fill="#243043" text-anchor="middle" font-weight="700" font-family="Georgia, serif">cache hash H1</text>
+<text x="633" y="256" font-size="11" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">context includes Omega=1</text>
+<line x1="325" y1="90" x2="175" y2="132" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="465" y1="90" x2="615" y2="132" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="157" y1="184" x2="157" y2="216" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="633" y1="184" x2="633" y2="216" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="256" y="294" width="278" height="46" rx="5" fill="#dff7ef" stroke="#139f73"/>
+<text x="395" y="316" font-size="12" fill="#243043" text-anchor="middle" font-weight="700" font-family="Georgia, serif">measured invariant: H0 != H1 and rotating det M != 0</text>
+<text x="395" y="334" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">det M = 2048 rho^9 exp(-12 z)</text>
+<line x1="252" y1="242" x2="316" y2="294" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="538" y1="242" x2="474" y2="294" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+</svg>
+      <figcaption><strong>Figure 7: Verifiability by derivation for the cache regression.</strong> The same expression is sent down two independent validation-context branches. Lagra measures the branch split, the pde-engine validator result, and the exact rotating determinant. The conclusion is a code obligation: the validator cache key must include Omega and validation mode.</figcaption>
+    </figure>
+
+
+    <figure>
+      <svg class="figure-svg" viewBox="0 0 790 360" role="img" aria-label="Novel discovery artifact flow">
+
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#243043"/>
+      </marker>
+      <marker id="arrowMagenta" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c6246b"/>
+      </marker>
+    </defs>
+
+<rect x="44" y="50" width="162" height="58" rx="5" fill="#15839c"/>
+<text x="125" y="73" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Bounded engine</text>
+<text x="125" y="91" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">depth 2, 112 rows</text>
+<rect x="314" y="50" width="162" height="58" rx="5" fill="#6c48c9"/>
+<text x="395" y="73" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Filter</text>
+<text x="395" y="91" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">valid, non-known</text>
+<rect x="584" y="50" width="162" height="58" rx="5" fill="#139f73"/>
+<text x="665" y="73" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Independent check</text>
+<text x="665" y="91" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">rebuild det M</text>
+<line x1="206" y1="79" x2="314" y2="79" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="476" y1="79" x2="584" y2="79" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="260" y="65" font-size="11" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">76 valid</text>
+<text x="530" y="65" font-size="11" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">both rho,z</text>
+<rect x="54" y="150" width="205" height="70" rx="5" fill="#3f4fc6"/>
+<text x="156" y="172" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">rho + z</text>
+<text x="156" y="192" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">oblique linear</text>
+<text x="156" y="210" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">det M -> 0</text>
+<rect x="292" y="150" width="205" height="70" rx="5" fill="#c6246b"/>
+<text x="394" y="172" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">rho/z</text>
+<text x="394" y="192" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">self-similar</text>
+<text x="394" y="210" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">det M -> 0</text>
+<rect x="531" y="150" width="205" height="70" rx="5" fill="#c97606"/>
+<text x="633" y="172" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">rho^2 + z^2</text>
+<text x="633" y="192" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">quadratic radius</text>
+<text x="633" y="210" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">det M -> 0</text>
+<rect x="54" y="248" width="205" height="70" rx="5" fill="#139f73"/>
+<text x="156" y="270" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">rho^2 + z</text>
+<text x="156" y="290" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">parabolic polynomial</text>
+<text x="156" y="308" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">det M -> 0</text>
+<rect x="292" y="248" width="205" height="70" rx="5" fill="#15839c"/>
+<text x="394" y="270" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">-rho^2 + z^2 + 1</text>
+<text x="394" y="290" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">hyperbolic quadratic</text>
+<text x="394" y="308" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">det M -> 0</text>
+<rect x="531" y="248" width="205" height="70" rx="5" fill="#6c48c9"/>
+<text x="633" y="270" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">rho/(1 - z)</text>
+<text x="633" y="290" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">rational sheet</text>
+<text x="633" y="308" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">det M -> 0</text>
+<text x="394" y="340" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">Novelty is scoped to the repo registry: not identical to the seven registered known_solutions.</text>
+</svg>
+      <figcaption><strong>Figure 8: Engine-discovered candidate foliations admitted by the adapter.</strong> The bounded depth-2 pde-engine run produces valid rows that are not identical to the seven registered known solutions. The exporter does not trust the cache: it rebuilds the determinant independently and admits only both-variable candidates whose determinant simplifies exactly to zero. This is an engine-novel result relative to the repository registry, not a literature-priority claim.</figcaption>
+    </figure>
+
+
+    <figure>
+      <svg class="figure-svg" viewBox="0 0 790 380" role="img" aria-label="Kerr paper target gate">
+
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#243043"/>
+      </marker>
+      <marker id="arrowMagenta" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c6246b"/>
+      </marker>
+    </defs>
+
+<rect x="38" y="48" width="158" height="60" rx="5" fill="#3f4fc6"/>
+<text x="117" y="72" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Literature target</text>
+<text x="117" y="91" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">Kerr FFE / GSE</text>
+<rect x="232" y="48" width="158" height="60" rx="5" fill="#6c48c9"/>
+<text x="311" y="72" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Strict gate</text>
+<text x="311" y="91" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">paper criteria</text>
+<rect x="426" y="48" width="158" height="60" rx="5" fill="#15839c"/>
+<text x="505" y="72" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Current engine</text>
+<text x="505" y="91" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">linear surrogate</text>
+<rect x="620" y="48" width="132" height="60" rx="5" fill="#c6246b"/>
+<text x="686" y="72" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Artifact</text>
+<text x="686" y="91" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">no_candidate_yet</text>
+<line x1="196" y1="78" x2="232" y2="78" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="390" y1="78" x2="426" y2="78" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="584" y1="78" x2="620" y2="78" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="56" y="150" width="170" height="64" rx="5" fill="#eef3ff" stroke="#3f4fc6"/>
+<text x="76" y="174" font-size="12" fill="#3f4fc6" text-anchor="start" font-weight="700" font-family="Georgia, serif">paper target</text>
+<text x="76" y="194" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">stationary axisymmetric</text>
+<text x="76" y="210" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">magnetically dominated</text>
+<rect x="310" y="136" width="176" height="112" rx="5" fill="#f4efff" stroke="#6c48c9"/>
+<text x="330" y="160" font-size="12" fill="#6c48c9" text-anchor="start" font-weight="700" font-family="Georgia, serif">admission checks</text>
+<text x="330" y="182" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">depends on r, x, a</text>
+<text x="330" y="198" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">finite denominators</text>
+<text x="330" y="214" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">small-spin anchor</text>
+<text x="330" y="230" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">axis / horizon regular</text>
+<rect x="552" y="150" width="176" height="100" rx="5" fill="#fff0f6" stroke="#c6246b"/>
+<text x="572" y="174" font-size="12" fill="#c6246b" text-anchor="start" font-weight="700" font-family="Georgia, serif">measured output</text>
+<text x="572" y="194" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">306 rows + 568 corrections</text>
+<text x="572" y="210" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">48-coeff solve: EmptySet</text>
+<text x="572" y="226" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">BZ O(a^2) anchor: pass</text>
+<text x="572" y="242" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">878 inputs, 0 admitted</text>
+<line x1="226" y1="182" x2="310" y2="192" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="486" y1="192" x2="552" y2="188" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="248" y="306" width="294" height="46" rx="5" fill="#fbf9f5" stroke="#9aa5b1"/>
+<text x="395" y="328" font-size="12" fill="#243043" text-anchor="middle" font-weight="700" font-family="Georgia, serif">guardrail: surrogate rows cannot become Kerr paper claims</text>
+<text x="395" y="346" font-size="11" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">full residual exists; no expression passes it</text>
+<line x1="505" y1="108" x2="430" y2="306" stroke="#243043" stroke-width="1.8" stroke-dasharray="5 5" marker-end="url(#arrow)"/>
+</svg>
+      <figcaption><strong>Figure 9: Kerr paper-target gate.</strong> The next target uses the same measurement discipline in the negative direction. The bounded Kerr run generated 306 rows; the strict gate scans those rows, 456 targeted finite-spin corrections, 112 Kerr-metric-resummed corrections, and four probes against the closed split-monopole nonlinear Kerr Grad-Shafranov residual. It also solves the 48-coefficient leading-order ansatz and gets EmptySet, verifies the known O(a^2) Blandford-Znajek perturbative anchor, then emits no_candidate_yet because no finite-spin exact expression passes the criteria.</figcaption>
+    </figure>
+
+
+  <h2>1. What exactly enters Lagra</h2>
+  <p>
+    The adapter has four external inputs.  First, it imports the pde-engine
+    force-free symbols <code>rho</code> and <code>z</code> from
+    <code>problems/force_free/validator.py</code>.  Second, it loads the seven known
+    Compere force-free foliations from the pde-engine problem registry.  Third,
+    it supplies two false controls, <code>rho*z</code> and <code>exp(rho*z)</code>.  Fourth,
+    it runs one rotation-context check on <code>rho**2*exp(-2*z)</code> with
+    <code>Omega=0</code> and <code>Omega=1</code> against a shared cache database.
+  </p>
+  <p>
+    Nothing enters through prose.  Each input is bound into a Lagra proof-search
+    artifact and then checked by <code>publication_readiness_audit.py</code> and
+    <code>proof_search_integrity_gate.py</code>.  The paper is downstream of those
+    gates.  This is the central point of using Lagra here: the artifact catalog,
+    not the narrative, decides whether the claim is admissible.
+  </p>
+
+  <h2>2. What exactly is measured</h2>
+  <p>
+    For an expression <code>u(rho,z)</code>, the adapter evaluates the force-free
+    determinant from Compere, Gralla, and Lupsasca, <em>Force-Free
+    Foliations</em>, Phys. Rev. D 94, 124012 (2016), Eq. 2.14 / Section 2.4:
+  </p>
+  <pre>det([[L_T(A), L_T(B)], [L_T^2(A), L_T^2(B)]])</pre>
+  <pre>A = u_rho_rho + u_z_z - u_rho/rho
+B = u_rho**2 + u_z**2
+T = u_z*d_rho - u_rho*d_z</pre>
+  <p>
+    The strict measurements are:
+  </p>
+  <table>
+    <tr><th>Measurement</th><th>Observed result</th><th>Claim admitted</th></tr>
+    <tr><td>Registry exact determinant</td><td><code>7/7</code> simplify to <code>0</code></td><td>The Lagra adapter matches the pde-engine registry solutions for this determinant.</td></tr>
+    <tr><td>Negative-control exact determinant</td><td><code>rho*z -> 16*rho*z</code>; <code>exp(rho*z) -> 16*rho*z*exp(6*rho*z)</code></td><td>The operator is not vacuously zero.</td></tr>
+    <tr><td>Rational point checks</td><td>Known solutions below <code>1e-60</code>; controls above <code>1e-6</code></td><td>The exact result survives independent numeric checkpoints.</td></tr>
+    <tr><td>Rotation-context cache regression</td><td><code>rho**2*exp(-2*z)</code> valid at <code>Omega=0</code>, invalid at <code>Omega=1</code></td><td>The pde-engine cache key must include rotation context.</td></tr>
+    <tr><td>Rotating determinant</td><td><code>2048*rho**9*exp(-12*z)</code></td><td>The rotating failure is a symbolic fact, not only a cache artifact.</td></tr>
+  </table>
+
+  <h2>3. Engine process-control candidates admitted by the measurement</h2>
+  <p>
+    The PR now includes a second artifact, generated by
+    <code>tools/export_force_free_novel_discoveries.py</code>.  It runs the bounded
+    pde-engine search, mines rows that are valid but not registered as one of
+    the seven known force-free solutions, and then independently rebuilds the
+    determinant instead of trusting the validator cache.  The claim is scoped
+    narrowly: these are process-control candidates, engine-novel relative to the
+    repository registry, not claimed as literature-first discoveries.
+  </p>
+  <table>
+    <tr><th>Engine-discovered expression</th><th>Class</th><th>Independent witness</th></tr>
+    <tr><td><code>rho + z</code></td><td>linear two-coordinate foliation</td><td><code>det M = 0</code></td></tr>
+    <tr><td><code>rho/z</code></td><td>scale-invariant ratio foliation</td><td><code>det M = 0</code></td></tr>
+    <tr><td><code>rho**2 + z**2</code></td><td>quadratic radius foliation</td><td><code>det M = 0</code></td></tr>
+    <tr><td><code>rho**2 + z</code></td><td>parabolic polynomial foliation</td><td><code>det M = 0</code></td></tr>
+    <tr><td><code>-rho**2 + z**2 + 1</code></td><td>hyperbolic quadratic foliation</td><td><code>det M = 0</code></td></tr>
+    <tr><td><code>rho/(1 - z)</code></td><td>rational geometric-sum foliation</td><td><code>det M = 0</code></td></tr>
+  </table>
+  <p>
+    The machine-readable version is
+    <code>docs/force-free-novel-discoveries.json</code>; the review-friendly
+    version is <code>docs/force-free-novel-discoveries.md</code>.
+  </p>
+  <p>
+    The full process record and next research target are documented in
+    <code>docs/discovery-process-and-next-target.md</code>.  The real paper target is
+    not this force-free registry problem; it is a Kerr force-free
+    Grad-Shafranov/extreme-Kerr target where the literature does not already
+    provide an exact analytic solution meeting the same criteria.
+  </p>
+
+  <h2>4. Kerr paper-target gate</h2>
+  <p>
+    The next target gate is now a concrete artifact, not only a paragraph:
+    <code>docs/kerr-paper-target-gate.json</code> and
+    <code>docs/kerr-paper-target-gate.md</code>.  It ran the current
+    <code>kerr_magnetosphere</code> engine harness at depth 2, recorded
+    <code>306</code> generated rows and <code>306</code> completed validations,
+    then scanned all <code>306</code> generated expressions, <code>192</code>
+    one-term correction candidates, <code>264</code> two-term correction
+    candidates, and four probes against the
+    full gate.  It admitted <code>0</code> paper candidates.
+  </p>
+  <p>
+    This is the right failure mode.  The current repository target is only a
+    linear surrogate for generation, while paper admission is now decided by
+    the closed split-monopole nonlinear residual from Mahlmann et al. Eq.
+    <code>GSLightCylinder</code>, rewritten with <code>x = cos(theta)</code>.  The
+    strict gate requires dependence on <code>r</code>, <code>x</code>, and
+    <code>a</code>; finite denominators on rational safe points; a small-spin
+    anchor to <code>1 - x</code> or <code>x</code>; rejection of those exact anchors
+    as known; and exact full-residual zero after the point checks.  No row meets
+    all of those criteria, so the artifact status is <code>no_candidate_yet</code>.
+  </p>
+  <p>
+    The targeted correction grammar is deliberately bounded:
+    <code>Psi = 1 - x + a**2*c*basis(r,x)</code>, with
+    <code>c in (-1, -0.5, 0.5, 1)</code>, eight angular factors, and six radial
+    factors.  That Cartesian product generates <code>192</code> correction
+    candidates.  The two-term screen uses a 12-function sub-basis and sign
+    coefficients to generate <code>264</code> more candidates.  All
+    <code>456</code> finite-spin correction candidates pass the cheap strict
+    prechecks before the full residual, and all <code>456</code> fail exact-zero
+    residual.  The follow-up metric-resummed screen adds <code>112</code>
+    Kerr-denominator candidates using <code>Sigma</code>, <code>Delta</code>,
+    and the light-cylinder metric block; all <code>112</code> pass strict
+    prechecks and all <code>112</code> fail exact-zero residual.
+  </p>
+  <p>
+    The stricter screen is not a larger fixed-coefficient search.  It solves the
+    leading <code>a**2</code> residual coefficient for the full one-term basis:
+    <code>Psi = 1 - x + a**2*sum_i c_i*basis_i(r,x)</code> with <code>M = 1</code>.
+    That produces <code>66</code> polynomial equations in <code>48</code> unknown
+    coefficients; the matrix has shape <code>[66, 48]</code>, and
+    <code>linsolve</code> returns <code>EmptySet</code>.  So even before the full
+    nonlinear residual, this ansatz family has no leading-order correction.
+  </p>
+  <p>
+    The next calibration is positive but deliberately perturbative.  The gate
+    encodes the Blandford-Znajek split-monopole slow-rotation correction from
+    Tanabe-Nagataki and Pan-Yu:
+    <code>Psi = 1 - x + a**2*x*(1-x**2)*R(r)</code>, where <code>R(r)</code>
+    contains the literature logarithm and dilogarithm radial terms.  After
+    applying <code>polylog(1,z) = -log(1-z)</code>, the coefficient of
+    <code>a**2</code> in the closed residual simplifies exactly to <code>0</code>.
+    This proves the gate recognizes the known <code>O(a**2)</code> perturbative
+    anchor, while still keeping it out of the finite-spin exact candidate set.
+  </p>
+  <p>
+    The JSON artifact now includes a criteria-status matrix.  It marks the
+    literature target, bounded engine generation, strict prechecks, nonlinear
+    residual screen, finite-spin correction screens, leading-order coefficient
+    solve, and literature perturbative anchor calibration as implemented.  It
+    deliberately marks broader equivalence filters and global
+    horizon/axis/light-surface regularity as not sufficient for a positive
+    paper claim.  That distinction matters: this is a target packet and
+    negative gate for a no-known-exact-solution problem, not a positive exact
+    Kerr solution.
+  </p>
+  <p>
+    The literature motivation is explicitly separated from the current
+    surrogate.  Mahlmann et al. frame static, axisymmetric, force-free Kerr
+    magnetospheres around the relativistic Grad-Shafranov equation and numerical
+    solution methods.  Camilloni et al. state that for extreme Kerr there is no
+    known exact analytic stationary, axisymmetric, magnetically dominated
+    force-free solution.  The gate is designed for that claim family, not for
+    more examples from the Compere force-free foliation registry.
+  </p>
+
+  <h2>5. The pde-engine patch forced by the measurement</h2>
+  <p>
+    The old validator cache hashed only the expression string.  That was wrong:
+    a non-rotating result could be replayed in a rotating context.  The patch
+    therefore includes the expression, schema, <code>Omega</code>,
+    <code>check_regularity</code>, <code>fast_point_only</code>, and <code>use_lean</code> in the hash.
+    The patch also removes the old fast-point placeholder derivative shortcut.
+    Fast point mode still avoids the expensive full path, but it now builds the
+    exact symbolic determinant before stopping at the exact point check.
+  </p>
+  <p>
+    The parallel reproduction worker had a separate bug: spawned children tried
+    to import <code>physics_agent.problems</code>, which is not the package namespace in
+    this repository.  The patch switches the child import to
+    <code>problems.load_problem</code> and adds a local fallback import for
+    <code>PreciseFoliationValidator</code>.
+  </p>
+
+  <h2>6. Reproduction commands</h2>
+  <pre>python3 -m py_compile   general_method_paper_reproduction.py   problems/force_free/validator.py   tests/test_force_free_validator_cache.py   tools/export_force_free_novel_discoveries.py   tools/export_kerr_paper_target_gate.py   tests/test_force_free_novel_discoveries.py   tests/test_kerr_paper_target_gate.py
+
+python3 -m unittest   tests/test_force_free_validator_cache.py   tests/test_force_free_novel_discoveries.py   tests/test_kerr_paper_target_gate.py
+
+python3 tools/export_force_free_novel_discoveries.py   --run-engine --max-depth 2 --validators 1   --timeout-s 90 --validation-timeout-s 3
+
+python3 tools/export_kerr_paper_target_gate.py   --run-engine --max-depth 2 --validators 1   --timeout-s 90 --validation-timeout-s 3</pre>
+  <p>
+    The Lagra-side commands that produced the measurements were:
+  </p>
+  <pre>python3 experiments/proof-search/pde_engine_force_free_point_gate.py   --pde-engine-root /Users/p/dev/pde-engine
+
+python3 experiments/proof-search/pde_engine_reproduction_health_gate.py   --pde-engine-root /Users/p/dev/pde-engine   --timeout-seconds 20
+
+python3 experiments/proof-search/render_yukawa_finite_range_paper.py
+python3 experiments/proof-search/publication_readiness_audit.py
+python3 experiments/proof-search/proof_search_integrity_gate.py</pre>
+
+  <h2>7. References</h2>
+  <p>
+    [1] Geoffrey Compere, Samuel E. Gralla, Alexandru Lupsasca,
+    <em>Force-Free Foliations</em>, Phys. Rev. D 94, 124012 (2016),
+    arXiv:1606.06727, DOI:10.1103/PhysRevD.94.124012.
+    The paper formulates force-free electrodynamics in terms of field-line
+    foliations; in the stationary axisymmetric case the object used here is a
+    foliation of the half-plane.
+  </p>
+  <p>
+    Links: <code>https://arxiv.org/abs/1606.06727</code> and
+    <code>https://doi.org/10.1103/PhysRevD.94.124012</code>.
+  </p>
+  <p>
+    [2] J. F. Mahlmann, P. Cerda-Duran, M. A. Aloy et al.,
+    <em>Numerically solving the relativistic Grad-Shafranov equation in Kerr
+    spacetimes: Numerical techniques</em>, MNRAS 477, 3927-3946 (2018),
+    arXiv:1802.00815, DOI:10.1093/mnras/sty858.
+  </p>
+  <p>
+    [3] F. Camilloni, G. Grignani, T. Harmark, R. Oliveri, M. Orselli,
+    <em>Moving away from the Near-Horizon Attractor of the Extreme Kerr
+    Force-Free Magnetosphere</em>, JCAP 10, 048 (2020), arXiv:2007.15665,
+    DOI:10.1088/1475-7516/2020/10/048.
+  </p>
+  <p>
+    [4] K. Tanabe and S. Nagataki,
+    <em>Higher Order Terms of Kerr Parameter for Blandford-Znajek Monopole
+    Solution</em>, arXiv:0802.0908.
+  </p>
+  <p>
+    [5] Z. Pan and C. Yu,
+    <em>Fourth-order split monopole perturbation solutions to the
+    Blandford-Znajek mechanism</em>, arXiv:1503.05248.
+  </p>
+
+  <h2>8. Boundary</h2>
+  <p class="claim">
+    The adapter is a positive exact-symbolic and pointwise Lagra measurement of
+    the pde-engine force-free boundary.  It is not a Lean theorem.  It is not a
+    full pde-engine paper reproduction.  The bounded depth-2 pde-engine smoke is
+    now process-clean, and it yields six independently rechecked process-control
+    candidates not identical to the registered known-solution functions.  The
+    full reproduction boundary remains: the bounded pass only finds two known
+    vertical canonical forms and does not recover the seven known Compere
+    solutions.  The Kerr gate is a separate <code>no_candidate_yet</code> artifact:
+    it prevents the current linear surrogate from being promoted into the next
+    paper target, appends targeted finite-spin corrections, and checks the
+    closed split-monopole nonlinear residual directly.  Its leading-order
+    coefficient solve also returns <code>EmptySet</code> for the 48-function
+    one-term ansatz.  Its literature anchor screen does recognize the known
+    <code>O(a**2)</code> Blandford-Znajek perturbative correction.
+  </p>
+</main>
+</body>
+</html>

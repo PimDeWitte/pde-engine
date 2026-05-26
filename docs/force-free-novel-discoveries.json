@@ -1,0 +1,188 @@
+{
+  "discoveries": [
+    {
+      "determinant_at_rho_4_5_z_6_7": "0",
+      "determinant_simplified": "0",
+      "engine_depth": 2,
+      "engine_row_id": 41,
+      "engine_validation_reason": "Valid foliation (Lean: det = 0 symbolically)",
+      "exact_symbolic_zero": true,
+      "expression": "rho + z",
+      "id": "oblique_linear",
+      "label": "linear two-coordinate foliation",
+      "not_identical_to_registered_known_solutions": true,
+      "sympy_count_ops": 1,
+      "variables": [
+        "rho",
+        "z"
+      ]
+    },
+    {
+      "determinant_at_rho_4_5_z_6_7": "0",
+      "determinant_simplified": "0",
+      "engine_depth": 1,
+      "engine_row_id": 4,
+      "engine_validation_reason": "Valid foliation (Lean: det = 0 symbolically)",
+      "exact_symbolic_zero": true,
+      "expression": "rho/z",
+      "id": "self_similar_ratio",
+      "label": "scale-invariant ratio foliation",
+      "not_identical_to_registered_known_solutions": true,
+      "sympy_count_ops": 1,
+      "variables": [
+        "rho",
+        "z"
+      ]
+    },
+    {
+      "determinant_at_rho_4_5_z_6_7": "0",
+      "determinant_simplified": "0",
+      "engine_depth": 1,
+      "engine_row_id": 3,
+      "engine_validation_reason": "Valid foliation (Lean: det = 0 symbolically)",
+      "exact_symbolic_zero": true,
+      "expression": "rho**2 + z**2",
+      "id": "quadratic_radius",
+      "label": "quadratic radius foliation",
+      "not_identical_to_registered_known_solutions": true,
+      "sympy_count_ops": 3,
+      "variables": [
+        "rho",
+        "z"
+      ]
+    },
+    {
+      "determinant_at_rho_4_5_z_6_7": "0",
+      "determinant_simplified": "0",
+      "engine_depth": 2,
+      "engine_row_id": 77,
+      "engine_validation_reason": "Valid foliation (Lean: det = 0 symbolically)",
+      "exact_symbolic_zero": true,
+      "expression": "rho**2 + z",
+      "id": "tilted_parabolic_polynomial",
+      "label": "parabolic polynomial foliation",
+      "not_identical_to_registered_known_solutions": true,
+      "sympy_count_ops": 2,
+      "variables": [
+        "rho",
+        "z"
+      ]
+    },
+    {
+      "determinant_at_rho_4_5_z_6_7": "0",
+      "determinant_simplified": "0",
+      "engine_depth": 2,
+      "engine_row_id": 108,
+      "engine_validation_reason": "Valid foliation (Lean: det = 0 symbolically)",
+      "exact_symbolic_zero": true,
+      "expression": "-rho**2 + z**2 + 1",
+      "id": "hyperbolic_quadratic",
+      "label": "hyperbolic quadratic foliation",
+      "not_identical_to_registered_known_solutions": true,
+      "sympy_count_ops": 4,
+      "variables": [
+        "rho",
+        "z"
+      ]
+    },
+    {
+      "determinant_at_rho_4_5_z_6_7": "0",
+      "determinant_simplified": "0",
+      "engine_depth": 2,
+      "engine_row_id": 44,
+      "engine_validation_reason": "Valid foliation (Lean: det = 0 symbolically)",
+      "exact_symbolic_zero": true,
+      "expression": "rho/(1 - z)",
+      "id": "geometric_ratio",
+      "label": "rational geometric-sum foliation",
+      "not_identical_to_registered_known_solutions": true,
+      "sympy_count_ops": 2,
+      "variables": [
+        "rho",
+        "z"
+      ]
+    }
+  ],
+  "known_solution_count": 7,
+  "literature_sources": [
+    {
+      "arxiv": "1606.06727",
+      "arxiv_url": "https://arxiv.org/abs/1606.06727",
+      "citation": "Geoffrey Compere, Samuel E. Gralla, Alexandru Lupsasca, Force-Free Foliations, Phys. Rev. D 94, 124012 (2016)",
+      "doi": "10.1103/PhysRevD.94.124012",
+      "doi_url": "https://doi.org/10.1103/PhysRevD.94.124012",
+      "id": "compere_gralla_lupsasca_2016_force_free_foliations",
+      "paper_equation": "Eq. 2.14",
+      "paper_section": "Section 2.4"
+    }
+  ],
+  "novelty_scope": "Novel relative to the repository's seven registered force-free known_solutions. This is not a literature-priority claim.",
+  "problem": "force_free",
+  "process": {
+    "engine_action": "fresh bounded pde-engine run, then post-filtered export",
+    "not_yet_applied": [
+      "literature-priority search",
+      "foliation reparameterization equivalence classification",
+      "global regularity and boundary-condition analysis",
+      "physical acceptability analysis",
+      "full depth-4 seven-solution pde-engine reproduction"
+    ],
+    "positive_filters_applied": [
+      "row was marked valid by the bounded force-free validator",
+      "row was not flagged as one of the registered known_solutions",
+      "expression contains both rho and z",
+      "independent determinant rebuild simplified exactly to zero",
+      "determinant at (rho,z)=(4/5,6/7) was exactly zero"
+    ],
+    "role": "process-control baseline, not the final publication target",
+    "search_bounds": {
+      "max_depth": 2,
+      "per_expression_validation_timeout_s": 3.0,
+      "validators": 1,
+      "wall_timeout_s": 90.0
+    }
+  },
+  "run_summary": {
+    "candidate_rows": 74,
+    "known_solution_rows": 2,
+    "total_completed": 112,
+    "total_generated": 112,
+    "total_valid_rows": 76
+  },
+  "schema": "force_free_novel_discoveries_v1",
+  "selection_policy": "valid non-paper depth-2 rows, both rho and z present, independently recomputed determinant simplifies exactly to zero",
+  "solution_target": {
+    "coordinates": [
+      "rho",
+      "z"
+    ],
+    "definitions": {
+      "A": "u_rho_rho + u_z_z - u_rho/rho",
+      "B": "u_rho**2 + u_z**2",
+      "T": "u_z*d_rho - u_rho*d_z"
+    },
+    "domain_description": "half-plane coordinates used for stationary axisymmetric field-line foliations",
+    "equation": "det([[L_T(A), L_T(B)], [L_T^2(A), L_T^2(B)]]) = 0",
+    "name": "stationary axisymmetric non-rotating force-free foliation constraint",
+    "source": "compere_gralla_lupsasca_2016_force_free_foliations"
+  },
+  "source_engine_run": {
+    "command": [
+      "python3",
+      "general_method_paper_reproduction.py",
+      "--problem",
+      "force_free",
+      "--max-depth",
+      "2",
+      "--validators",
+      "1"
+    ],
+    "db_path": "problems/force_free/outputs/parallel_runs_paper_repro_20260526_091146_fa5af2b9.db",
+    "run_id": "paper_repro_20260526_091146_fa5af2b9",
+    "table_name": "expressions_paper_repro_20260526_091146_fa5af2b9"
+  },
+  "witness_point": {
+    "rho": "4/5",
+    "z": "6/7"
+  }
+}
