@@ -24,8 +24,8 @@ adapter gate.
   determinant, and emits JSON/Markdown process-control artifacts.
 - `tools/export_kerr_paper_target_gate.py` runs the stricter next-target gate
   for the closed split-monopole Kerr force-free / Grad-Shafranov paper program
-  and appends a bounded finite-spin correction grammar before emitting a
-  `no_candidate_yet` artifact instead of promoting the current linear
+  and appends bounded one-term and two-term finite-spin correction grammars
+  before emitting a `no_candidate_yet` artifact instead of promoting the current linear
   surrogate.
 - `tests/test_force_free_novel_discoveries.py` checks the independent
   determinant builder and the registry-novel candidate filter.
@@ -138,9 +138,10 @@ python3 tools/export_kerr_paper_target_gate.py \
 
 The result is `no_candidate_yet`: `306` generated rows, `306` completed
 validations, all `306` generated expressions scanned by the full target gate,
-`192` bounded finite-spin correction candidates, four additional probes, and
-`0` admitted paper candidates across `502` total candidate inputs. The targeted
-grammar is:
+`192` bounded one-term finite-spin correction candidates, `264` bounded
+two-term correction candidates, four additional probes, and `0` admitted paper
+candidates across `766` total candidate inputs. The one-term targeted grammar
+is:
 
 ```text
 Psi = 1 - x + a**2*c*basis(r,x)
@@ -154,7 +155,11 @@ The angular factors are `1`, `x`, `x**2`, `1-x**2`, `x*(1-x**2)`,
 `1/(r*(r - 2*M))`.
 
 All `192` correction candidates pass the strict prechecks before the full
-residual and then fail exact-zero residual. The gate also probes `1 - x`, `x`,
+residual and then fail exact-zero residual. The two-term screen uses
+`Psi = 1 - x + a**2*(c1*basis_i(r,x) + c2*basis_j(r,x))` with
+`c1,c2 in {-1,1}`, a 12-function sub-basis, and produces `264` candidates.
+All `264` pass the strict prechecks before the full residual and then fail
+exact-zero residual. The gate also probes `1 - x`, `x`,
 `1/(1 - 1)`, and `1 - x + a**2*r*x`. These are rejected respectively as known
 anchors, undefined expressions, or finite-spin anchor-like expressions whose
 full nonlinear Kerr split-monopole Grad-Shafranov residual is nonzero at
@@ -217,16 +222,16 @@ diagram states what enters Lagra and what measurement comes out.
 Artifact hashes:
 
 ```text
-319b42aad872913727987fac631c16da2e2e64bbed3029e588500469f201f9c6  docs/lagra-force-free-adapter-paper.html
-fdb1ad6b5e805b9ce98023b0a14327da2860e196eb8a0b474739d195778b575f  docs/lagra-force-free-adapter-paper.pdf
-4fc6f842f2376fa012b302f1302b3e0e7996cb1faba18ca2e7d84c8b7b8aa3fa  tools/render_lagra_force_free_adapter_paper.py
+0e9a92309c83bd36cdd3a6f45fec355deddef72f1de18cd2ff7e3b08f876f185  docs/lagra-force-free-adapter-paper.html
+e929868104b8b02aa52ffac6ff711f4a8f40ab61844cb1d52fd26dfec9ea89b4  docs/lagra-force-free-adapter-paper.pdf
+2809244fccec6356db3d3652f99470b31e4c77f629fb50d5951764ca3d8de2a3  tools/render_lagra_force_free_adapter_paper.py
 f67202596b8fe94c85b6ca9ebba02267a7891ef6929add75bf0a0b5f73f67d6c  docs/force-free-novel-discoveries.json
 b6073e74d079d19d7183101f5a21770064e0f3ea450fd257c803afc9e2cd301c  docs/force-free-novel-discoveries.md
 cd5999772df7b0e2a06d10831f9863ddb51ea5ecca5276e314eedc6d76517b41  tools/export_force_free_novel_discoveries.py
-de15db7c7f38c0202b17824671aaf5523db4b4a6dd928aa9d0100d422ea0f897  docs/discovery-process-and-next-target.md
-fa7d020e922dfa52b56ef74f65187e9487cd32d12139992270e662290378dd0a  docs/kerr-paper-target-gate.json
-711f1377453bca2d93a540349e9749627bf4da4f81c5c322f1b5a25003b502b9  docs/kerr-paper-target-gate.md
-93136f3ce83c016b3928a1827f7cff6593468fbef44fd253874d12cc258713ba  tools/export_kerr_paper_target_gate.py
+e624a0ef5f433fb803ce8d398267e0f99c45f1e03d56cad658736f58e08dd5e4  docs/discovery-process-and-next-target.md
+4c5364f6d4662402918463b3826c7449a519909092469c0c9334f92f8f2f89fa  docs/kerr-paper-target-gate.json
+b9175db80801e24bdc6bd0df5e5d55c5b02879f56d181c634db6ce3aa19020f6  docs/kerr-paper-target-gate.md
+22d5cf7c0ef7005219a944a00dca1e44aa86eea7a925d439e1544fa95fe529c5  tools/export_kerr_paper_target_gate.py
 ```
 
 ## Reproduction commands

@@ -18,6 +18,7 @@ import sqlite3
 import subprocess
 import sys
 from dataclasses import dataclass
+from itertools import combinations, product
 from pathlib import Path
 from typing import Any
 
@@ -69,6 +70,24 @@ CORRECTION_RADIAL_FACTORS = [
     "1/(r - 2*M)",
     "1/(r - 2*M)**2",
     "1/(r*(r - 2*M))",
+]
+
+PAIR_CORRECTION_COEFFICIENTS = [
+    sp.Integer(-1),
+    sp.Integer(1),
+]
+
+PAIR_CORRECTION_ANGULAR_FACTORS = [
+    "x",
+    "1-x**2",
+    "x*(1-x**2)",
+    "(1-x**2)**2",
+]
+
+PAIR_CORRECTION_RADIAL_FACTORS = [
+    "1/r",
+    "1/r**2",
+    "1/(r - 2*M)",
 ]
 
 LITERATURE_SOURCES = [
@@ -149,11 +168,23 @@ class CandidateRow:
 
 def correction_basis() -> list[tuple[str, sp.Basic]]:
     """Bounded finite-spin corrections around the split-monopole anchor."""
+    return _cartesian_basis(CORRECTION_ANGULAR_FACTORS, CORRECTION_RADIAL_FACTORS)
+
+
+def pair_correction_basis() -> list[tuple[str, sp.Basic]]:
+    """Smaller basis used for bounded two-term finite-spin corrections."""
+    return _cartesian_basis(PAIR_CORRECTION_ANGULAR_FACTORS, PAIR_CORRECTION_RADIAL_FACTORS)
+
+
+def _cartesian_basis(
+    angular_factors: list[str],
+    radial_factors: list[str],
+) -> list[tuple[str, sp.Basic]]:
     locals_map = sympify_locals()
     basis: list[tuple[str, sp.Basic]] = []
-    for angular_name in CORRECTION_ANGULAR_FACTORS:
+    for angular_name in angular_factors:
         angular_expr = sp.sympify(angular_name, locals=locals_map)
-        for radial_name in CORRECTION_RADIAL_FACTORS:
+        for radial_name in radial_factors:
             radial_expr = sp.sympify(radial_name, locals=locals_map)
             basis.append(
                 (
@@ -187,6 +218,40 @@ def generate_anchor_correction_rows() -> list[CandidateRow]:
                         f"basis={basis_name}"
                     ),
                     source="anchor_correction_grammar",
+                )
+            )
+    return rows
+
+
+def generate_anchor_pair_correction_rows() -> list[CandidateRow]:
+    locals_map = sympify_locals()
+    a = locals_map["a"]
+    x = locals_map["x"]
+    rows: list[CandidateRow] = []
+    seen: set[str] = set()
+    basis = pair_correction_basis()
+    for (left_name, left_expr), (right_name, right_expr) in combinations(basis, 2):
+        for left_coeff, right_coeff in product(
+            PAIR_CORRECTION_COEFFICIENTS,
+            PAIR_CORRECTION_COEFFICIENTS,
+        ):
+            correction = left_coeff * left_expr + right_coeff * right_expr
+            expr = sp.factor(1 - x + a**2 * correction)
+            expr_str = sp.sstr(expr)
+            if expr_str in seen:
+                continue
+            seen.add(expr_str)
+            rows.append(
+                CandidateRow(
+                    row_id=None,
+                    expression=expr_str,
+                    depth=None,
+                    validation_reason=(
+                        "two-term anchor correction grammar: "
+                        f"left_coeff={sp.sstr(left_coeff)}, left_basis={left_name}, "
+                        f"right_coeff={sp.sstr(right_coeff)}, right_basis={right_name}"
+                    ),
+                    source="anchor_pair_correction_grammar",
                 )
             )
     return rows
@@ -679,12 +744,17 @@ def build_artifact(
     run_summary: dict[str, Any],
     include_probes: bool,
     include_corrections: bool,
+    include_pair_corrections: bool,
 ) -> dict[str, Any]:
     candidate_rows = list(rows)
     correction_rows: list[CandidateRow] = []
     if include_corrections:
         correction_rows = generate_anchor_correction_rows()
         candidate_rows.extend(correction_rows)
+    pair_correction_rows: list[CandidateRow] = []
+    if include_pair_corrections:
+        pair_correction_rows = generate_anchor_pair_correction_rows()
+        candidate_rows.extend(pair_correction_rows)
     if include_probes:
         candidate_rows.extend(
             CandidateRow(None, expr, None, "manual strict-gate probe", "probe")
@@ -725,6 +795,16 @@ def build_artifact(
                 "basis_construction": "cartesian product of angular_factors and radial_factors",
                 "generated_candidates": len(correction_rows),
             },
+            "two_term_search_grammar": {
+                "enabled": include_pair_corrections,
+                "form": "Psi = 1 - x + a**2 * (c1*basis_i(r,x) + c2*basis_j(r,x))",
+                "coefficients": [sp.sstr(item) for item in PAIR_CORRECTION_COEFFICIENTS],
+                "angular_factors": PAIR_CORRECTION_ANGULAR_FACTORS,
+                "radial_factors": PAIR_CORRECTION_RADIAL_FACTORS,
+                "basis": [name for name, _ in pair_correction_basis()],
+                "basis_construction": "unordered pairs from the cartesian product basis",
+                "generated_candidates": len(pair_correction_rows),
+            },
         },
         "source_engine_run": None
         if run is None
@@ -760,18 +840,35 @@ def markdown_from_artifact(artifact: dict[str, Any]) -> str:
         source_run = "- No engine run attached; artifact contains strict-gate probes only.\n"
 
     grammar = artifact["gate"]["targeted_search_grammar"]
+    pair_grammar = artifact["gate"]["two_term_search_grammar"]
     correction_assessments = [
         item for item in artifact["assessments"] if item["source"] == "anchor_correction_grammar"
+    ]
+    pair_correction_assessments = [
+        item
+        for item in artifact["assessments"]
+        if item["source"] == "anchor_pair_correction_grammar"
     ]
     correction_prechecks = [
         item
         for item in correction_assessments
         if item["strict_prechecks"]["passed_before_full_target_residual"]
     ]
+    pair_correction_prechecks = [
+        item
+        for item in pair_correction_assessments
+        if item["strict_prechecks"]["passed_before_full_target_residual"]
+    ]
     correction_exact = [item for item in correction_assessments if item["full_target"]["exact_zero"]]
+    pair_correction_exact = [
+        item for item in pair_correction_assessments if item["full_target"]["exact_zero"]
+    ]
     coeffs = ", ".join(grammar["coefficients"])
+    pair_coeffs = ", ".join(pair_grammar["coefficients"])
     angular_lines = "\n".join(f"- `{item}`" for item in grammar["angular_factors"])
     radial_lines = "\n".join(f"- `{item}`" for item in grammar["radial_factors"])
+    pair_angular_lines = "\n".join(f"- `{item}`" for item in pair_grammar["angular_factors"])
+    pair_radial_lines = "\n".join(f"- `{item}`" for item in pair_grammar["radial_factors"])
     grammar_section = f"""## Targeted finite-spin correction grammar
 
 The gate also appends an expanded bounded correction grammar around the
@@ -795,6 +892,26 @@ This generated `{grammar["generated_candidates"]}` correction candidates. In
 this run, `{len(correction_prechecks)}` passed the strict prechecks before
 the full residual, and `{len(correction_exact)}` had exact-zero full residual.
 The full Cartesian-product basis list is stored in the JSON artifact.
+
+The gate then appends a bounded two-term correction screen:
+
+```text
+{pair_grammar["form"]}
+c1, c2 in {{{pair_coeffs}}}
+```
+
+Two-term angular factors:
+
+{pair_angular_lines}
+
+Two-term radial factors:
+
+{pair_radial_lines}
+
+This generated `{pair_grammar["generated_candidates"]}` two-term correction
+candidates. In this run, `{len(pair_correction_prechecks)}` passed strict
+prechecks before the full residual, and `{len(pair_correction_exact)}` had
+exact-zero full residual.
 """
 
     rows = []
@@ -878,6 +995,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-rows", type=int, default=1000)
     parser.add_argument("--include-probes", action="store_true", default=True)
     parser.add_argument("--no-corrections", action="store_true", help="Do not add the bounded anchor-preserving correction grammar.")
+    parser.add_argument(
+        "--no-pair-corrections",
+        action="store_true",
+        help="Do not add the bounded two-term anchor-preserving correction grammar.",
+    )
     parser.add_argument("--output", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--markdown", type=Path, default=DEFAULT_MD)
     return parser.parse_args()
@@ -929,6 +1051,7 @@ def main() -> int:
         summary,
         include_probes=args.include_probes,
         include_corrections=not args.no_corrections,
+        include_pair_corrections=not args.no_pair_corrections,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.markdown.parent.mkdir(parents=True, exist_ok=True)

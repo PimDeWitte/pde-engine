@@ -410,8 +410,8 @@ def svg9_kerr_gate() -> str:
         text(330, 230, "axis / horizon regular", 11, INK, "start"),
         rect(552, 150, 176, 64, "#fff0f6", stroke=MAGENTA, rx=5),
         text(572, 174, "measured output", 12, MAGENTA, "start", weight="700"),
-        text(572, 194, "306 rows + 192 corrections", 11, INK, "start"),
-        text(572, 210, "502 inputs, 0 admitted", 11, INK, "start"),
+        text(572, 194, "306 rows + 456 corrections", 11, INK, "start"),
+        text(572, 210, "766 inputs, 0 admitted", 11, INK, "start"),
         arrow(226, 182, 310, 192),
         arrow(486, 192, 552, 188),
         rect(248, 286, 294, 46, "#fbf9f5", stroke=LINE, rx=5),
@@ -477,7 +477,7 @@ def html() -> str:
             9,
             "Kerr paper-target gate",
             svg9_kerr_gate(),
-            "The next target uses the same measurement discipline in the negative direction. The bounded Kerr run generated 306 rows; the strict gate scans those rows, 192 targeted finite-spin corrections, and four probes against the closed split-monopole nonlinear Kerr Grad-Shafranov residual, then emits no_candidate_yet because no expression passes the criteria.",
+            "The next target uses the same measurement discipline in the negative direction. The bounded Kerr run generated 306 rows; the strict gate scans those rows, 456 targeted finite-spin corrections, and four probes against the closed split-monopole nonlinear Kerr Grad-Shafranov residual, then emits no_candidate_yet because no expression passes the criteria.",
         ),
     ]
 
@@ -571,8 +571,8 @@ def html() -> str:
     include <code>Omega</code> and the validation mode; and a bounded engine pass
     exports six non-registered, independently rechecked candidate foliations
     as a process-control baseline rather than as a publication target.
-    A second gate records the next Kerr paper target, appends a targeted
-    finite-spin correction grammar, and emits <code>no_candidate_yet</code>
+    A second gate records the next Kerr paper target, appends targeted one-term
+    and two-term finite-spin correction grammars, and emits <code>no_candidate_yet</code>
     rather than promoting the current linear surrogate.
     The negative result is equally
     important: the bounded pde-engine smoke is now process-clean, but the full
@@ -662,7 +662,8 @@ T = u_z*d_rho - u_rho*d_z</pre>
     <code>kerr_magnetosphere</code> engine harness at depth 2, recorded
     <code>306</code> generated rows and <code>306</code> completed validations,
     then scanned all <code>306</code> generated expressions, <code>192</code>
-    targeted finite-spin correction candidates, and four probes against the
+    one-term correction candidates, <code>264</code> two-term correction
+    candidates, and four probes against the
     full gate.  It admitted <code>0</code> paper candidates.
   </p>
   <p>
@@ -681,8 +682,11 @@ T = u_z*d_rho - u_rho*d_z</pre>
     <code>Psi = 1 - x + a**2*c*basis(r,x)</code>, with
     <code>c in {-1, -1/2, 1/2, 1}</code>, eight angular factors, and six radial
     factors.  That Cartesian product generates <code>192</code> correction
-    candidates.  All <code>192</code> pass the cheap strict prechecks before the
-    full residual, and all <code>192</code> fail exact-zero residual.
+    candidates.  The two-term screen uses a 12-function sub-basis and sign
+    coefficients to generate <code>264</code> more candidates.  All
+    <code>456</code> finite-spin correction candidates pass the cheap strict
+    prechecks before the full residual, and all <code>456</code> fail exact-zero
+    residual.
   </p>
   <p>
     The literature motivation is explicitly separated from the current

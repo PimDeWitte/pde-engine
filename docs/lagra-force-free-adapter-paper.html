@@ -87,8 +87,8 @@
     include <code>Omega</code> and the validation mode; and a bounded engine pass
     exports six non-registered, independently rechecked candidate foliations
     as a process-control baseline rather than as a publication target.
-    A second gate records the next Kerr paper target, appends a targeted
-    finite-spin correction grammar, and emits <code>no_candidate_yet</code>
+    A second gate records the next Kerr paper target, appends targeted one-term
+    and two-term finite-spin correction grammars, and emits <code>no_candidate_yet</code>
     rather than promoting the current linear surrogate.
     The negative result is equally
     important: the bounded pde-engine smoke is now process-clean, but the full
@@ -532,8 +532,8 @@
 <text x="330" y="230" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">axis / horizon regular</text>
 <rect x="552" y="150" width="176" height="64" rx="5" fill="#fff0f6" stroke="#c6246b"/>
 <text x="572" y="174" font-size="12" fill="#c6246b" text-anchor="start" font-weight="700" font-family="Georgia, serif">measured output</text>
-<text x="572" y="194" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">306 rows + 192 corrections</text>
-<text x="572" y="210" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">502 inputs, 0 admitted</text>
+<text x="572" y="194" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">306 rows + 456 corrections</text>
+<text x="572" y="210" font-size="11" fill="#243043" text-anchor="start" font-weight="400" font-family="Georgia, serif">766 inputs, 0 admitted</text>
 <line x1="226" y1="182" x2="310" y2="192" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
 <line x1="486" y1="192" x2="552" y2="188" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
 <rect x="248" y="286" width="294" height="46" rx="5" fill="#fbf9f5" stroke="#9aa5b1"/>
@@ -541,7 +541,7 @@
 <text x="395" y="326" font-size="11" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">full residual exists; no expression passes it</text>
 <line x1="505" y1="108" x2="430" y2="286" stroke="#243043" stroke-width="1.8" stroke-dasharray="5 5" marker-end="url(#arrow)"/>
 </svg>
-      <figcaption><strong>Figure 9: Kerr paper-target gate.</strong> The next target uses the same measurement discipline in the negative direction. The bounded Kerr run generated 306 rows; the strict gate scans those rows, 192 targeted finite-spin corrections, and four probes against the closed split-monopole nonlinear Kerr Grad-Shafranov residual, then emits no_candidate_yet because no expression passes the criteria.</figcaption>
+      <figcaption><strong>Figure 9: Kerr paper-target gate.</strong> The next target uses the same measurement discipline in the negative direction. The bounded Kerr run generated 306 rows; the strict gate scans those rows, 456 targeted finite-spin corrections, and four probes against the closed split-monopole nonlinear Kerr Grad-Shafranov residual, then emits no_candidate_yet because no expression passes the criteria.</figcaption>
     </figure>
 
 
@@ -625,7 +625,8 @@ T = u_z*d_rho - u_rho*d_z</pre>
     <code>kerr_magnetosphere</code> engine harness at depth 2, recorded
     <code>306</code> generated rows and <code>306</code> completed validations,
     then scanned all <code>306</code> generated expressions, <code>192</code>
-    targeted finite-spin correction candidates, and four probes against the
+    one-term correction candidates, <code>264</code> two-term correction
+    candidates, and four probes against the
     full gate.  It admitted <code>0</code> paper candidates.
   </p>
   <p>
@@ -644,8 +645,11 @@ T = u_z*d_rho - u_rho*d_z</pre>
     <code>Psi = 1 - x + a**2*c*basis(r,x)</code>, with
     <code>c in (-1, -0.5, 0.5, 1)</code>, eight angular factors, and six radial
     factors.  That Cartesian product generates <code>192</code> correction
-    candidates.  All <code>192</code> pass the cheap strict prechecks before the
-    full residual, and all <code>192</code> fail exact-zero residual.
+    candidates.  The two-term screen uses a 12-function sub-basis and sign
+    coefficients to generate <code>264</code> more candidates.  All
+    <code>456</code> finite-spin correction candidates pass the cheap strict
+    prechecks before the full residual, and all <code>456</code> fail exact-zero
+    residual.
   </p>
   <p>
     The literature motivation is explicitly separated from the current

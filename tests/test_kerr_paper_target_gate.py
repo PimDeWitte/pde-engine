@@ -6,11 +6,16 @@ from tools.export_kerr_paper_target_gate import (
     CORRECTION_COEFFICIENTS,
     CORRECTION_RADIAL_FACTORS,
     FULL_TARGET_REJECTION,
+    PAIR_CORRECTION_ANGULAR_FACTORS,
+    PAIR_CORRECTION_COEFFICIENTS,
+    PAIR_CORRECTION_RADIAL_FACTORS,
     assess_expression,
     correction_basis,
     exact_zero,
+    generate_anchor_pair_correction_rows,
     full_kerr_split_monopole_residual,
     generate_anchor_correction_rows,
+    pair_correction_basis,
     sympify_locals,
 )
 
@@ -74,6 +79,35 @@ class KerrPaperTargetGateTest(unittest.TestCase):
             expr = sp.sympify(row.expression, locals=locals_map)
             self.assertEqual(row.source, "anchor_correction_grammar")
             self.assertIn("expanded anchor correction grammar:", row.validation_reason or "")
+            self.assertEqual(sp.simplify(sp.limit(expr, a, 0) - (1 - x)), 0)
+            self.assertNotEqual(sp.simplify(expr - (1 - x)), 0)
+            self.assertTrue(
+                {"a", "r", "x"}.issubset({str(symbol) for symbol in expr.free_symbols})
+            )
+
+    def test_pair_correction_grammar_preserves_small_spin_anchor(self):
+        locals_map = sympify_locals()
+        a = locals_map["a"]
+        x = locals_map["x"]
+
+        rows = generate_anchor_pair_correction_rows()
+        pair_basis_count = len(PAIR_CORRECTION_ANGULAR_FACTORS) * len(
+            PAIR_CORRECTION_RADIAL_FACTORS
+        )
+        expected_pair_count = (
+            pair_basis_count
+            * (pair_basis_count - 1)
+            // 2
+            * len(PAIR_CORRECTION_COEFFICIENTS) ** 2
+        )
+
+        self.assertEqual(len(pair_correction_basis()), pair_basis_count)
+        self.assertEqual(len(rows), expected_pair_count)
+        self.assertEqual(len({row.expression for row in rows}), len(rows))
+        for row in rows:
+            expr = sp.sympify(row.expression, locals=locals_map)
+            self.assertEqual(row.source, "anchor_pair_correction_grammar")
+            self.assertIn("two-term anchor correction grammar:", row.validation_reason or "")
             self.assertEqual(sp.simplify(sp.limit(expr, a, 0) - (1 - x)), 0)
             self.assertNotEqual(sp.simplify(expr - (1 - x)), 0)
             self.assertTrue(

@@ -73,12 +73,37 @@ this run, `192` passed the strict prechecks before
 the full residual, and `0` had exact-zero full residual.
 The full Cartesian-product basis list is stored in the JSON artifact.
 
+The gate then appends a bounded two-term correction screen:
+
+```text
+Psi = 1 - x + a**2 * (c1*basis_i(r,x) + c2*basis_j(r,x))
+c1, c2 in {-1, 1}
+```
+
+Two-term angular factors:
+
+- `x`
+- `1-x**2`
+- `x*(1-x**2)`
+- `(1-x**2)**2`
+
+Two-term radial factors:
+
+- `1/r`
+- `1/r**2`
+- `1/(r - 2*M)`
+
+This generated `264` two-term correction
+candidates. In this run, `264` passed strict
+prechecks before the full residual, and `0` had
+exact-zero full residual.
+
 
 ## Source run
 
-- Run id: `paper_repro_20260526_094823_46b75700`
-- Database: `problems/kerr_magnetosphere/outputs/parallel_runs_paper_repro_20260526_094823_46b75700.db`
-- Table: `expressions_paper_repro_20260526_094823_46b75700`
+- Run id: `paper_repro_20260526_095755_50aca069`
+- Database: `problems/kerr_magnetosphere/outputs/parallel_runs_paper_repro_20260526_095755_50aca069.db`
+- Table: `expressions_paper_repro_20260526_095755_50aca069`
 - Command: `python3 general_method_paper_reproduction.py --problem kerr_magnetosphere --max-depth 2 --validators 1`
 - Bounds: `max_depth=2`, `validators=1`, `per_expression_validation_timeout_s=3.0`
 
