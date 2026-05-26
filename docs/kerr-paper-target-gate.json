@@ -22837,6 +22837,2894 @@
     },
     {
       "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=-1, basis=x*(1-x**2)/r",
+      "equivalent_to_known_anchor": false,
+      "expression": "(x - 1)*(a**2*x**2 + a**2*x - r)/r",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-16*(26373353343116789677 + 11001283986488850000*sqrt(6))/(1414216983912662109375*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "7*(195303009529093 + 128116356250000*sqrt(3))/(9337331250000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-8142842344213231/896932983398437500",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "11256793664/4257758009375",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "-142757/8963838",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "95944867/10580652000",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=-1/2, basis=x*(1-x**2)/r",
+      "equivalent_to_known_anchor": false,
+      "expression": "(x - 1)*(a**2*x**2 + a**2*x - 2*r)/(2*r)",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-16*(16144515505086313919 + 6689118448322550000*sqrt(6))/(1414216983912662109375*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "7*(245266410803917 + 154694481250000*sqrt(3))/(18674662500000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-1787409336619119/298977661132812500",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "3396832/4257758009375",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "-102257/17927676",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "14363207/3526884000",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=1/2, basis=x*(1-x**2)/r",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(x - 1)*(a**2*x**2 + a**2*x + 2*r)/(2*r)",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "32*(2157487305861194647 + 967606314005025000*sqrt(6))/(1414216983912662109375*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "-7*(46752345106717 + 48381981250000*sqrt(3))/(18674662500000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "245418063823607/896932983398437500",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-22503396832/4257758009375",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "264257/17927676",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-62620871/10580652000",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=1, basis=x*(1-x**2)/r",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(x - 1)*(a**2*x**2 + a**2*x + r)/r",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "112*(2077945475613414811 + 892482595168050000*sqrt(6))/(1414216983912662109375*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "-7*(96700474759693 + 74960106250000*sqrt(3))/(9337331250000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "1023396328619827/298977661132812500",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-33756793664/4257758009375",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "223757/8963838",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-38492039/3526884000",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=-1, basis=x*(1-x**2)/r**2",
+      "equivalent_to_known_anchor": false,
+      "expression": "(x - 1)*(a**2*x**2 + a**2*x - r**2)/r**2",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-32*(879055740133329484933 + 362843748738410625000*sqrt(6))/(176777122989082763671875*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "7*(273629912664277 + 166976831250000*sqrt(3))/(28011993750000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-1672300185453077/448466491699218750",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-33795970048/63866370140625",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "-7211/4979910",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "543559/661290750",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=-1/2, basis=x*(1-x**2)/r**2",
+      "equivalent_to_known_anchor": false,
+      "expression": "(x - 1)*(a**2*x**2 + a**2*x - 2*r**2)/(2*r**2)",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-32*(624376870508527418351 + 255701652811588125000*sqrt(6))/(176777122989082763671875*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "7*(422916281409013 + 246711206250000*sqrt(3))/(56023987500000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-1970434122249367/597955322265625000",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-101272985024/63866370140625",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "15289/9959820",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-356227/7053768000",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=1/2, basis=x*(1-x**2)/r**2",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(x - 1)*(a**2*x**2 + a**2*x + 2*r**2)/(2*r**2)",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-32*(41417460957943125000*sqrt(6) + 115001038218686046649)/(176777122989082763671875*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "7*(5555868750000*sqrt(3) + 13368420601799)/(4309537500000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-4349915392619399/1793865966796875000",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-236227014976/63866370140625",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "5747/766140",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-37993819/21161304000",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=1, basis=x*(1-x**2)/r**2",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(x - 1)*(a**2*x**2 + a**2*x + r**2)/r**2",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "32*(139695890201526406183 + 65724634968879375000*sqrt(6))/(176777122989082763671875*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "-7*(-24504795925523 + 7508081250000*sqrt(3))/(28011993750000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-148604060170633/74744415283203125",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-303704029952/63866370140625",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "52211/4979910",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-1568233/587814000",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=-1, basis=x*(1-x**2)/(r - 2*M)",
+      "equivalent_to_known_anchor": false,
+      "expression": "(x - 1)*(2*M + a**2*x**2 + a**2*x - r)/(-2*M + r)",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "16*(-8178268429342777 + 924495747750000*sqrt(6))/(11313735871301296875*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "21*(5250436044293 + 3613456250000*sqrt(3))/(1037481250000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-2107546341369241/298977661132812500",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-124806336/34062064075",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "-19337/1659970",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "3538693/391876000",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "M",
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=-1/2, basis=x*(1-x**2)/(r - 2*M)",
+      "equivalent_to_known_anchor": false,
+      "expression": "(x - 1)*(4*M + a**2*x**2 + a**2*x - 2*r)/(2*(-2*M + r))",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-16*(9045563766750000*sqrt(6) + 27811756207472819)/(11313735871301296875*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "21*(7172927176517 + 4597831250000*sqrt(3))/(2074962500000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-4478161073900731/896932983398437500",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-107403168/34062064075",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "-11837/3319940",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "42889543/10580652000",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "M",
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=1/2, basis=x*(1-x**2)/(r - 2*M)",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(x - 1)*(-4*M + a**2*x**2 + a**2*x + 2*r)/(2*(-2*M + r))",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-32*(33354497324406053 + 14492841397875000*sqrt(6))/(11313735871301296875*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "-21*(-50162055883 + 660331250000*sqrt(3))/(2074962500000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-198164094817673/298977661132812500",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-72596832/34062064075",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "41837/3319940",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-20806931/3526884000",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "M",
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=1, basis=x*(1-x**2)/(r - 2*M)",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(x - 1)*(-2*M + a**2*x**2 + a**2*x + r)/(-2*M + r)",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-16*(85981306518734423 + 38955742310250000*sqrt(6))/(11313735871301296875*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "-21*(1857057454493 + 1644706250000*sqrt(3))/(1037481250000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "1426612016473973/896932983398437500",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-55193664/34062064075",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "34337/1659970",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-115075961/10580652000",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "M",
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=-1, basis=(1-x**2)/r",
+      "equivalent_to_known_anchor": false,
+      "expression": "(x - 1)*(a**2*x + a**2 - r)/r",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-1216*(5827739477962500*sqrt(6) + 14318923500700327)/(52378406811580078125*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "-77*(18914375000*sqrt(3) + 32915934713)/(37349325000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-36094201665577/2391821289062500",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "43148322976/12773274028125",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "98281/4481919",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "8918989/705376800",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=-1/2, basis=(1-x**2)/r",
+      "equivalent_to_known_anchor": false,
+      "expression": "(x - 1)*(a**2*x + a**2 - 2*r)/(2*r)",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-8*(530943493293900000*sqrt(6) + 1307519839442825263)/(52378406811580078125*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "-7*(632591886463 + 406982500000*sqrt(3))/(298794600000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-66441450693857/7175463867187500",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "4699161488/12773274028125",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "118531/8963838",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "12401921/2116130400",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=1/2, basis=(1-x**2)/r",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(x - 1)*(a**2*x + a**2 + 2*r)/(2*r)",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "8*(431614267991875513 + 178802321418900000*sqrt(6))/(52378406811580078125*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "7*(2107982500000*sqrt(3) + 3772165045183)/(298794600000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "9444330912369/2391821289062500",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-72199161488/12773274028125",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "-2887/689526",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-1812019/235125600",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=1, basis=(1-x**2)/r",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(x - 1)*(a**2*x + a**2 + r)/r",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "64*(162721840043690713 + 66709403596912500*sqrt(6))/(52378406811580078125*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "7*(420683125000*sqrt(3) + 738159474703)/(37349325000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "79005464575981/7175463867187500",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-110648322976/12773274028125",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "-57781/4481919",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-30663217/2116130400",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=-1, basis=(1-x**2)/r**2",
+      "equivalent_to_known_anchor": false,
+      "expression": "(x - 1)*(a**2*x + a**2 - r**2)/r**2",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-64*(547188766647187500*sqrt(6) + 1353571748710347233)/(503638527034423828125*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "7*(147524625000*sqrt(3) + 257014435163)/(112047975000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-3178358547859/1195910644531250",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-1170273088/4912797703125",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "12251/1493973",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-57097/44086050",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=-1/2, basis=(1-x**2)/r**2",
+      "equivalent_to_known_anchor": false,
+      "expression": "(x - 1)*(a**2*x + a**2 - 2*r**2)/(2*r**2)",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-16*(19729113743373750000*sqrt(6) + 48887184090699971077)/(6547300851447509765625*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "7*(1865848500000*sqrt(3) + 3422522608673)/(896383800000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-39797914938601/14350927734375000",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-91981775072/63866370140625",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "19001/2987946",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-4693781/4232260800",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=1/2, basis=(1-x**2)/r**2",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(x - 1)*(a**2*x + a**2 + 2*r**2)/(2*r**2)",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-16*(2279709498813750000*sqrt(6) + 5877982719629838923)/(6547300851447509765625*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "7*(3237151500000*sqrt(3) + 6112552081567)/(896383800000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-13979524811633/4783642578125000",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-245518224928/63866370140625",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "7999/2987946",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-1039573/1410753600",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=1, basis=(1-x**2)/r**2",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(x - 1)*(a**2*x + a**2 + r**2)/r**2",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "256*(977037707471781476 + 402812038966640625*sqrt(6))/(6547300851447509765625*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "7*(490350375000*sqrt(3) + 929415750457)/(112047975000000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-5311534013399/1793865966796875",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-322286449856/63866370140625",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "1249/1493973",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-582797/1058065200",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=-1, basis=x/r",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(a**2*x + r*x - r)/r",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-(5034426323400000*sqrt(6) + 12380041323618847)/(149226230232421875*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "(4539519137 + 2733730000*sqrt(3))/(137905200000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-185519749913/114807421875000",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-754356606/327519846875",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "71815/14480046",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-1795009/846452160",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=-1/2, basis=x/r",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(a**2*x + 2*r*x - 2*r)/(2*r)",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-(968037898800000*sqrt(6) + 2393256240907501)/(31933185070312500*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "(2850379600*sqrt(3) + 5051758061)/(143421408000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-172048474349/76538281250000",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-10528317939/4257758009375",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "1784095/376481196",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-95417/62700160",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=1/2, basis=x/r",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(-a**2*x + 2*r*x - 2*r)/(2*r)",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-(91059645295800000*sqrt(6) + 228478889266015691)/(3879881986042968750*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "(71624510000*sqrt(3) + 140264274379)/(3585535200000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-2380312137059/688844531250000",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-11971682061/4257758009375",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "1617905/376481196",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-548741/1692904320",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=1, basis=x/r",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(-a**2*x + r*x - r)/r",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-2*(240065325900000*sqrt(6) + 608883090990797)/(23949888802734375*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "(35903510000*sqrt(3) + 73018701163)/(1792767600000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-1389416375161/344422265625000",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-12693364122/4257758009375",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "767405/188240598",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "77503/282150720",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=-1, basis=x/r**2",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(a**2*x + r**2*x - r**2)/r**2",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-(7119669881430000000*sqrt(6) + 17680511541716895113)/(242492624127685546875*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "(756965250000*sqrt(3) + 1430692523269)/(48404725200000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-2528042267279/1377689062500000",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-53395796268/21288790046875",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "118705/20915622",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-6793777/3385808640",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=-1/2, basis=x/r**2",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(a**2*x + 2*r**2*x - 2*r**2)/(2*r**2)",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-(28067495255000000*sqrt(6) + 69771095025601777)/(997912033447265625*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "(1721432250000*sqrt(3) + 3236834509429)/(96809450400000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-3235310135713/1377689062500000",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-54822898134/21288790046875",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "213205/41831244",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-3306259/2257205760",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=1/2, basis=x/r**2",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(-a**2*x + 2*r**2*x - 2*r**2)/(2*r**2)",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-14*(444418877002500000*sqrt(6) + 1107221413108324201)/(242492624127685546875*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "(2136435750000*sqrt(3) + 3980184198107)/(96809450400000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-516131655493/153076562500000",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-57677101866/21288790046875",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "164795/41831244",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-2581223/6771617280",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "anchor correction grammar: coeff=1, basis=x/r**2",
+      "equivalent_to_known_anchor": false,
+      "expression": "-(-a**2*x + r**2*x - r**2)/r**2",
+      "full_target": {
+        "exact_zero": false,
+        "point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-(73118465970000000*sqrt(6) + 182394581069249227)/(2993736100341796875*(20*sqrt(6) + 49))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "(46878750000*sqrt(3) + 86963073659)/(1936189008000*(4*sqrt(3) + 7))",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "-5347853123321/1377689062500000",
+            "zero": false
+          }
+        ],
+        "reason": "full nonlinear Kerr split-monopole GSE residual is not exact zero",
+        "residual_defined": true,
+        "residual_simplified": "<skipped; point checks nonzero>"
+      },
+      "linear_surrogate": {
+        "independent_linear_surrogate_point_zero": false,
+        "linear_surrogate_point_checks": [
+          {
+            "point": {
+              "M": "1",
+              "a": "1/5",
+              "r": "5/2",
+              "x": "1/3"
+            },
+            "value": "-59104203732/21288790046875",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "1/2",
+              "r": "3",
+              "x": "-2/5"
+            },
+            "value": "70295/20915622",
+            "zero": false
+          },
+          {
+            "point": {
+              "M": "1",
+              "a": "4/5",
+              "r": "4",
+              "x": "1/5"
+            },
+            "value": "181259/1128602880",
+            "zero": false
+          }
+        ],
+        "linear_surrogate_reason": "linear surrogate point checks nonzero"
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "full nonlinear Kerr split-monopole GSE residual is not exact zero"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "anchor_correction_grammar",
+      "strict_prechecks": {
+        "passed_before_full_target_residual": true,
+        "rejections_before_full_target_residual": []
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
       "engine_validation_reason": "manual strict-gate probe",
       "equivalent_to_known_anchor": true,
       "expression": "1 - x",
@@ -23161,7 +26049,7 @@
       ]
     }
   ],
-  "candidate_inputs_scanned": 310,
+  "candidate_inputs_scanned": 338,
   "gate": {
     "full_target_residual": {
       "closed_potential_functions": "split-monopole setup: omega = a/(2*(r_+**2 + a**2)), I(Psi)=-(omega/2)*Psi*(2-Psi), II'=I*dI/dPsi",
@@ -23199,7 +26087,27 @@
         "r": "4",
         "x": "1/5"
       }
-    ]
+    ],
+    "targeted_search_grammar": {
+      "basis": [
+        "x*(1-x**2)/r",
+        "x*(1-x**2)/r**2",
+        "x*(1-x**2)/(r - 2*M)",
+        "(1-x**2)/r",
+        "(1-x**2)/r**2",
+        "x/r",
+        "x/r**2"
+      ],
+      "coefficients": [
+        "-1",
+        "-1/2",
+        "1/2",
+        "1"
+      ],
+      "enabled": true,
+      "form": "Psi = 1 - x + a**2 * c * basis(r,x)",
+      "generated_candidates": 28
+    }
   },
   "literature_sources": [
     {
@@ -23248,15 +26156,15 @@
       "--validators",
       "1"
     ],
-    "db_path": "problems/kerr_magnetosphere/outputs/parallel_runs_paper_repro_20260526_093256_50fe8d6c.db",
-    "run_id": "paper_repro_20260526_093256_50fe8d6c",
+    "db_path": "problems/kerr_magnetosphere/outputs/parallel_runs_paper_repro_20260526_093939_80027ff6.db",
+    "run_id": "paper_repro_20260526_093939_80027ff6",
     "search_bounds": {
       "max_depth": 2,
       "per_expression_validation_timeout_s": 3.0,
       "validators": 1,
       "wall_timeout_s": 90.0
     },
-    "table_name": "expressions_paper_repro_20260526_093256_50fe8d6c"
+    "table_name": "expressions_paper_repro_20260526_093939_80027ff6"
   },
   "status": "no_candidate_yet"
 }

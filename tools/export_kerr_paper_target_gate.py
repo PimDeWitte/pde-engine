@@ -44,6 +44,13 @@ DEFAULT_PROBES = [
     "1 - x + a**2*r*x",
 ]
 
+CORRECTION_COEFFICIENTS = [
+    sp.Integer(-1),
+    sp.Rational(-1, 2),
+    sp.Rational(1, 2),
+    sp.Integer(1),
+]
+
 LITERATURE_SOURCES = [
     {
         "id": "mahlmann_cerda_duran_aloy_2018_kerr_gse_numerics",
@@ -118,6 +125,48 @@ class CandidateRow:
     depth: int | None = None
     validation_reason: str | None = None
     source: str = "engine"
+
+
+def correction_basis() -> list[tuple[str, sp.Basic]]:
+    """Small bounded finite-spin corrections around the split-monopole anchor."""
+    locals_map = sympify_locals()
+    r = locals_map["r"]
+    x = locals_map["x"]
+    m = locals_map["M"]
+    return [
+        ("x*(1-x**2)/r", x * (1 - x**2) / r),
+        ("x*(1-x**2)/r**2", x * (1 - x**2) / r**2),
+        ("x*(1-x**2)/(r - 2*M)", x * (1 - x**2) / (r - 2 * m)),
+        ("(1-x**2)/r", (1 - x**2) / r),
+        ("(1-x**2)/r**2", (1 - x**2) / r**2),
+        ("x/r", x / r),
+        ("x/r**2", x / r**2),
+    ]
+
+
+def generate_anchor_correction_rows() -> list[CandidateRow]:
+    locals_map = sympify_locals()
+    a = locals_map["a"]
+    x = locals_map["x"]
+    rows: list[CandidateRow] = []
+    seen: set[str] = set()
+    for basis_name, basis_expr in correction_basis():
+        for coeff in CORRECTION_COEFFICIENTS:
+            expr = sp.factor(1 - x + a**2 * coeff * basis_expr)
+            expr_str = sp.sstr(expr)
+            if expr_str in seen:
+                continue
+            seen.add(expr_str)
+            rows.append(
+                CandidateRow(
+                    row_id=None,
+                    expression=expr_str,
+                    depth=None,
+                    validation_reason=f"anchor correction grammar: coeff={sp.sstr(coeff)}, basis={basis_name}",
+                    source="anchor_correction_grammar",
+                )
+            )
+    return rows
 
 
 def sympify_locals() -> dict[str, Any]:
@@ -606,8 +655,13 @@ def build_artifact(
     rows: list[CandidateRow],
     run_summary: dict[str, Any],
     include_probes: bool,
+    include_corrections: bool,
 ) -> dict[str, Any]:
     candidate_rows = list(rows)
+    correction_rows: list[CandidateRow] = []
+    if include_corrections:
+        correction_rows = generate_anchor_correction_rows()
+        candidate_rows.extend(correction_rows)
     if include_probes:
         candidate_rows.extend(
             CandidateRow(None, expr, None, "manual strict-gate probe", "probe")
@@ -637,6 +691,13 @@ def build_artifact(
                     "I(Psi)=-(omega/2)*Psi*(2-Psi), II'=I*dI/dPsi"
                 ),
                 "implemented": PAPER_TARGET_VALIDATOR_IMPLEMENTED,
+            },
+            "targeted_search_grammar": {
+                "enabled": include_corrections,
+                "form": "Psi = 1 - x + a**2 * c * basis(r,x)",
+                "coefficients": [sp.sstr(item) for item in CORRECTION_COEFFICIENTS],
+                "basis": [name for name, _ in correction_basis()],
+                "generated_candidates": len(correction_rows),
             },
         },
         "source_engine_run": None
@@ -671,6 +732,37 @@ def markdown_from_artifact(artifact: dict[str, Any]) -> str:
 """
     else:
         source_run = "- No engine run attached; artifact contains strict-gate probes only.\n"
+
+    grammar = artifact["gate"]["targeted_search_grammar"]
+    correction_assessments = [
+        item for item in artifact["assessments"] if item["source"] == "anchor_correction_grammar"
+    ]
+    correction_prechecks = [
+        item
+        for item in correction_assessments
+        if item["strict_prechecks"]["passed_before_full_target_residual"]
+    ]
+    correction_exact = [item for item in correction_assessments if item["full_target"]["exact_zero"]]
+    coeffs = ", ".join(grammar["coefficients"])
+    basis_lines = "\n".join(f"- `{basis}`" for basis in grammar["basis"])
+    grammar_section = f"""## Targeted finite-spin correction grammar
+
+The gate also appends a bounded correction grammar around the split-monopole
+anchor:
+
+```text
+{grammar["form"]}
+c in {{{coeffs}}}
+```
+
+Basis functions:
+
+{basis_lines}
+
+This generated `{grammar["generated_candidates"]}` correction candidates. In
+this run, `{len(correction_prechecks)}` passed the strict prechecks before the
+full residual, and `{len(correction_exact)}` had exact-zero full residual.
+"""
 
     rows = []
     for item in artifact["assessments"][:20]:
@@ -725,6 +817,8 @@ of the nonlinear Kerr force-free Grad-Shafranov equation:
 The finite-spin paper target remains intentionally hard: the Schwarzschild
 anchor is used only as an `a -> 0` limit, not as a finite-spin solution.
 
+{grammar_section}
+
 ## Source run
 
 {source_run}
@@ -750,6 +844,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--run-id", default="manual")
     parser.add_argument("--max-rows", type=int, default=1000)
     parser.add_argument("--include-probes", action="store_true", default=True)
+    parser.add_argument("--no-corrections", action="store_true", help="Do not add the bounded anchor-preserving correction grammar.")
     parser.add_argument("--output", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--markdown", type=Path, default=DEFAULT_MD)
     return parser.parse_args()
@@ -795,7 +890,13 @@ def main() -> int:
         )
         rows, summary = load_rows(run, args.max_rows)
 
-    artifact = build_artifact(run, rows, summary, include_probes=args.include_probes)
+    artifact = build_artifact(
+        run,
+        rows,
+        summary,
+        include_probes=args.include_probes,
+        include_corrections=not args.no_corrections,
+    )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.markdown.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")

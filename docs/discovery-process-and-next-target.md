@@ -135,10 +135,10 @@ force-free Grad-Shafranov problem. Historical local outputs also contain many
 degenerate expressions such as `1/(1 - 1)`, so the next step cannot be "run it
 and trust the valid rows." The next step must tighten the target before search.
 
-## Next implementation step
+## Gate implementation step
 
-Before running a serious search, add a new target manifest and validator gate
-for the Kerr paper target:
+Before treating any row as a serious paper candidate, the PR added a target
+manifest and validator gate for the Kerr paper target:
 
 - source equation and citation metadata
 - physical-domain assumptions (`r > r_+`, `|x| < 1`, admissible spin)
@@ -148,8 +148,9 @@ for the Kerr paper target:
 - axis/horizon/light-surface regularity checks
 - equivalence filters for constant shifts, scalings, and known anchors
 - JSON exporter with a `no_candidate_yet` result if no row meets all criteria
+- targeted finite-spin correction grammar around the split-monopole anchor
 
-Only after that should we let the engine search. A negative result under the
+Only after that should the engine search matter. A negative result under the
 strict gate is useful; a degenerate "valid" row is not.
 
 ## First gate now added
@@ -169,13 +170,27 @@ python3 tools/export_kerr_paper_target_gate.py \
   --timeout-s 90 --validation-timeout-s 3
 ```
 
-It generated `306` rows, completed `306` validations, scanned all `306`
-generated expressions plus four probes, and admitted `0` paper candidates. It
-also probed `1 - x`, `x`, `1/(1 - 1)`, and `1 - x + a**2*r*x` to prove that
-the gate rejects known anchors and undefined expressions, and actually
-evaluates the full nonlinear residual on the only anchor-like expression that
-passes the cheap prechecks.
+It generated `306` engine rows, completed `306` validations, appended `28`
+bounded finite-spin correction candidates of the form
+`Psi = 1 - x + a**2*c*basis(r,x)`, scanned those plus four probes, and admitted
+`0` paper candidates. The correction grammar used
+`c in {-1, -1/2, 1/2, 1}` and the basis functions:
+
+- `x*(1-x**2)/r`
+- `x*(1-x**2)/r**2`
+- `x*(1-x**2)/(r - 2*M)`
+- `(1-x**2)/r`
+- `(1-x**2)/r**2`
+- `x/r`
+- `x/r**2`
+
+All `28` correction candidates pass the cheap strict prechecks and reach the
+full nonlinear residual; all `28` fail exact-zero residual. The probes
+`1 - x`, `x`, `1/(1 - 1)`, and `1 - x + a**2*r*x` prove that the gate rejects
+known anchors and undefined expressions and evaluates the full nonlinear
+residual on an anchor-like finite-spin expression.
 
 The status is therefore **`no_candidate_yet`**. That is intentional. It is the
 right artifact for the next paper program: the residual gate now exists for
-the closed split-monopole target, but no generated row meets the full criteria.
+the closed split-monopole target, but no generated or targeted correction row
+meets the full criteria.

@@ -24,8 +24,9 @@ adapter gate.
   determinant, and emits JSON/Markdown process-control artifacts.
 - `tools/export_kerr_paper_target_gate.py` runs the stricter next-target gate
   for the closed split-monopole Kerr force-free / Grad-Shafranov paper program
-  and emits a `no_candidate_yet` artifact instead of promoting the current
-  linear surrogate.
+  and appends a bounded finite-spin correction grammar before emitting a
+  `no_candidate_yet` artifact instead of promoting the current linear
+  surrogate.
 - `tests/test_force_free_novel_discoveries.py` checks the independent
   determinant builder and the registry-novel candidate filter.
 - `tests/test_kerr_paper_target_gate.py` checks that undefined expressions,
@@ -137,11 +138,29 @@ python3 tools/export_kerr_paper_target_gate.py \
 
 The result is `no_candidate_yet`: `306` generated rows, `306` completed
 validations, all `306` generated expressions scanned by the full target gate,
-four additional probes, and `0` admitted paper candidates. The gate also probes
-`1 - x`, `x`, `1/(1 - 1)`, and `1 - x + a**2*r*x`. These are rejected
-respectively as known anchors, undefined expressions, or finite-spin
-anchor-like expressions whose full nonlinear Kerr split-monopole
-Grad-Shafranov residual is nonzero at rational safe points.
+`28` bounded finite-spin correction candidates, four additional probes, and
+`0` admitted paper candidates. The targeted grammar is:
+
+```text
+Psi = 1 - x + a**2*c*basis(r,x)
+c in {-1, -1/2, 1/2, 1}
+basis in {
+  x*(1-x**2)/r,
+  x*(1-x**2)/r**2,
+  x*(1-x**2)/(r - 2*M),
+  (1-x**2)/r,
+  (1-x**2)/r**2,
+  x/r,
+  x/r**2
+}
+```
+
+All `28` correction candidates pass the strict prechecks before the full
+residual and then fail exact-zero residual. The gate also probes `1 - x`, `x`,
+`1/(1 - 1)`, and `1 - x + a**2*r*x`. These are rejected respectively as known
+anchors, undefined expressions, or finite-spin anchor-like expressions whose
+full nonlinear Kerr split-monopole Grad-Shafranov residual is nonzero at
+rational safe points.
 
 ## Literature sources
 
@@ -200,18 +219,16 @@ diagram states what enters Lagra and what measurement comes out.
 Artifact hashes:
 
 ```text
-5c79209969bf3dc1703307696425652b75d174c72060cbe9b841f4c50f402184  docs/lagra-force-free-adapter-paper.html
-b672dd12562390b47c0721e7196a04425b0e266926fab55113bb7d5c7b1ff0b7  docs/lagra-force-free-adapter-paper.pdf
-546ccd1bd39882ad9d3b3a7ef5ff1aed1466b902b21e43c9995bc8461b7759e9  tools/render_lagra_force_free_adapter_paper.py
+e1679740b5bc21f710b14b9f5467885628f1edb42cc205c62f1ee05a35ccf637  docs/lagra-force-free-adapter-paper.html
+14689f82c54b1da4a5673659a8002b2bb7d72bfe800bd64e422dfb840682fdf4  docs/lagra-force-free-adapter-paper.pdf
+f2f60f1d1ab9fb0f16dc88871b301a4a4d4385948e5ced345c6586199931cfa0  tools/render_lagra_force_free_adapter_paper.py
 f67202596b8fe94c85b6ca9ebba02267a7891ef6929add75bf0a0b5f73f67d6c  docs/force-free-novel-discoveries.json
 b6073e74d079d19d7183101f5a21770064e0f3ea450fd257c803afc9e2cd301c  docs/force-free-novel-discoveries.md
 cd5999772df7b0e2a06d10831f9863ddb51ea5ecca5276e314eedc6d76517b41  tools/export_force_free_novel_discoveries.py
-dc14a75a63d42dc37f086d4ce968188d6d9fdfe7c1e2a99c3a3ebdefab2e859f  docs/discovery-process-and-next-target.md
-86c75ebdb0f2c6ff96e0346f17704f6498437caef88bc0f07e6b61ea31af2b27  docs/kerr-paper-target-gate.json
-b10e5e50e6c442d34326eb5430b96916d65c1662be2c4b36b28ca8c245575896  docs/kerr-paper-target-gate.md
-0b8ed0cd2827f47ef6950a07076200c86a66759cbf64d3528c575b0696af3e99  tools/export_kerr_paper_target_gate.py
-7feafdfd3e9dee42cbeed306ca2bf62a55d49a1659c23d662de360a83da6f44b  pde_engine_force_free_point_gate.json
-e5a4c2b7ce63ba4044dcdfa5f0aa58758b3e2e5db92e12b8936e01770d3f99a1  pde_engine_reproduction_health_gate.json
+a289a9019fd85f269c9700895bb5c4c12bcec7c6490a4c53d0938673978ee888  docs/discovery-process-and-next-target.md
+5c2ebe122566f40b1582341b5ca3e10ed59360d913aa9dbb0032ade959f28d47  docs/kerr-paper-target-gate.json
+5b8db0b6100226c53290e3a2dabbbdb769468e054686d77f8276638bf4d06e7a  docs/kerr-paper-target-gate.md
+a9bffe70e4fa327f2d74ea94745c892d22216bf57e2f45cbc2b53f7ace0acf41  tools/export_kerr_paper_target_gate.py
 ```
 
 ## Reproduction commands
