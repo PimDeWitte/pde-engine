@@ -114,6 +114,21 @@ returned `EmptySet`.  It therefore generated
 `0` additional candidates.
 
 
+The gate also calibrates itself against the literature slow-rotation
+split-monopole perturbative correction:
+
+```text
+Psi = 1 - x + a**2*x*(1-x**2)*R(r)
+coefficient of a**2 in full residual series through O(a**4)
+M = 1
+```
+
+Using `polylog(1, z) = -log(1 - z)`, the leading-order
+residual simplifies to `0`.
+The screen status is `passes_leading_order_anchor`. This is not added as a
+finite-spin exact candidate: This is a perturbative O(a**2) literature anchor, not an exact finite-spin Kerr paper candidate.
+
+
 
 ## Criteria status matrix
 
@@ -129,6 +144,7 @@ future work before a positive solution claim.
 | `full_residual` | Candidate rows must pass the closed split-monopole nonlinear Kerr Grad-Shafranov residual. | implemented_negative | 0 candidates have exact-zero full residual; admitted_count=0. |
 | `bounded_correction_screens` | The split-monopole anchor is tested with bounded one-term and two-term finite-spin correction grammars. | implemented_negative | 192 one-term and 264 two-term rows generated; 456 pass strict prechecks; 0 exact-zero residual rows. |
 | `coefficient_solve` | The one-term basis is tested with arbitrary leading-order coefficients, not only sampled constants. | no_leading_order_solution | 66 equations, 48 unknowns, matrix [66, 48], linsolve=EmptySet. |
+| `literature_perturbative_anchor` | The gate is calibrated against the known O(a**2) Blandford-Znajek split-monopole perturbative correction. | passes_leading_order_anchor | leading_residual_exact_zero=True; This is a perturbative O(a**2) literature anchor, not an exact finite-spin Kerr paper candidate. |
 | `equivalence_filters` | Candidate rows must not be equivalent to known solutions under broader gauge, scaling, coordinate, or reparameterization transformations. | partial_not_sufficient_for_positive_claim | The current gate rejects exact known anchors and trivial equivalents only; broader equivalence filters remain future work. |
 | `global_regularities` | Candidate rows must pass horizon, axis, and light-surface regularity checks for a positive paper claim. | not_implemented_for_positive_claim | The current gate checks symbolic finiteness and denominator safety on rational safe points; it does not prove global horizon/axis/light-surface regularity. |
 

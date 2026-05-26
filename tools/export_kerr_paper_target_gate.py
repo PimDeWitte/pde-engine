@@ -91,6 +91,7 @@ PAIR_CORRECTION_RADIAL_FACTORS = [
 ]
 
 COEFFICIENT_SOLVE_SERIES_ORDER = 4
+LITERATURE_ANCHOR_SERIES_ORDER = 4
 
 LITERATURE_SOURCES = [
     {
@@ -120,6 +121,32 @@ LITERATURE_SOURCES = [
         "role": (
             "states the no-known-exact-analytic stationary, axisymmetric, "
             "magnetically dominated extreme-Kerr force-free solution target"
+        ),
+    },
+    {
+        "id": "tanabe_nagataki_2008_bz_monopole_perturbation",
+        "citation": (
+            "K. Tanabe and S. Nagataki, Higher Order Terms of Kerr Parameter "
+            "for Blandford-Znajek Monopole Solution (2008)"
+        ),
+        "arxiv": "0802.0908",
+        "arxiv_url": "https://arxiv.org/abs/0802.0908",
+        "role": (
+            "gives the second-order split-monopole perturbative flux "
+            "correction with logarithm and dilogarithm radial terms"
+        ),
+    },
+    {
+        "id": "pan_yu_2015_bz_monopole_perturbation",
+        "citation": (
+            "Z. Pan and C. Yu, Fourth-order split monopole perturbation "
+            "solutions to the Blandford-Znajek mechanism (2015)"
+        ),
+        "arxiv": "1503.05248",
+        "arxiv_url": "https://arxiv.org/abs/1503.05248",
+        "role": (
+            "states that the split-monopole Blandford-Znajek solution is "
+            "known analytically as a perturbative solution through O(a^2)"
         ),
     },
 ]
@@ -328,6 +355,86 @@ def solve_leading_order_coefficient_rows() -> tuple[list[CandidateRow], dict[str
         "exact_solution_count": len(exact_solutions),
         "skipped_parametric_solution_count": skipped_parametric,
         "generated_candidates": len(rows),
+    }
+
+
+def tanabe_bz_radial_correction() -> sp.Basic:
+    """Tanabe-Nagataki / Blandford-Znajek second-order radial correction."""
+    locals_map = sympify_locals()
+    r = locals_map["r"]
+    return sp.factor(
+        (
+            sp.polylog(2, sp.Rational(2) / r)
+            - sp.log(1 - sp.Rational(2) / r) * sp.log(r / 2)
+        )
+        * r**2
+        * (2 * r - 3)
+        / 8
+        + (1 + 3 * r - 6 * r**2) * sp.log(r / 2) / 12
+        + sp.Rational(11, 72)
+        + sp.Rational(1, 3) / r
+        + r / 2
+        - r**2 / 2
+    )
+
+
+def simplify_polylog_order_one(expr: sp.Basic) -> sp.Basic:
+    replacements: dict[sp.Basic, sp.Basic] = {}
+    for atom in expr.atoms(sp.Function):
+        if atom.func == sp.polylog and len(atom.args) == 2 and atom.args[0] == 1:
+            replacements[atom] = -sp.log(1 - atom.args[1])
+    return expr.xreplace(replacements)
+
+
+def literature_slow_rotation_anchor_metadata() -> dict[str, Any]:
+    locals_map = sympify_locals()
+    a = locals_map["a"]
+    x = locals_map["x"]
+    m = locals_map["M"]
+    r = locals_map["r"]
+    radial = tanabe_bz_radial_correction()
+    psi = 1 - x + a**2 * x * (1 - x**2) * radial
+    residual = full_kerr_split_monopole_residual(psi)
+    leading_residual = (
+        sp.series(residual.subs(m, 1), a, 0, LITERATURE_ANCHOR_SERIES_ORDER)
+        .removeO()
+        .coeff(a, 2)
+    )
+    normalized_residual = sp.factor(
+        sp.cancel(sp.together(simplify_polylog_order_one(leading_residual)))
+    )
+    exact = exact_zero(normalized_residual)
+
+    point_checks = []
+    for point in SAFE_POINTS:
+        value = sp.factor(sp.cancel(sp.together(normalized_residual.subs(_point_subs(point)))))
+        point_checks.append(
+            {
+                "point": {key: sp.sstr(value) for key, value in point.items()},
+                "value": sp.sstr(value),
+                "zero": bool(value == 0 or sp.simplify(value) == 0),
+            }
+        )
+
+    return {
+        "enabled": True,
+        "status": "passes_leading_order_anchor" if exact else "fails_leading_order_anchor",
+        "ansatz": "Psi = 1 - x + a**2*x*(1-x**2)*R(r)",
+        "radial_correction_source": "Tanabe-Nagataki 2008 Eq. for f(r); Pan-Yu 2015 R(r)",
+        "series": (
+            "coefficient of a**2 in full residual series through "
+            f"O(a**{LITERATURE_ANCHOR_SERIES_ORDER})"
+        ),
+        "mass_normalization": "M = 1",
+        "polylog_identity_used": "polylog(1, z) = -log(1 - z)",
+        "leading_residual_exact_zero": bool(exact),
+        "leading_residual_simplified": sp.sstr(normalized_residual)[:2000],
+        "point_checks": point_checks,
+        "finite_spin_exact_candidate": False,
+        "claim_boundary": (
+            "This is a perturbative O(a**2) literature anchor, not an exact "
+            "finite-spin Kerr paper candidate."
+        ),
     }
 
 
@@ -730,6 +837,7 @@ def criteria_status_matrix(
     correction_rows: list[CandidateRow],
     pair_correction_rows: list[CandidateRow],
     coefficient_solve_metadata: dict[str, Any],
+    literature_anchor_metadata: dict[str, Any],
     admitted_count: int,
 ) -> list[dict[str, Any]]:
     correction_assessments = [
@@ -798,6 +906,16 @@ def criteria_status_matrix(
                 f"{coefficient_solve_metadata.get('unknown_count', 0)} unknowns, "
                 f"matrix {coefficient_solve_metadata.get('matrix_shape', [])}, "
                 f"linsolve={coefficient_solve_metadata.get('linsolve_result', '<not-run>')}."
+            ),
+        },
+        {
+            "id": "literature_perturbative_anchor",
+            "criterion": "The gate is calibrated against the known O(a**2) Blandford-Znajek split-monopole perturbative correction.",
+            "status": literature_anchor_metadata.get("status", "not_run"),
+            "evidence": (
+                f"leading_residual_exact_zero="
+                f"{literature_anchor_metadata.get('leading_residual_exact_zero', False)}; "
+                f"{literature_anchor_metadata.get('claim_boundary', '<not-run>')}"
             ),
         },
         {
@@ -911,6 +1029,7 @@ def build_artifact(
     include_corrections: bool,
     include_pair_corrections: bool,
     include_coefficient_solve: bool,
+    include_literature_anchor: bool,
 ) -> dict[str, Any]:
     candidate_rows = list(rows)
     correction_rows: list[CandidateRow] = []
@@ -929,6 +1048,12 @@ def build_artifact(
     if include_coefficient_solve:
         coefficient_solve_rows, coefficient_solve_metadata = solve_leading_order_coefficient_rows()
         candidate_rows.extend(coefficient_solve_rows)
+    literature_anchor_metadata: dict[str, Any] = {
+        "enabled": False,
+        "status": "not_run",
+    }
+    if include_literature_anchor:
+        literature_anchor_metadata = literature_slow_rotation_anchor_metadata()
     if include_probes:
         candidate_rows.extend(
             CandidateRow(None, expr, None, "manual strict-gate probe", "probe")
@@ -944,6 +1069,7 @@ def build_artifact(
         correction_rows,
         pair_correction_rows,
         coefficient_solve_metadata,
+        literature_anchor_metadata,
         len(admitted),
     )
 
@@ -989,6 +1115,7 @@ def build_artifact(
                 "generated_candidates": len(pair_correction_rows),
             },
             "coefficient_solve_screen": coefficient_solve_metadata,
+            "literature_slow_rotation_anchor_screen": literature_anchor_metadata,
         },
         "source_engine_run": None
         if run is None
@@ -1026,6 +1153,7 @@ def markdown_from_artifact(artifact: dict[str, Any]) -> str:
     grammar = artifact["gate"]["targeted_search_grammar"]
     pair_grammar = artifact["gate"]["two_term_search_grammar"]
     coefficient_solve = artifact["gate"]["coefficient_solve_screen"]
+    literature_anchor = artifact["gate"]["literature_slow_rotation_anchor_screen"]
     correction_assessments = [
         item for item in artifact["assessments"] if item["source"] == "anchor_correction_grammar"
     ]
@@ -1073,6 +1201,24 @@ returned `{coefficient_solve["linsolve_result"]}`.  It therefore generated
 """
     else:
         coefficient_section = "\nThe leading-order coefficient solve screen was disabled for this artifact.\n"
+    if literature_anchor.get("enabled"):
+        literature_anchor_section = f"""
+The gate also calibrates itself against the literature slow-rotation
+split-monopole perturbative correction:
+
+```text
+{literature_anchor["ansatz"]}
+{literature_anchor["series"]}
+{literature_anchor["mass_normalization"]}
+```
+
+Using `{literature_anchor["polylog_identity_used"]}`, the leading-order
+residual simplifies to `{literature_anchor["leading_residual_simplified"]}`.
+The screen status is `{literature_anchor["status"]}`. This is not added as a
+finite-spin exact candidate: {literature_anchor["claim_boundary"]}
+"""
+    else:
+        literature_anchor_section = "\nThe literature perturbative anchor screen was disabled for this artifact.\n"
     grammar_section = f"""## Targeted finite-spin correction grammar
 
 The gate also appends an expanded bounded correction grammar around the
@@ -1117,6 +1263,7 @@ candidates. In this run, `{len(pair_correction_prechecks)}` passed strict
 prechecks before the full residual, and `{len(pair_correction_exact)}` had
 exact-zero full residual.
 {coefficient_section}
+{literature_anchor_section}
 """
 
     rows = []
@@ -1231,6 +1378,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Do not run the leading-order coefficient solve screen.",
     )
+    parser.add_argument(
+        "--no-literature-anchor",
+        action="store_true",
+        help="Do not run the literature slow-rotation perturbative anchor screen.",
+    )
     parser.add_argument("--output", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--markdown", type=Path, default=DEFAULT_MD)
     return parser.parse_args()
@@ -1284,6 +1436,7 @@ def main() -> int:
         include_corrections=not args.no_corrections,
         include_pair_corrections=not args.no_pair_corrections,
         include_coefficient_solve=not args.no_coefficient_solve,
+        include_literature_anchor=not args.no_literature_anchor,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.markdown.parent.mkdir(parents=True, exist_ok=True)

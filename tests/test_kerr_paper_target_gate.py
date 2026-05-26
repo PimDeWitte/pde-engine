@@ -16,6 +16,7 @@ from tools.export_kerr_paper_target_gate import (
     generate_anchor_pair_correction_rows,
     full_kerr_split_monopole_residual,
     generate_anchor_correction_rows,
+    literature_slow_rotation_anchor_metadata,
     pair_correction_basis,
     solve_leading_order_coefficient_rows,
     sympify_locals,
@@ -143,10 +144,12 @@ class KerrPaperTargetGateTest(unittest.TestCase):
             include_corrections=False,
             include_pair_corrections=False,
             include_coefficient_solve=False,
+            include_literature_anchor=False,
         )
         criteria = {item["id"]: item for item in artifact["criteria_status"]}
 
         self.assertEqual(criteria["full_residual"]["status"], "implemented_negative")
+        self.assertEqual(criteria["literature_perturbative_anchor"]["status"], "not_run")
         self.assertEqual(
             criteria["global_regularities"]["status"],
             "not_implemented_for_positive_claim",
@@ -156,6 +159,17 @@ class KerrPaperTargetGateTest(unittest.TestCase):
             criteria["equivalence_filters"]["status"],
             "partial_not_sufficient_for_positive_claim",
         )
+
+    def test_literature_slow_rotation_anchor_passes_leading_order_residual(self):
+        metadata = literature_slow_rotation_anchor_metadata()
+
+        self.assertTrue(metadata["enabled"])
+        self.assertEqual(metadata["status"], "passes_leading_order_anchor")
+        self.assertTrue(metadata["leading_residual_exact_zero"])
+        self.assertEqual(metadata["leading_residual_simplified"], "0")
+        self.assertFalse(metadata["finite_spin_exact_candidate"])
+        self.assertIn("perturbative", metadata["claim_boundary"])
+        self.assertTrue(all(item["zero"] for item in metadata["point_checks"]))
 
 
 if __name__ == "__main__":

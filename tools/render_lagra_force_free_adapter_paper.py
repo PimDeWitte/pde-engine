@@ -408,11 +408,12 @@ def svg9_kerr_gate() -> str:
         text(330, 198, "finite denominators", 11, INK, "start"),
         text(330, 214, "small-spin anchor", 11, INK, "start"),
         text(330, 230, "axis / horizon regular", 11, INK, "start"),
-        rect(552, 150, 176, 82, "#fff0f6", stroke=MAGENTA, rx=5),
+        rect(552, 150, 176, 100, "#fff0f6", stroke=MAGENTA, rx=5),
         text(572, 174, "measured output", 12, MAGENTA, "start", weight="700"),
         text(572, 194, "306 rows + 456 corrections", 11, INK, "start"),
         text(572, 210, "48-coeff solve: EmptySet", 11, INK, "start"),
-        text(572, 226, "766 inputs, 0 admitted", 11, INK, "start"),
+        text(572, 226, "BZ O(a^2) anchor: pass", 11, INK, "start"),
+        text(572, 242, "766 inputs, 0 admitted", 11, INK, "start"),
         arrow(226, 182, 310, 192),
         arrow(486, 192, 552, 188),
         rect(248, 306, 294, 46, "#fbf9f5", stroke=LINE, rx=5),
@@ -478,7 +479,7 @@ def html() -> str:
             9,
             "Kerr paper-target gate",
             svg9_kerr_gate(),
-            "The next target uses the same measurement discipline in the negative direction. The bounded Kerr run generated 306 rows; the strict gate scans those rows, 456 targeted finite-spin corrections, and four probes against the closed split-monopole nonlinear Kerr Grad-Shafranov residual. It also solves the 48-coefficient leading-order ansatz and gets EmptySet, then emits no_candidate_yet because no expression passes the criteria.",
+            "The next target uses the same measurement discipline in the negative direction. The bounded Kerr run generated 306 rows; the strict gate scans those rows, 456 targeted finite-spin corrections, and four probes against the closed split-monopole nonlinear Kerr Grad-Shafranov residual. It also solves the 48-coefficient leading-order ansatz and gets EmptySet, verifies the known O(a^2) Blandford-Znajek perturbative anchor, then emits no_candidate_yet because no finite-spin exact expression passes the criteria.",
         ),
     ]
 
@@ -574,8 +575,9 @@ def html() -> str:
     as a process-control baseline rather than as a publication target.
     A second gate records the next Kerr paper target, appends targeted one-term
     and two-term finite-spin correction grammars, runs a 48-coefficient
-    leading-order solve, and emits <code>no_candidate_yet</code> rather than
-    promoting the current linear surrogate.
+    leading-order solve, checks the literature slow-rotation perturbative
+    anchor, and emits <code>no_candidate_yet</code> rather than promoting the
+    current linear surrogate.
     The negative result is equally
     important: the bounded pde-engine smoke is now process-clean, but the full
     seven-solution pde-engine/Lean reproduction path remains non-green on this
@@ -700,14 +702,26 @@ T = u_z*d_rho - u_rho*d_z</pre>
     nonlinear residual, this ansatz family has no leading-order correction.
   </p>
   <p>
+    The next calibration is positive but deliberately perturbative.  The gate
+    encodes the Blandford-Znajek split-monopole slow-rotation correction from
+    Tanabe-Nagataki and Pan-Yu:
+    <code>Psi = 1 - x + a**2*x*(1-x**2)*R(r)</code>, where <code>R(r)</code>
+    contains the literature logarithm and dilogarithm radial terms.  After
+    applying <code>polylog(1,z) = -log(1-z)</code>, the coefficient of
+    <code>a**2</code> in the closed residual simplifies exactly to <code>0</code>.
+    This proves the gate recognizes the known <code>O(a**2)</code> perturbative
+    anchor, while still keeping it out of the finite-spin exact candidate set.
+  </p>
+  <p>
     The JSON artifact now includes a criteria-status matrix.  It marks the
     literature target, bounded engine generation, strict prechecks, nonlinear
-    residual screen, finite-spin correction screens, and leading-order
-    coefficient solve as implemented.  It deliberately marks broader
-    equivalence filters and global horizon/axis/light-surface regularity as
-    not sufficient for a positive paper claim.  That distinction matters: this
-    is a target packet and negative gate for a no-known-exact-solution problem,
-    not a positive exact Kerr solution.
+    residual screen, finite-spin correction screens, leading-order coefficient
+    solve, and literature perturbative anchor calibration as implemented.  It
+    deliberately marks broader equivalence filters and global
+    horizon/axis/light-surface regularity as not sufficient for a positive
+    paper claim.  That distinction matters: this is a target packet and
+    negative gate for a no-known-exact-solution problem, not a positive exact
+    Kerr solution.
   </p>
   <p>
     The literature motivation is explicitly separated from the current
@@ -798,6 +812,16 @@ python3 experiments/proof-search/proof_search_integrity_gate.py</pre>
     Force-Free Magnetosphere</em>, JCAP 10, 048 (2020), arXiv:2007.15665,
     DOI:10.1088/1475-7516/2020/10/048.
   </p>
+  <p>
+    [4] K. Tanabe and S. Nagataki,
+    <em>Higher Order Terms of Kerr Parameter for Blandford-Znajek Monopole
+    Solution</em>, arXiv:0802.0908.
+  </p>
+  <p>
+    [5] Z. Pan and C. Yu,
+    <em>Fourth-order split monopole perturbation solutions to the
+    Blandford-Znajek mechanism</em>, arXiv:1503.05248.
+  </p>
 
   <h2>8. Boundary</h2>
   <p class="claim">
@@ -813,7 +837,8 @@ python3 experiments/proof-search/proof_search_integrity_gate.py</pre>
     paper target, appends targeted finite-spin corrections, and checks the
     closed split-monopole nonlinear residual directly.  Its leading-order
     coefficient solve also returns <code>EmptySet</code> for the 48-function
-    one-term ansatz.
+    one-term ansatz.  Its literature anchor screen does recognize the known
+    <code>O(a**2)</code> Blandford-Znajek perturbative correction.
   </p>
 </main>
 </body>

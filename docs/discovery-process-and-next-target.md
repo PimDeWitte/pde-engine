@@ -155,6 +155,10 @@ manifest and validator gate for the Kerr paper target:
 - leading-order coefficient solve over the targeted basis, so the run tests
   an arbitrary one-term coefficient combination instead of only fixed scalar
   coefficients
+- literature slow-rotation anchor check using the Tanabe-Nagataki /
+  Pan-Yu Blandford-Znajek split-monopole perturbative correction, so the gate
+  is calibrated against a known `O(a**2)` solution without promoting it to an
+  exact finite-spin candidate
 
 Only after that should the engine search matter. A negative result under the
 strict gate is useful; a degenerate "valid" row is not.
@@ -228,6 +232,20 @@ coefficients in the same 48-function basis. The leading-order residual produces
 matrix shape `[66, 48]`, and SymPy returns `EmptySet`. Therefore the one-term
 finite-spin ansatz has no leading-order correction in this basis and contributes
 `0` additional candidate rows.
+
+The PR then added a literature perturbative anchor screen:
+
+```text
+Psi = 1 - x + a**2*x*(1-x**2)*R(r)
+R(r) = Tanabe-Nagataki / Pan-Yu log+dilog radial correction
+M = 1
+```
+
+After applying `polylog(1,z) = -log(1-z)`, the coefficient of `a**2` in the
+closed split-monopole residual simplifies exactly to `0` and all rational
+point checks are zero. This is a calibration result, not a finite-spin exact
+candidate: the artifact records it as a perturbative `O(a**2)` literature
+anchor.
 
 The status is therefore **`no_candidate_yet`**. That is intentional. It is the
 right artifact for the next paper program: the residual gate now exists for

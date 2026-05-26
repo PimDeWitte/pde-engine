@@ -25,8 +25,9 @@ adapter gate.
 - `tools/export_kerr_paper_target_gate.py` runs the stricter next-target gate
   for the closed split-monopole Kerr force-free / Grad-Shafranov paper program,
   appends bounded one-term and two-term finite-spin correction grammars, and
-  runs a leading-order coefficient solve before emitting a `no_candidate_yet`
-  artifact instead of promoting the current linear surrogate.
+  runs a leading-order coefficient solve plus a literature slow-rotation anchor
+  check before emitting a `no_candidate_yet` artifact instead of promoting the
+  current linear surrogate.
 - `tests/test_force_free_novel_discoveries.py` checks the independent
   determinant builder and the registry-novel candidate filter.
 - `tests/test_kerr_paper_target_gate.py` checks that undefined expressions,
@@ -174,13 +175,23 @@ and SymPy `linsolve` returns `EmptySet`. That rules out the entire one-term
 basis as a leading-order correction family rather than only the sampled
 coefficients.
 
+The gate now also checks the known Blandford-Znajek slow-rotation perturbative
+anchor from Tanabe-Nagataki and Pan-Yu:
+`Psi = 1 - x + a**2*x*(1-x**2)*R(r)`, where `R(r)` contains the literature
+logarithm and dilogarithm radial correction. After applying
+`polylog(1,z) = -log(1-z)`, the coefficient of `a**2` in the closed residual
+simplifies exactly to `0`, and all rational point checks are zero. The artifact
+marks this as a perturbative `O(a**2)` anchor, not an exact finite-spin paper
+candidate.
+
 The artifact also carries a criteria-status matrix. It marks the literature
 target, bounded engine generation, strict prechecks, nonlinear residual screen,
-finite-spin correction screens, and coefficient solve as implemented. It marks
-broader equivalence filtering and global horizon/axis/light-surface regularity
-as not sufficient for a positive paper claim. This is deliberate: the current
-artifact is a negative gate and a target packet, not a claim that all positive
-paper criteria have been implemented.
+finite-spin correction screens, coefficient solve, and literature perturbative
+anchor calibration as implemented. It marks broader equivalence filtering and
+global horizon/axis/light-surface regularity as not sufficient for a positive
+paper claim. This is deliberate: the current artifact is a negative gate and a
+target packet, not a claim that all positive paper criteria have been
+implemented.
 
 ## Literature sources
 
@@ -240,16 +251,16 @@ measurement comes out.
 Artifact hashes:
 
 ```text
-85badcaec38fccab164a477ec14275a5629e8aec70d78b241f5438579392cc3f  docs/lagra-force-free-adapter-paper.html
-200d0bf0985d65ca81579f6ae809e7c6f48d693ae7e6dcd317bdacb3ea28c8bc  docs/lagra-force-free-adapter-paper.pdf
-4dc3d29a1f186f5db5e08366c6843a2881eb1eddcd3b4c30974b0de070f88675  tools/render_lagra_force_free_adapter_paper.py
+d992821aae6d3bd0d56cf565ef972fbf1d2327217d8ad3e149db1bc1024e4fba  docs/lagra-force-free-adapter-paper.html
+9c6587e617de2e5e189d4fc3f174ffa46fa47f26b0a342c274b9276d8c364cb1  docs/lagra-force-free-adapter-paper.pdf
+dee917615ba99060e29970219c4f8726929f3c296ab6d5acde0da819b993c89a  tools/render_lagra_force_free_adapter_paper.py
 f67202596b8fe94c85b6ca9ebba02267a7891ef6929add75bf0a0b5f73f67d6c  docs/force-free-novel-discoveries.json
 b6073e74d079d19d7183101f5a21770064e0f3ea450fd257c803afc9e2cd301c  docs/force-free-novel-discoveries.md
 cd5999772df7b0e2a06d10831f9863ddb51ea5ecca5276e314eedc6d76517b41  tools/export_force_free_novel_discoveries.py
-5b3e0bd4cedb1877c7c9347b1be18ae5ed1a8c1f3ec76c0fddc4dbeda6b08e61  docs/discovery-process-and-next-target.md
-d9f3396bf63c60df470886d0cf1dea30611b4d3ed7d7cbe3b0f3a57ef152c30c  docs/kerr-paper-target-gate.json
-c9d25aa13593754aa90ea2410bf3492952e50e346731b56edce00526649b61ff  docs/kerr-paper-target-gate.md
-b1f20d53d6b7bc65853872a4b6a07931c0b5fd41dc0f0c3abde8f1f76a869c65  tools/export_kerr_paper_target_gate.py
+024919b59a15aca96c17da99f1522097633715e072a88f9bd4e494ef463bce0b  docs/discovery-process-and-next-target.md
+3c03c4114ca86268bd213aa71ee0e41be023bdd73201986a5b4bcfb1154679f8  docs/kerr-paper-target-gate.json
+ba389f6999d42c79e6db15956d3a25ab6a5e4dba3324714cbe6a9a2a4134fb3f  docs/kerr-paper-target-gate.md
+b06927bdb7165c5b076d5440189b3fb8dadfd35b807f5bee0827804b429dd8be  tools/export_kerr_paper_target_gate.py
 ```
 
 ## Reproduction commands
