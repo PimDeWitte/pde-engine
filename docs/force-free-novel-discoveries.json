@@ -1,0 +1,137 @@
+{
+  "discoveries": [
+    {
+      "determinant_at_rho_4_5_z_6_7": "0",
+      "determinant_simplified": "0",
+      "engine_depth": 2,
+      "engine_row_id": 41,
+      "engine_validation_reason": "Valid foliation (Lean: det = 0 symbolically)",
+      "exact_symbolic_zero": true,
+      "expression": "rho + z",
+      "id": "oblique_linear",
+      "label": "linear two-coordinate foliation",
+      "not_identical_to_registered_known_solutions": true,
+      "sympy_count_ops": 1,
+      "variables": [
+        "rho",
+        "z"
+      ]
+    },
+    {
+      "determinant_at_rho_4_5_z_6_7": "0",
+      "determinant_simplified": "0",
+      "engine_depth": 1,
+      "engine_row_id": 4,
+      "engine_validation_reason": "Valid foliation (Lean: det = 0 symbolically)",
+      "exact_symbolic_zero": true,
+      "expression": "rho/z",
+      "id": "self_similar_ratio",
+      "label": "scale-invariant ratio foliation",
+      "not_identical_to_registered_known_solutions": true,
+      "sympy_count_ops": 1,
+      "variables": [
+        "rho",
+        "z"
+      ]
+    },
+    {
+      "determinant_at_rho_4_5_z_6_7": "0",
+      "determinant_simplified": "0",
+      "engine_depth": 1,
+      "engine_row_id": 3,
+      "engine_validation_reason": "Valid foliation (Lean: det = 0 symbolically)",
+      "exact_symbolic_zero": true,
+      "expression": "rho**2 + z**2",
+      "id": "quadratic_radius",
+      "label": "quadratic radius foliation",
+      "not_identical_to_registered_known_solutions": true,
+      "sympy_count_ops": 3,
+      "variables": [
+        "rho",
+        "z"
+      ]
+    },
+    {
+      "determinant_at_rho_4_5_z_6_7": "0",
+      "determinant_simplified": "0",
+      "engine_depth": 2,
+      "engine_row_id": 77,
+      "engine_validation_reason": "Valid foliation (Lean: det = 0 symbolically)",
+      "exact_symbolic_zero": true,
+      "expression": "rho**2 + z",
+      "id": "tilted_parabolic_polynomial",
+      "label": "parabolic polynomial foliation",
+      "not_identical_to_registered_known_solutions": true,
+      "sympy_count_ops": 2,
+      "variables": [
+        "rho",
+        "z"
+      ]
+    },
+    {
+      "determinant_at_rho_4_5_z_6_7": "0",
+      "determinant_simplified": "0",
+      "engine_depth": 2,
+      "engine_row_id": 108,
+      "engine_validation_reason": "Valid foliation (Lean: det = 0 symbolically)",
+      "exact_symbolic_zero": true,
+      "expression": "-rho**2 + z**2 + 1",
+      "id": "hyperbolic_quadratic",
+      "label": "hyperbolic quadratic foliation",
+      "not_identical_to_registered_known_solutions": true,
+      "sympy_count_ops": 4,
+      "variables": [
+        "rho",
+        "z"
+      ]
+    },
+    {
+      "determinant_at_rho_4_5_z_6_7": "0",
+      "determinant_simplified": "0",
+      "engine_depth": 2,
+      "engine_row_id": 44,
+      "engine_validation_reason": "Valid foliation (Lean: det = 0 symbolically)",
+      "exact_symbolic_zero": true,
+      "expression": "rho/(1 - z)",
+      "id": "geometric_ratio",
+      "label": "rational geometric-sum foliation",
+      "not_identical_to_registered_known_solutions": true,
+      "sympy_count_ops": 2,
+      "variables": [
+        "rho",
+        "z"
+      ]
+    }
+  ],
+  "known_solution_count": 7,
+  "novelty_scope": "Novel relative to the repository's seven registered force-free known_solutions. This is not a literature-priority claim.",
+  "problem": "force_free",
+  "run_summary": {
+    "candidate_rows": 74,
+    "known_solution_rows": 2,
+    "total_completed": 112,
+    "total_generated": 112,
+    "total_valid_rows": 76
+  },
+  "schema": "force_free_novel_discoveries_v1",
+  "selection_policy": "valid non-paper depth-2 rows, both rho and z present, independently recomputed determinant simplifies exactly to zero",
+  "source_engine_run": {
+    "command": [
+      "python3",
+      "general_method_paper_reproduction.py",
+      "--problem",
+      "force_free",
+      "--max-depth",
+      "2",
+      "--validators",
+      "1"
+    ],
+    "db_path": "problems/force_free/outputs/parallel_runs_paper_repro_20260526_071520_c7dcbaa2.db",
+    "run_id": "paper_repro_20260526_071520_c7dcbaa2",
+    "table_name": "expressions_paper_repro_20260526_071520_c7dcbaa2"
+  },
+  "witness_point": {
+    "rho": "4/5",
+    "z": "6/7"
+  }
+}

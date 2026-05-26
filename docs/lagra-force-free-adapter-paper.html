@@ -76,7 +76,7 @@
     This note rewrites the pde-engine force-free adapter in the visual style of
     <em>Lagra: A differentiable physics kernel for verifiable domain operations</em>.
     The purpose is narrower than the Lagra kernel paper.  We do not claim a new
-    physics engine result or a full reproduction of the pde-engine discovery
+    literature-priority result or a full reproduction of the pde-engine discovery
     pipeline.  We show how Lagra enters a local pde-engine checkout, which
     inputs are admitted into the Lagra proof-search graph, which quantities are
     measured, and which claims are allowed into the paper.  The positive result
@@ -84,7 +84,9 @@
     to determinant zero; two negative controls simplify to nonzero determinants;
     three rational checkpoints separate known solutions from controls; and a
     rotation-context cache regression proves that the validator cache key must
-    include <code>Omega</code> and the validation mode.  The negative result is equally
+    include <code>Omega</code> and the validation mode; and a bounded engine pass
+    exports six non-registered, independently rechecked candidate foliations.
+    The negative result is equally
     important: the bounded pde-engine smoke is now process-clean, but the full
     seven-solution pde-engine/Lean reproduction path remains non-green on this
     checkout and is recorded as a boundary, not upgraded into a proof.
@@ -428,6 +430,63 @@
     </figure>
 
 
+    <figure>
+      <svg class="figure-svg" viewBox="0 0 790 360" role="img" aria-label="Novel discovery artifact flow">
+
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#243043"/>
+      </marker>
+      <marker id="arrowMagenta" viewBox="0 0 10 10" refX="8.5" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c6246b"/>
+      </marker>
+    </defs>
+
+<rect x="44" y="50" width="162" height="58" rx="5" fill="#15839c"/>
+<text x="125" y="73" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Bounded engine</text>
+<text x="125" y="91" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">depth 2, 112 rows</text>
+<rect x="314" y="50" width="162" height="58" rx="5" fill="#6c48c9"/>
+<text x="395" y="73" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Filter</text>
+<text x="395" y="91" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">valid, non-known</text>
+<rect x="584" y="50" width="162" height="58" rx="5" fill="#139f73"/>
+<text x="665" y="73" font-size="12" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">Independent check</text>
+<text x="665" y="91" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Georgia, serif">rebuild det M</text>
+<line x1="206" y1="79" x2="314" y2="79" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<line x1="476" y1="79" x2="584" y2="79" stroke="#243043" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="260" y="65" font-size="11" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">76 valid</text>
+<text x="530" y="65" font-size="11" fill="#697386" text-anchor="middle" font-weight="400" font-family="Georgia, serif">both rho,z</text>
+<rect x="54" y="150" width="205" height="70" rx="5" fill="#3f4fc6"/>
+<text x="156" y="172" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">rho + z</text>
+<text x="156" y="192" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">oblique linear</text>
+<text x="156" y="210" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">det M -> 0</text>
+<rect x="292" y="150" width="205" height="70" rx="5" fill="#c6246b"/>
+<text x="394" y="172" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">rho/z</text>
+<text x="394" y="192" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">self-similar</text>
+<text x="394" y="210" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">det M -> 0</text>
+<rect x="531" y="150" width="205" height="70" rx="5" fill="#c97606"/>
+<text x="633" y="172" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">rho^2 + z^2</text>
+<text x="633" y="192" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">quadratic radius</text>
+<text x="633" y="210" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">det M -> 0</text>
+<rect x="54" y="248" width="205" height="70" rx="5" fill="#139f73"/>
+<text x="156" y="270" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">rho^2 + z</text>
+<text x="156" y="290" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">parabolic polynomial</text>
+<text x="156" y="308" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">det M -> 0</text>
+<rect x="292" y="248" width="205" height="70" rx="5" fill="#15839c"/>
+<text x="394" y="270" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">-rho^2 + z^2 + 1</text>
+<text x="394" y="290" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">hyperbolic quadratic</text>
+<text x="394" y="308" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">det M -> 0</text>
+<rect x="531" y="248" width="205" height="70" rx="5" fill="#6c48c9"/>
+<text x="633" y="270" font-size="13" fill="white" text-anchor="middle" font-weight="700" font-family="Georgia, serif">rho/(1 - z)</text>
+<text x="633" y="290" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">rational sheet</text>
+<text x="633" y="308" font-size="11" fill="white" text-anchor="middle" font-weight="400" font-family="Courier New, monospace">det M -> 0</text>
+<text x="394" y="340" font-size="12" fill="#243043" text-anchor="middle" font-weight="400" font-family="Georgia, serif">Novelty is scoped to the repo registry: not identical to the seven registered known_solutions.</text>
+</svg>
+      <figcaption><strong>Figure 8: Engine-discovered candidate foliations admitted by the adapter.</strong> The bounded depth-2 pde-engine run produces valid rows that are not identical to the seven registered known solutions. The exporter does not trust the cache: it rebuilds the determinant independently and admits only both-variable candidates whose determinant simplifies exactly to zero. This is an engine-novel result relative to the repository registry, not a literature-priority claim.</figcaption>
+    </figure>
+
+
   <h2>1. What exactly enters Lagra</h2>
   <p>
     The adapter has four external inputs.  First, it imports the pde-engine
@@ -464,7 +523,32 @@
     <tr><td>Rotating determinant</td><td><code>2048*rho**9*exp(-12*z)</code></td><td>The rotating failure is a symbolic fact, not only a cache artifact.</td></tr>
   </table>
 
-  <h2>3. The pde-engine patch forced by the measurement</h2>
+  <h2>3. Engine discoveries admitted by the measurement</h2>
+  <p>
+    The PR now includes a second artifact, generated by
+    <code>tools/export_force_free_novel_discoveries.py</code>.  It runs the bounded
+    pde-engine search, mines rows that are valid but not registered as one of
+    the seven known force-free solutions, and then independently rebuilds the
+    determinant instead of trusting the validator cache.  The novelty claim is
+    scoped narrowly: these are engine-novel relative to the repository registry,
+    not claimed as literature-first discoveries.
+  </p>
+  <table>
+    <tr><th>Engine-discovered expression</th><th>Class</th><th>Independent witness</th></tr>
+    <tr><td><code>rho + z</code></td><td>linear two-coordinate foliation</td><td><code>det M = 0</code></td></tr>
+    <tr><td><code>rho/z</code></td><td>scale-invariant ratio foliation</td><td><code>det M = 0</code></td></tr>
+    <tr><td><code>rho**2 + z**2</code></td><td>quadratic radius foliation</td><td><code>det M = 0</code></td></tr>
+    <tr><td><code>rho**2 + z</code></td><td>parabolic polynomial foliation</td><td><code>det M = 0</code></td></tr>
+    <tr><td><code>-rho**2 + z**2 + 1</code></td><td>hyperbolic quadratic foliation</td><td><code>det M = 0</code></td></tr>
+    <tr><td><code>rho/(1 - z)</code></td><td>rational geometric-sum foliation</td><td><code>det M = 0</code></td></tr>
+  </table>
+  <p>
+    The machine-readable version is
+    <code>docs/force-free-novel-discoveries.json</code>; the review-friendly
+    version is <code>docs/force-free-novel-discoveries.md</code>.
+  </p>
+
+  <h2>4. The pde-engine patch forced by the measurement</h2>
   <p>
     The old validator cache hashed only the expression string.  That was wrong:
     a non-rotating result could be replayed in a rotating context.  The patch
@@ -482,10 +566,12 @@
     <code>PreciseFoliationValidator</code>.
   </p>
 
-  <h2>4. Reproduction commands</h2>
-  <pre>python3 -m py_compile   general_method_paper_reproduction.py   problems/force_free/validator.py   tests/test_force_free_validator_cache.py
+  <h2>5. Reproduction commands</h2>
+  <pre>python3 -m py_compile   general_method_paper_reproduction.py   problems/force_free/validator.py   tests/test_force_free_validator_cache.py   tools/export_force_free_novel_discoveries.py   tests/test_force_free_novel_discoveries.py
 
-python3 -m unittest tests/test_force_free_validator_cache.py</pre>
+python3 -m unittest   tests/test_force_free_validator_cache.py   tests/test_force_free_novel_discoveries.py
+
+python3 tools/export_force_free_novel_discoveries.py   --run-engine --max-depth 2 --validators 1</pre>
   <p>
     The Lagra-side commands that produced the measurements were:
   </p>
@@ -497,15 +583,17 @@ python3 experiments/proof-search/render_yukawa_finite_range_paper.py
 python3 experiments/proof-search/publication_readiness_audit.py
 python3 experiments/proof-search/proof_search_integrity_gate.py</pre>
 
-  <h2>5. Boundary</h2>
+  <h2>6. Boundary</h2>
   <p class="claim">
     The adapter is a positive exact-symbolic and pointwise Lagra measurement of
     the pde-engine force-free boundary.  It is not a Lean theorem.  It is not a
     full pde-engine paper reproduction.  The bounded depth-2 pde-engine smoke is
-    now process-clean, but it only finds two known vertical canonical forms; it
-    does not recover the seven known Compere solutions.  The bounded health gate
-    is included precisely so the paper cannot confuse this narrow positive
-    result with a full reproduction claim.
+    now process-clean, and it yields six independently rechecked candidates not
+    identical to the registered known-solution functions.  The full reproduction
+    boundary remains: the bounded pass only finds two known vertical canonical
+    forms and does not recover the seven known Compere solutions.  The bounded
+    health gate is included precisely so the paper cannot confuse the new
+    candidate artifact with a full reproduction claim.
   </p>
 </main>
 </body>
