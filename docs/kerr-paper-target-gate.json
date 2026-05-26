@@ -1,0 +1,256 @@
+{
+  "admitted_count": 0,
+  "assessments": [
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "manual strict-gate probe",
+      "equivalent_to_known_anchor": true,
+      "expression": "1 - x",
+      "linear_surrogate": {
+        "independent_linear_surrogate_exact_zero": false,
+        "linear_surrogate_lhs_simplified": "-4*M*a**2*r*x/((a**2*x**2 + r**2)**2*(-2*M*r + a**2 + r**2))",
+        "repo_linear_surrogate_reason": "PDE residual != 0 (fast point check) | residual: -4*M*a**2*r*x/((a**2*x**2 + r**2)**2*(-2*M*r + a**2 + r**2))",
+        "repo_linear_surrogate_valid": false
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "missing required variables: a, r",
+        "equivalent to known small-spin anchor",
+        "does not pass current repo linear surrogate heavy validation",
+        "full nonlinear Kerr force-free Grad-Shafranov validator is not implemented"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "probe",
+      "strict_prechecks": {
+        "passed_before_full_target_blocker": false,
+        "rejections_before_full_target_blocker": [
+          "missing required variables: a, r",
+          "equivalent to known small-spin anchor",
+          "does not pass current repo linear surrogate heavy validation"
+        ]
+      },
+      "variables": [
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "manual strict-gate probe",
+      "equivalent_to_known_anchor": true,
+      "expression": "x",
+      "linear_surrogate": {
+        "independent_linear_surrogate_exact_zero": false,
+        "linear_surrogate_lhs_simplified": "4*M*a**2*r*x/((a**2*x**2 + r**2)**2*(-2*M*r + a**2 + r**2))",
+        "repo_linear_surrogate_reason": "PDE residual != 0 (fast point check) | residual: 4*M*a**2*r*x/((a**2*x**2 + r**2)**2*(-2*M*r + a**2 + r**2))",
+        "repo_linear_surrogate_valid": false
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "missing required variables: a, r",
+        "equivalent to known small-spin anchor",
+        "does not pass current repo linear surrogate heavy validation",
+        "full nonlinear Kerr force-free Grad-Shafranov validator is not implemented"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "x",
+      "source": "probe",
+      "strict_prechecks": {
+        "passed_before_full_target_blocker": false,
+        "rejections_before_full_target_blocker": [
+          "missing required variables: a, r",
+          "equivalent to known small-spin anchor",
+          "does not pass current repo linear surrogate heavy validation"
+        ]
+      },
+      "variables": [
+        "x"
+      ]
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "manual strict-gate probe",
+      "equivalent_to_known_anchor": false,
+      "expression": "1/(1 - 1)",
+      "linear_surrogate": {
+        "independent_linear_surrogate_exact_zero": true,
+        "linear_surrogate_lhs_simplified": "0",
+        "repo_linear_surrogate_reason": "Trivial constant solution excluded",
+        "repo_linear_surrogate_valid": false
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "missing required variables: a, r, x",
+        "non-finite symbolic expression",
+        "fails small-spin anchor limit to 1 - x or x",
+        "does not pass current repo linear surrogate heavy validation",
+        "full nonlinear Kerr force-free Grad-Shafranov validator is not implemented"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": false,
+      "small_spin_limit": "zoo",
+      "source": "probe",
+      "strict_prechecks": {
+        "passed_before_full_target_blocker": false,
+        "rejections_before_full_target_blocker": [
+          "missing required variables: a, r, x",
+          "non-finite symbolic expression",
+          "fails small-spin anchor limit to 1 - x or x",
+          "does not pass current repo linear surrogate heavy validation"
+        ]
+      },
+      "variables": []
+    },
+    {
+      "engine_depth": null,
+      "engine_validation_reason": "manual strict-gate probe",
+      "equivalent_to_known_anchor": false,
+      "expression": "1 - x + a**2*r*x",
+      "linear_surrogate": {
+        "independent_linear_surrogate_exact_zero": false,
+        "linear_surrogate_lhs_simplified": "2*M*a**2*x*(-2*M*a**2*r*x**2 + 2*M*r**3 + a**4*x**2 + 3*a**2*r**2*x**2 - 3*a**2*r**2 - r**4 - 2*r*x**2 + 2*r)/((x - 1)*(x + 1)*(a**2*x**2 + r**2)**2*(-2*M*r + a**2 + r**2))",
+        "repo_linear_surrogate_reason": "PDE residual != 0 (fast point check) | residual: 4*M*a**2*r*x*(a**2*r - 1)/((a**2*x**2 + r**2)**2*(-2*M*r + a**2 + r**2)) + a**2*x*(4*M*r**2/(a**2*x**2 + r**2)**2 - 2*M/(a**2*x**2 + r**2))/(1 - x**2)",
+        "repo_linear_surrogate_valid": false
+      },
+      "paper_admissible": false,
+      "paper_rejection_reasons": [
+        "does not pass current repo linear surrogate heavy validation",
+        "full nonlinear Kerr force-free Grad-Shafranov validator is not implemented"
+      ],
+      "parse_error": null,
+      "required_variables": [
+        "a",
+        "r",
+        "x"
+      ],
+      "row_id": null,
+      "small_spin_anchor_matches": true,
+      "small_spin_limit": "1 - x",
+      "source": "probe",
+      "strict_prechecks": {
+        "passed_before_full_target_blocker": false,
+        "rejections_before_full_target_blocker": [
+          "does not pass current repo linear surrogate heavy validation"
+        ]
+      },
+      "variables": [
+        "a",
+        "r",
+        "x"
+      ]
+    }
+  ],
+  "candidate_inputs_scanned": 4,
+  "gate": {
+    "rejects_known_anchors": [
+      "1 - x",
+      "x"
+    ],
+    "rejects_singular_denominators": true,
+    "required_variables": [
+      "a",
+      "r",
+      "x"
+    ],
+    "requires_full_target_validator": true,
+    "requires_small_spin_anchor": "limit a -> 0 must equal 1 - x or x",
+    "safe_points": [
+      {
+        "M": "1",
+        "a": "1/5",
+        "r": "5/2",
+        "x": "1/3"
+      },
+      {
+        "M": "1",
+        "a": "1/2",
+        "r": "3",
+        "x": "-2/5"
+      },
+      {
+        "M": "1",
+        "a": "4/5",
+        "r": "4",
+        "x": "1/5"
+      }
+    ]
+  },
+  "literature_sources": [
+    {
+      "arxiv": "1802.00815",
+      "arxiv_url": "https://arxiv.org/abs/1802.00815",
+      "citation": "J. F. Mahlmann, P. Cerda-Duran, M. A. Aloy et al., Numerically solving the relativistic Grad-Shafranov equation in Kerr spacetimes: Numerical techniques, MNRAS 477, 3927-3946 (2018)",
+      "doi": "10.1093/mnras/sty858",
+      "doi_url": "https://doi.org/10.1093/mnras/sty858",
+      "id": "mahlmann_cerda_duran_aloy_2018_kerr_gse_numerics",
+      "role": "establishes the Kerr force-free Grad-Shafranov numerical target family"
+    },
+    {
+      "arxiv": "2007.15665",
+      "arxiv_url": "https://arxiv.org/abs/2007.15665",
+      "citation": "F. Camilloni, G. Grignani, T. Harmark, R. Oliveri, M. Orselli, Moving away from the Near-Horizon Attractor of the Extreme Kerr Force-Free Magnetosphere, JCAP 10, 048 (2020)",
+      "doi": "10.1088/1475-7516/2020/10/048",
+      "doi_url": "https://doi.org/10.1088/1475-7516/2020/10/048",
+      "id": "camilloni_grignani_harmark_oliveri_orselli_2020_extreme_kerr",
+      "role": "states the no-known-exact-analytic stationary, axisymmetric, magnetically dominated extreme-Kerr force-free solution target"
+    }
+  ],
+  "paper_target": {
+    "claim": "No pde-engine row is a paper candidate until the full nonlinear Kerr force-free target equation, physical domain, and regularity gates are encoded.",
+    "current_repo_problem": "kerr_magnetosphere",
+    "current_repo_problem_boundary": "linear surrogate only; useful as a harness, not sufficient for the paper target",
+    "name": "Kerr force-free magnetosphere / relativistic Grad-Shafranov paper target",
+    "status": "not_implemented_in_repo",
+    "validator_implemented": false
+  },
+  "run_summary": {
+    "known_solution_rows": 0,
+    "total_completed": 306,
+    "total_generated": 306,
+    "total_valid_rows": 0,
+    "valid_rows_loaded_for_strict_gate": 0
+  },
+  "schema": "kerr_paper_target_gate_v1",
+  "source_engine_run": {
+    "command": [
+      "python3",
+      "general_method_paper_reproduction.py",
+      "--problem",
+      "kerr_magnetosphere",
+      "--max-depth",
+      "2",
+      "--validators",
+      "1"
+    ],
+    "db_path": "problems/kerr_magnetosphere/outputs/parallel_runs_paper_repro_20260526_091857_d29966e9.db",
+    "run_id": "paper_repro_20260526_091857_d29966e9",
+    "search_bounds": {
+      "max_depth": 2,
+      "per_expression_validation_timeout_s": 3.0,
+      "validators": 1,
+      "wall_timeout_s": 90.0
+    },
+    "table_name": "expressions_paper_repro_20260526_091857_d29966e9"
+  },
+  "status": "no_candidate_yet"
+}

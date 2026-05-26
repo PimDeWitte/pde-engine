@@ -151,3 +151,31 @@ for the Kerr paper target:
 
 Only after that should we let the engine search. A negative result under the
 strict gate is useful; a degenerate "valid" row is not.
+
+## First gate now added
+
+This PR now includes the first machine-readable version of that gate:
+
+- `tools/export_kerr_paper_target_gate.py`
+- `tests/test_kerr_paper_target_gate.py`
+- `docs/kerr-paper-target-gate.json`
+- `docs/kerr-paper-target-gate.md`
+
+The gate ran the current `kerr_magnetosphere` harness with:
+
+```sh
+python3 tools/export_kerr_paper_target_gate.py \
+  --run-engine --max-depth 2 --validators 1 \
+  --timeout-s 90 --validation-timeout-s 3
+```
+
+It generated `306` rows, completed `306` validations, found `0` valid rows in
+the current linear surrogate run, and admitted `0` paper candidates. It also
+probed `1 - x`, `x`, `1/(1 - 1)`, and `1 - x + a**2*r*x` to prove that the
+gate rejects known anchors, undefined expressions, and anchor-like expressions
+until the full nonlinear Kerr force-free Grad-Shafranov validator is
+implemented.
+
+The status is therefore **`no_candidate_yet`**. That is intentional. It is the
+right artifact for the next paper program until the real target equation,
+regularity conditions, and equivalence filters are encoded.

@@ -379,6 +379,50 @@ def svg8_discoveries() -> str:
     return "\n".join(parts)
 
 
+def svg9_kerr_gate() -> str:
+    parts = [
+        '<svg class="figure-svg" viewBox="0 0 790 360" role="img" aria-label="Kerr paper target gate">',
+        defs(),
+        rect(38, 48, 158, 60, BLUE, rx=5),
+        text(117, 72, "Literature target", 12, "white", weight="700"),
+        text(117, 91, "Kerr FFE / GSE", 11, "white"),
+        rect(232, 48, 158, 60, PURPLE, rx=5),
+        text(311, 72, "Strict gate", 12, "white", weight="700"),
+        text(311, 91, "paper criteria", 11, "white"),
+        rect(426, 48, 158, 60, TEAL, rx=5),
+        text(505, 72, "Current engine", 12, "white", weight="700"),
+        text(505, 91, "linear surrogate", 11, "white"),
+        rect(620, 48, 132, 60, MAGENTA, rx=5),
+        text(686, 72, "Artifact", 12, "white", weight="700"),
+        text(686, 91, "no_candidate_yet", 11, "white"),
+        arrow(196, 78, 232, 78),
+        arrow(390, 78, 426, 78),
+        arrow(584, 78, 620, 78),
+        rect(56, 150, 170, 64, "#eef3ff", stroke=BLUE, rx=5),
+        text(76, 174, "paper target", 12, BLUE, "start", weight="700"),
+        text(76, 194, "stationary axisymmetric", 11, INK, "start"),
+        text(76, 210, "magnetically dominated", 11, INK, "start"),
+        rect(310, 136, 176, 112, "#f4efff", stroke=PURPLE, rx=5),
+        text(330, 160, "admission checks", 12, PURPLE, "start", weight="700"),
+        text(330, 182, "depends on r, x, a", 11, INK, "start"),
+        text(330, 198, "finite denominators", 11, INK, "start"),
+        text(330, 214, "small-spin anchor", 11, INK, "start"),
+        text(330, 230, "axis / horizon regular", 11, INK, "start"),
+        rect(552, 150, 176, 64, "#fff0f6", stroke=MAGENTA, rx=5),
+        text(572, 174, "measured output", 12, MAGENTA, "start", weight="700"),
+        text(572, 194, "306 rows, 0 valid", 11, INK, "start"),
+        text(572, 210, "4 probes, 0 admitted", 11, INK, "start"),
+        arrow(226, 182, 310, 192),
+        arrow(486, 192, 552, 188),
+        rect(248, 286, 294, 46, "#fbf9f5", stroke=LINE, rx=5),
+        text(395, 308, "guardrail: surrogate rows cannot become Kerr paper claims", 12, INK, weight="700"),
+        text(395, 326, "full nonlinear target validator is still the blocker", 11, MUTED),
+        arrow(505, 108, 430, 286, dash=True),
+        "</svg>",
+    ]
+    return "\n".join(parts)
+
+
 def html() -> str:
     figs = [
         figure(
@@ -428,6 +472,12 @@ def html() -> str:
             "Engine-discovered candidate foliations admitted by the adapter",
             svg8_discoveries(),
             "The bounded depth-2 pde-engine run produces valid rows that are not identical to the seven registered known solutions. The exporter does not trust the cache: it rebuilds the determinant independently and admits only both-variable candidates whose determinant simplifies exactly to zero. This is an engine-novel result relative to the repository registry, not a literature-priority claim.",
+        ),
+        figure(
+            9,
+            "Kerr paper-target gate",
+            svg9_kerr_gate(),
+            "The next target uses the same measurement discipline in the negative direction. The bounded Kerr surrogate search generated 306 rows and no valid rows; the strict gate also probes known anchors and a nontrivial anchor-like expression, then emits no_candidate_yet because the repository still lacks the full nonlinear Kerr force-free Grad-Shafranov validator.",
         ),
     ]
 
@@ -521,6 +571,8 @@ def html() -> str:
     include <code>Omega</code> and the validation mode; and a bounded engine pass
     exports six non-registered, independently rechecked candidate foliations
     as a process-control baseline rather than as a publication target.
+    A second gate records the next Kerr paper target and emits
+    <code>no_candidate_yet</code> rather than promoting the current linear surrogate.
     The negative result is equally
     important: the bounded pde-engine smoke is now process-clean, but the full
     seven-solution pde-engine/Lean reproduction path remains non-green on this
@@ -601,7 +653,35 @@ T = u_z*d_rho - u_rho*d_z</pre>
     provide an exact analytic solution meeting the same criteria.
   </p>
 
-  <h2>4. The pde-engine patch forced by the measurement</h2>
+  <h2>4. Kerr paper-target gate</h2>
+  <p>
+    The next target gate is now a concrete artifact, not only a paragraph:
+    <code>docs/kerr-paper-target-gate.json</code> and
+    <code>docs/kerr-paper-target-gate.md</code>.  It ran the current
+    <code>kerr_magnetosphere</code> engine harness at depth 2 and recorded
+    <code>306</code> generated rows, <code>306</code> completed validations,
+    <code>0</code> valid rows, and <code>0</code> admitted paper candidates.
+  </p>
+  <p>
+    This is the right failure mode.  The current repository target is only a
+    linear surrogate.  The strict gate requires dependence on <code>r</code>,
+    <code>x</code>, and <code>a</code>; finite denominators on rational safe
+    points; a small-spin anchor to <code>1 - x</code> or <code>x</code>; rejection of
+    those exact anchors as known; and, most importantly, a full nonlinear Kerr
+    force-free Grad-Shafranov residual.  Since that full target validator is not
+    implemented yet, the artifact status is <code>no_candidate_yet</code>.
+  </p>
+  <p>
+    The literature motivation is explicitly separated from the current
+    surrogate.  Mahlmann et al. frame static, axisymmetric, force-free Kerr
+    magnetospheres around the relativistic Grad-Shafranov equation and numerical
+    solution methods.  Camilloni et al. state that for extreme Kerr there is no
+    known exact analytic stationary, axisymmetric, magnetically dominated
+    force-free solution.  The gate is designed for that claim family, not for
+    more examples from the Compere force-free foliation registry.
+  </p>
+
+  <h2>5. The pde-engine patch forced by the measurement</h2>
   <p>
     The old validator cache hashed only the expression string.  That was wrong:
     a non-rotating result could be replayed in a rotating context.  The patch
@@ -619,20 +699,28 @@ T = u_z*d_rho - u_rho*d_z</pre>
     <code>PreciseFoliationValidator</code>.
   </p>
 
-  <h2>5. Reproduction commands</h2>
+  <h2>6. Reproduction commands</h2>
   <pre>python3 -m py_compile \
   general_method_paper_reproduction.py \
   problems/force_free/validator.py \
   tests/test_force_free_validator_cache.py \
   tools/export_force_free_novel_discoveries.py \
-  tests/test_force_free_novel_discoveries.py
+  tools/export_kerr_paper_target_gate.py \
+  tests/test_force_free_novel_discoveries.py \
+  tests/test_kerr_paper_target_gate.py
 
 python3 -m unittest \
   tests/test_force_free_validator_cache.py \
-  tests/test_force_free_novel_discoveries.py
+  tests/test_force_free_novel_discoveries.py \
+  tests/test_kerr_paper_target_gate.py
 
 python3 tools/export_force_free_novel_discoveries.py \
-  --run-engine --max-depth 2 --validators 1</pre>
+  --run-engine --max-depth 2 --validators 1 \
+  --timeout-s 90 --validation-timeout-s 3
+
+python3 tools/export_kerr_paper_target_gate.py \
+  --run-engine --max-depth 2 --validators 1 \
+  --timeout-s 90 --validation-timeout-s 3</pre>
   <p>
     The Lagra-side commands that produced the measurements were:
   </p>
@@ -647,7 +735,7 @@ python3 experiments/proof-search/render_yukawa_finite_range_paper.py
 python3 experiments/proof-search/publication_readiness_audit.py
 python3 experiments/proof-search/proof_search_integrity_gate.py</pre>
 
-  <h2>6. References</h2>
+  <h2>7. References</h2>
   <p>
     [1] Geoffrey Compere, Samuel E. Gralla, Alexandru Lupsasca,
     <em>Force-Free Foliations</em>, Phys. Rev. D 94, 124012 (2016),
@@ -660,8 +748,20 @@ python3 experiments/proof-search/proof_search_integrity_gate.py</pre>
     Links: <code>https://arxiv.org/abs/1606.06727</code> and
     <code>https://doi.org/10.1103/PhysRevD.94.124012</code>.
   </p>
+  <p>
+    [2] J. F. Mahlmann, P. Cerda-Duran, M. A. Aloy et al.,
+    <em>Numerically solving the relativistic Grad-Shafranov equation in Kerr
+    spacetimes: Numerical techniques</em>, MNRAS 477, 3927-3946 (2018),
+    arXiv:1802.00815, DOI:10.1093/mnras/sty858.
+  </p>
+  <p>
+    [3] F. Camilloni, G. Grignani, T. Harmark, R. Oliveri, M. Orselli,
+    <em>Moving away from the Near-Horizon Attractor of the Extreme Kerr
+    Force-Free Magnetosphere</em>, JCAP 10, 048 (2020), arXiv:2007.15665,
+    DOI:10.1088/1475-7516/2020/10/048.
+  </p>
 
-  <h2>7. Boundary</h2>
+  <h2>8. Boundary</h2>
   <p class="claim">
     The adapter is a positive exact-symbolic and pointwise Lagra measurement of
     the pde-engine force-free boundary.  It is not a Lean theorem.  It is not a
@@ -670,9 +770,9 @@ python3 experiments/proof-search/proof_search_integrity_gate.py</pre>
     candidates not identical to the registered known-solution functions.  The
     full reproduction boundary remains: the bounded pass only finds two known
     vertical canonical forms and does not recover the seven known Compere
-    solutions.  The bounded health gate is included precisely so the paper
-    cannot confuse the new candidate artifact with a full reproduction claim or
-    with the next Kerr research target.
+    solutions.  The Kerr gate is a separate <code>no_candidate_yet</code> artifact:
+    it prevents the current linear surrogate from being promoted into the next
+    paper target before the full nonlinear validator exists.
   </p>
 </main>
 </body>

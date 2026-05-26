@@ -22,8 +22,14 @@ adapter gate.
 - `tools/export_force_free_novel_discoveries.py` runs a bounded force-free
   engine pass, mines valid non-registered rows, independently rebuilds the
   determinant, and emits JSON/Markdown process-control artifacts.
+- `tools/export_kerr_paper_target_gate.py` runs the stricter next-target gate
+  for the Kerr force-free / Grad-Shafranov paper program and emits a
+  `no_candidate_yet` artifact instead of promoting the current linear surrogate.
 - `tests/test_force_free_novel_discoveries.py` checks the independent
   determinant builder and the registry-novel candidate filter.
+- `tests/test_kerr_paper_target_gate.py` checks that undefined expressions,
+  known small-spin anchors, and anchor-like nontrivial probes are not admitted
+  as Kerr paper candidates before the full nonlinear target validator exists.
 - `docs/discovery-process-and-next-target.md` records the full process,
   including the search bounds, post-hoc filters, missing criteria, and the next
   Kerr-force-free target.
@@ -113,6 +119,28 @@ The full process record is in
 this force-free list is not the final research target. It is the control
 problem used to debug and document the pde-engine/Lagra evidence path.
 
+## Kerr paper-target gate
+
+The next-target artifact is:
+
+- `docs/kerr-paper-target-gate.json`
+- `docs/kerr-paper-target-gate.md`
+
+It ran the current `kerr_magnetosphere` harness with:
+
+```sh
+python3 tools/export_kerr_paper_target_gate.py \
+  --run-engine --max-depth 2 --validators 1 \
+  --timeout-s 90 --validation-timeout-s 3
+```
+
+The result is `no_candidate_yet`: `306` generated rows, `306` completed
+validations, `0` valid rows in the current linear surrogate run, and `0`
+admitted paper candidates. The gate also probes `1 - x`, `x`, `1/(1 - 1)`, and
+`1 - x + a**2*r*x`. These are rejected respectively as known anchors,
+undefined expressions, or not paper-admissible until the full nonlinear Kerr
+force-free Grad-Shafranov validator is implemented.
+
 ## Literature sources
 
 - Geoffrey Compere, Samuel E. Gralla, Alexandru Lupsasca, "Force-Free
@@ -120,6 +148,14 @@ problem used to debug and document the pde-engine/Lagra evidence path.
   DOI:10.1103/PhysRevD.94.124012.
 - arXiv: <https://arxiv.org/abs/1606.06727>
 - DOI: <https://doi.org/10.1103/PhysRevD.94.124012>
+- J. F. Mahlmann, P. Cerda-Duran, M. A. Aloy et al., "Numerically solving the
+  relativistic Grad-Shafranov equation in Kerr spacetimes: Numerical
+  techniques," MNRAS 477, 3927-3946 (2018), arXiv:1802.00815,
+  DOI:10.1093/mnras/sty858.
+- F. Camilloni, G. Grignani, T. Harmark, R. Oliveri, M. Orselli, "Moving away
+  from the Near-Horizon Attractor of the Extreme Kerr Force-Free
+  Magnetosphere," JCAP 10, 048 (2020), arXiv:2007.15665,
+  DOI:10.1088/1475-7516/2020/10/048.
 
 ## Claim boundary
 
@@ -146,8 +182,11 @@ and not the paper target.
 - `docs/force-free-novel-discoveries.json`
 - `docs/force-free-novel-discoveries.md`
 - `docs/discovery-process-and-next-target.md`
+- `docs/kerr-paper-target-gate.json`
+- `docs/kerr-paper-target-gate.md`
 - `tools/render_lagra_force_free_adapter_paper.py`
 - `tools/export_force_free_novel_discoveries.py`
+- `tools/export_kerr_paper_target_gate.py`
 
 These are pde-engine-facing paper artifacts generated on 2026-05-26 in the
 visual style of `/Users/p/Downloads/LagraPaperV1 (1).pdf`. The paper maps the
@@ -159,13 +198,16 @@ diagram states what enters Lagra and what measurement comes out.
 Artifact hashes:
 
 ```text
-2da86b8029a0ad252c4ba8907b7e10019df42b8b949721a281b0f1db5cde5995  docs/lagra-force-free-adapter-paper.html
-2555cb05126b691127c3d5db1900a94409ce02d86a78c23f61e81e86c8c0bf52  docs/lagra-force-free-adapter-paper.pdf
-7a9c0cc5219b697843e6c80d9d263cc55537b3fefad34d4cd553c5b8d1887d2d  tools/render_lagra_force_free_adapter_paper.py
+e01a1387b601922d37c711e864ea68ab5642b3b250182a5440be6f1dafada3e5  docs/lagra-force-free-adapter-paper.html
+6a49b3423af38cd9d4cd4de9790faf660addd18a8069f75830435c22be972b83  docs/lagra-force-free-adapter-paper.pdf
+652d749d81fe001a1da946589fc17e5dbfcef6717f4f8067e61f2b76b610dfeb  tools/render_lagra_force_free_adapter_paper.py
 f67202596b8fe94c85b6ca9ebba02267a7891ef6929add75bf0a0b5f73f67d6c  docs/force-free-novel-discoveries.json
 b6073e74d079d19d7183101f5a21770064e0f3ea450fd257c803afc9e2cd301c  docs/force-free-novel-discoveries.md
 cd5999772df7b0e2a06d10831f9863ddb51ea5ecca5276e314eedc6d76517b41  tools/export_force_free_novel_discoveries.py
-53a95f937062e0817358e5fbb0cb00ba4183b7eafd376fdd7175c6d7e3a0d334  docs/discovery-process-and-next-target.md
+aae6c6bb6b7fb1cca50a00834e1e4ac072d99c0225b1dfb315a00ec3d3af61fa  docs/discovery-process-and-next-target.md
+28bf0b7036926283f7551dc0e1617bade023c5519799059e754530e6c165bd02  docs/kerr-paper-target-gate.json
+13ceaed419ab2b96bae73ab8560df84e22a1c36c4a325ee060dd925cd478aa44  docs/kerr-paper-target-gate.md
+d1c90623c3a2baa96202b3c4f66fb10a5618fc5d5d95d7f05e9d95fdbb443436  tools/export_kerr_paper_target_gate.py
 7feafdfd3e9dee42cbeed306ca2bf62a55d49a1659c23d662de360a83da6f44b  pde_engine_force_free_point_gate.json
 e5a4c2b7ce63ba4044dcdfa5f0aa58758b3e2e5db92e12b8936e01770d3f99a1  pde_engine_reproduction_health_gate.json
 ```
@@ -180,14 +222,22 @@ python3 -m py_compile \
   problems/force_free/validator.py \
   tests/test_force_free_validator_cache.py \
   tools/export_force_free_novel_discoveries.py \
-  tests/test_force_free_novel_discoveries.py
+  tools/export_kerr_paper_target_gate.py \
+  tests/test_force_free_novel_discoveries.py \
+  tests/test_kerr_paper_target_gate.py
 
 python3 -m unittest \
   tests/test_force_free_validator_cache.py \
-  tests/test_force_free_novel_discoveries.py
+  tests/test_force_free_novel_discoveries.py \
+  tests/test_kerr_paper_target_gate.py
 
 python3 tools/export_force_free_novel_discoveries.py \
-  --run-engine --max-depth 2 --validators 1
+  --run-engine --max-depth 2 --validators 1 \
+  --timeout-s 90 --validation-timeout-s 3
+
+python3 tools/export_kerr_paper_target_gate.py \
+  --run-engine --max-depth 2 --validators 1 \
+  --timeout-s 90 --validation-timeout-s 3
 
 python3 tools/render_lagra_force_free_adapter_paper.py
 ```
