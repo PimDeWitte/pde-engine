@@ -318,18 +318,18 @@ Our approach is based on two key insights:
 %%{init: {'theme':'dark', 'themeVariables': {'primaryColor':'#2e7d32','primaryTextColor':'#fff','primaryBorderColor':'#66bb6a','lineColor':'#5c6bc0','secondaryColor':'#1976d2','tertiaryColor':'#e65100','background':'#1e1e1e','mainBkg':'#2d2d30','secondBkg':'#252526','tertiaryBkg':'#3c3c3c','tertiaryTextColor':'#fff','darkMode':true}}}%%
 graph TD
     %% Problem Definition Phase
-    A[Problem Specification<br/>coordinates, primitives, operations] 
+    A["Problem Specification<br/>coordinates, primitives, operations"]
     A --> B[Expression Generator<br/>Depth 1: rho, z]
     
     %% Generation Phase
-    B --> C[Apply Operations<br/>sin, cos, +, *, /, ...]
-    C --> D[Expression Candidates<br/>sin&#40;rho&#41;, rho*z, ...]
+    B --> C["Apply Operations<br/>sin, cos, +, *, /, ..."]
+    C --> D["Expression Candidates<br/>sin(rho), rho*z, ..."]
     
     %% Normalization Phase
     D --> E[Lean Theorem Prover<br/>Mathematical Normalization]
     E --> F{Duplicate<br/>Check}
     F -->|New| G[Unique Expression]
-    F -->|Exists| H[Skip &#40;~99% reduction&#41;]
+    F -->|Exists| H["Skip (~99% reduction)"]
     
     %% Validation Phase
     G --> I[PDE Validator<br/>Fast point checks]
@@ -337,11 +337,11 @@ graph TD
     J -->|Yes| K[Symbolic Verification]
     J -->|No| L[Invalid]
     K --> M{Proven<br/>Valid?}
-    M -->|Yes| N[&#10003; Valid Solution]
+    M -->|Yes| N["✓ Valid Solution"]
     M -->|No| L
     
     %% Storage Phase
-    N --> O[SQLite Database<br/>Results & Monitoring]
+    N --> O["SQLite Database<br/>Results & Monitoring"]
     L --> O
     
     %% Iteration

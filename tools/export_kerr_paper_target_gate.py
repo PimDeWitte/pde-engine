@@ -173,6 +173,23 @@ LITERATURE_SOURCES = [
             "known analytically as a perturbative solution through O(a^2)"
         ),
     },
+    {
+        "id": "menon_dermer_2007_exact_bz_process_class",
+        "citation": (
+            "G. Menon and C. D. Dermer, A Class of Exact Solutions to the "
+            "Blandford-Znajek Process, Gen. Relativ. Gravit. 39, 785-794 (2007)"
+        ),
+        "arxiv": "astro-ph/0511661",
+        "arxiv_url": "https://arxiv.org/abs/astro-ph/0511661",
+        "doi": "10.1007/s10714-007-0418-2",
+        "doi_url": "https://doi.org/10.1007/s10714-007-0418-2",
+        "role": (
+            "gives an exact Kerr force-free class with r-independent poloidal "
+            "surfaces and omega = 1/(a*sin(theta)^2); useful as an exact "
+            "residual candidate but singular on the axis and not the BZ "
+            "split-monopole finite-spin solution"
+        ),
+    },
 ]
 
 PAPER_TARGET = {
